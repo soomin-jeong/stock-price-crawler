@@ -1,4 +1,4 @@
-from utils import Crawler
+from util import Crawler
 
 SBOND_PAGE = 'https://www.investing.com/etfs/db-x-trackers-ii-global-sovereign-5-historical-data'
 SBOND_OUTPUT = 'sbond_cash.csv'
