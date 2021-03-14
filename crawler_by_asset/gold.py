@@ -1,4 +1,4 @@
-from utils import Crawler
+from util import Crawler
 
 GOLD_PAGE = 'https://www.investing.com/etfs/spdr-gold-trust-historical-data'
 GOLD_OUTPUT = 'gold_data.csv'
