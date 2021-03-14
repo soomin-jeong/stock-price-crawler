@@ -1,7 +1,7 @@
 This project is developed in **Python3.7**
 
 # installation
-pip install requirements.txt
+pip install -r requirements.txt
 
 # Project Description
 
