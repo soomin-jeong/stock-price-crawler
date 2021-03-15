@@ -1,8 +1,13 @@
 import time
 import os
+import csv
 import datetime
 
+
 from selenium import webdriver
+#from webdriver_manager.chrome import ChromeDriverManager
+from webdriver_manager.firefox import GeckoDriverManager
+from datetime import datetime
 
 #use webdriver_manager to ensure support for different driver types in all our dev environments
 #from webdriver_manager.chrome import ChromeDriverManager
@@ -29,8 +34,6 @@ class Crawler(object):
 
         #self.driver = webdriver.Safari()
         #self.driver = webdriver.Firefox()
-        #self.driver = webdriver.Chrome()
-        
         self.driver.get(self.start_page)
         time.sleep(2)
 
@@ -49,28 +52,34 @@ class Crawler(object):
 
         # get values from table
         table = self.driver.find_element_by_id("results_box").find_elements_by_tag_name("tr")
-        time.sleep(1);
+        print(table)
+        time.sleep(1)
 
         # write data
         data = []
         for row in table:
             value = row.find_elements_by_tag_name("td")
+            print(value)
             if (len(value) == 7):
                 date = value[0].get_attribute('data-real-value')
                 print(date)
                 date_formatted = time.strftime('%d/%m/%Y', time.localtime(int(date)))
                 price = value[1].get_attribute('data-real-value')
-                #tuples = {'date': date.strftime("%D", time.localtime(int(date))), 'price' : price}
-                #tuples = {date.strftime("%d.%m.%Y"), str(price)}
-                tuples = (date_formatted, price)
                 print(tuples)
                 data.append(tuples)
         return data
 
-    def write_as_csv(self, data):
-        file_path = os.path.join('crawled_data', self.output_name)
-        with open(file_path, "a") as f:
-            f.write(data)
+    def write_as_csv(self, data): 
+        filename = 'crawled_data_' + self.output_name + datetime.now().strftime("%H%M%S") +'.csv'  
+        #file_path = os.path.join('crawled_data', self.output_name, '.csv')
+        with open(filename, 'w+', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow(["date", "price"])
+            for x in data:
+                writer.writerow(x)
+            
+        #with open(file_path, "a") as f:
+            #f.write(data)
 
     def close_webdriver(self):
         self.driver.close()
@@ -78,5 +87,5 @@ class Crawler(object):
     def run_crawler(self):
         self.start_webdriver()
         data = self.access_the_data()
-        #self.write_as_csv(data)
+        self.write_as_csv(data)
         self.close_webdriver()
