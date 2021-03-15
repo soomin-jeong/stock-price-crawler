@@ -15,6 +15,7 @@ cash_crawler.run_crawler()
 # corporate bonds
 cbond_crawler.run_crawler()
 
+
 #gold
 gold_crawler.run_crawler()
 
@@ -23,3 +24,4 @@ stock_crawler.run_crawler()
 
 #sovereign bonds
 sbond_crawler.run_crawler()
+
