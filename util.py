@@ -1,11 +1,17 @@
 import time
 import os
 import csv
+import datetime
+
 
 from selenium import webdriver
 #from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.firefox import GeckoDriverManager
 from datetime import datetime
+
+#use webdriver_manager to ensure support for different driver types in all our dev environments
+#from webdriver_manager.chrome import ChromeDriverManager
+from webdriver_manager.firefox import GeckoDriverManager
 
 # Date range to search
 START_DATE = '01/01/2020'
@@ -19,11 +25,15 @@ class Crawler(object):
         self.driver = None
 
     def start_webdriver(self):
+        ##Webdrivers managed by webdriver-manager. Preferred use.
+
+        self.driver = webdriver.Firefox(executable_path=GeckoDriverManager().install())
+        #self.driverdriver = webdriver.Chrome(ChromeDriverManager().install())
+        
+        ##Webdrivers if locally installed
+
         #self.driver = webdriver.Safari()
         #self.driver = webdriver.Firefox()
-        self.driver = webdriver.Firefox(executable_path=GeckoDriverManager().install())
-        #self.driver = webdriver.Chrome()
-        #self.driverdriver = webdriver.Chrome(ChromeDriverManager().install())
         self.driver.get(self.start_page)
         time.sleep(2)
 
@@ -52,10 +62,9 @@ class Crawler(object):
             print(value)
             if (len(value) == 7):
                 date = value[0].get_attribute('data-real-value')
+                print(date)
+                date_formatted = time.strftime('%d/%m/%Y', time.localtime(int(date)))
                 price = value[1].get_attribute('data-real-value')
-                date_formatted = time.strftime("%D", time.localtime(int(date)))
-                #tuples = {'date': time.strftime("%D", time.localtime(int(date))), 'price' : price}
-                tuples = {date_formatted, price}
                 print(tuples)
                 data.append(tuples)
         return data
