@@ -1,5 +1,5 @@
 
-from crawler_by_asset import cash_crawler, gold_crawler, sbond_crawler, cbond_cralwer
+from crawler_by_asset import cash_crawler, gold_crawler, sbond_crawler, cbond_crawler
 
 # crawlers = [cash_crawler, gold_crawler, sbond_crawler, cbond_cralwer]
 #
