@@ -1,5 +1,6 @@
 import time
 import os
+import datetime
 
 from selenium import webdriver
 
@@ -56,8 +57,12 @@ class Crawler(object):
             value = row.find_elements_by_tag_name("td")
             if (len(value) == 7):
                 date = value[0].get_attribute('data-real-value')
+                print(date)
+                date_formatted = time.strftime('%d/%m/%Y', time.localtime(int(date)))
                 price = value[1].get_attribute('data-real-value')
-                tuples = {'date': time.strftime("%D", time.localtime(int(date))), 'price' : price}
+                #tuples = {'date': date.strftime("%D", time.localtime(int(date))), 'price' : price}
+                #tuples = {date.strftime("%d.%m.%Y"), str(price)}
+                tuples = (date_formatted, price)
                 print(tuples)
                 data.append(tuples)
         return data
