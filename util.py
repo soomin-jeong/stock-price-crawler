@@ -3,6 +3,10 @@ import os
 
 from selenium import webdriver
 
+#use webdriver_manager to ensure support for different driver types in all our dev environments
+#from webdriver_manager.chrome import ChromeDriverManager
+from webdriver_manager.firefox import GeckoDriverManager
+
 # Date range to search
 START_DATE = '01/01/2020'
 END_DATE = '12/31/2020'
@@ -15,9 +19,17 @@ class Crawler(object):
         self.driver = None
 
     def start_webdriver(self):
+        ##Webdrivers managed by webdriver-manager. Preferred use.
+
+        self.driver = webdriver.Firefox(executable_path=GeckoDriverManager().install())
+        #self.driverdriver = webdriver.Chrome(ChromeDriverManager().install())
+        
+        ##Webdrivers if locally installed
+
         #self.driver = webdriver.Safari()
         #self.driver = webdriver.Firefox()
-        self.driver = webdriver.Chrome()
+        #self.driver = webdriver.Chrome()
+        
         self.driver.get(self.start_page)
         time.sleep(2)
 
