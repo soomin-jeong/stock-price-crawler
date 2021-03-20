@@ -25,3 +25,13 @@ stock_crawler.run_crawler()
 #sovereign bonds
 sbond_crawler.run_crawler()
 
+#generate portfolio
+
+#run trading methodology
+#one-off
+
+#one-off rebalanced
+
+#DCA
+
+#DCA rebalanced
