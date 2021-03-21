@@ -3,11 +3,8 @@ import os
 import csv
 import datetime
 
-
-from selenium import webdriver
-#from webdriver_manager.chrome import ChromeDriverManager
-from webdriver_manager.firefox import GeckoDriverManager
 from datetime import datetime
+from selenium import webdriver
 
 #use webdriver_manager to ensure support for different driver types in all our dev environments
 #from webdriver_manager.chrome import ChromeDriverManager
@@ -67,7 +64,8 @@ class Crawler(object):
         return data
 
     def write_as_csv(self, data): 
-        filename = 'crawled_data_' + self.output_name + datetime.now().strftime("%H%M%S") +'.csv'  
+        #filename = 'crawled_data_' + self.output_name + datetime.now().strftime("%H%M%S") +'.csv' 
+        filename = self.output_name +'.csv' 
         #file_path = os.path.join('crawled_data', self.output_name, '.csv')
         with open(filename, 'w+', newline='') as file:
             writer = csv.writer(file)

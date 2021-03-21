@@ -1,11 +1,8 @@
 
-#from crawler_by_asset import cash_crawler, gold_crawler, sbond_crawler, cbond_crawler, stock_crawler
+from crawler_by_asset import cash_crawler, gold_crawler, sbond_crawler, cbond_crawler, stock_crawler
 from portfolio_allocation import portfolio_generator
-# crawlers = [cash_crawler, gold_crawler, sbond_crawler, cbond_cralwer]
-#
-# for each in crawlers:
-#     each.run_cralwer()
-#
+#from trading_methodologies import oneoff, DCA
+
 
 #asset classes
 #cash
