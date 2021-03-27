@@ -5,17 +5,18 @@ import datetime
 import pandas as pd
 import math
 
+import trading_methodologies.trading_util as trading_util
 from datetime import datetime
 
 #one-off takes the amount of money to be spent, the date on which the investment is made and the portfolio as it should be balanced
-def write_as_csv(data): 
-    filename = 'trading_methodologies.csv'  
-    #file_path = os.path.join('crawled_data', self.output_name, '.csv')
-    with open(filename, 'w+', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(["Trading Method.", "Asset Alloc.", "Asset", "Amount($)", "Asset price", "# shares"])
-        for x in data:
-            writer.writerow(x)
+# def write_as_csv(data): 
+#     filename = 'trading_methodologies.csv'  
+#     #file_path = os.path.join('crawled_data', self.output_name, '.csv')
+#     with open(filename, 'w+', newline='') as file:
+#         writer = csv.writer(file)
+#         writer.writerow(["Trading Method.", "Asset Alloc.", "Asset", "Amount($)", "Asset price", "# shares"])
+#         for x in data:
+#             writer.writerow(x)
 
 def oneoff(startmoney, investment_date):
     portfoliodf = pd.read_csv('./portfolio_allocations.csv')
@@ -88,6 +89,6 @@ def oneoff(startmoney, investment_date):
         data.append(tuple(["Oneoff", portf_alloc, cash_money, cashprice, cash_units]))
 
     #write trading methodologies to CSV
-    write_as_csv(data)
+    trading_util.write_as_csv(data, "overwrite")
     #print("stockprice on the date was " + str(stockprice) + " cbond price was " + str(cbondprice) + " the sbond price was  " +str(sbondprice))
     return 'Oneoff succeeded'
