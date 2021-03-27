@@ -5,6 +5,7 @@ import datetime
 import pandas as pd
 import math
 import calendar
+import trading_methodologies.oneoff as oneoff
 
 #add months adds months while dealing with end of the month cases where 31/30th is given as days input
 def add_months(sourcedate, months):
@@ -65,54 +66,63 @@ def find_data_point(asset_class, sourcedate):
                 print("there is no data for " + new_date.strftime('%d/%m/%Y'))
 
     return date_on_date, price_on_date
-    
 
 def DCA(startmoney, investment_date, investment_period):
-    
-    #load crawler data
-    # portfoliodf = pd.read_csv('./portfolio_allocations.csv')
-    # #stocksdf = pd.read_csv('./amundi-msci-wrld-ae-c.csv')
-    # cbondsdf = pd.read_csv('./ishares-global-corporate-bond-$.csv')
-    # print(cbondsdf)
-    # sbondsdf = pd.read_csv('./db-x-trackers-ii-global-sovereign-5.csv')
-    # golddf = pd.read_csv('./spdr-gold-trust.csv')
-    # cashdf = pd.read_csv('./usdollar.csv')
 
     #floored division to find the amount to be invested per month
-    money_per_month = startmoney//investment_period
+    money_per_month = math.floor(startmoney/investment_period)
+
     #create date object from date string
     date_obj = datetime.datetime.strptime(investment_date, '%d/%m/%Y')
+
     #test if we have data for the whole time period
     investment_pd_end_obj= add_months(date_obj, investment_period)
     date_obj, price = find_data_point("cbonds", investment_pd_end_obj)
     if (date_obj == None) or (price == None):
         return print("the specified date or investment period are outside of the dataset")
-    else:
-        find_data_point("cbonds", date_obj)
-    # print(investment_pd_end_obj)
-    # print(investment_pd_end_obj.strftime('%d/%m/%Y'))
+    
+    #if we have the data we can continue
+    #load the portfolio logic file
+    portfoliodf = pd.read_csv('./portfolio_allocations.csv')
+
+    #iterate through every row of the portfolio file to get portfolio logic
+    for index, row in portfoliodf.iterrows():
+        #get portfolio logic data
+        portf_alloc = row['Asset Alloc.']
+        stock_percentage = row['ST']
+        cbond_percentage = row['CB']
+        sbond_percentage = row['PB']
+        gold_percentage = row['GO']
+        cash_percentage = row['CA']
+
+        #calculate how much of money should be spent on each asset
+        stock_money = money_per_month*stock_percentage
+        cbond_money = money_per_month*cbond_percentage
+        sbond_money = money_per_month*sbond_percentage
+        gold_money = money_per_month*gold_percentage
+        cash_money = money_per_month*cash_percentage
+
+        #execute trade with portfolio logic for every month of investment period
+        for x in range(0,investment_period):
+            print("iterator value is: " + str(x))
+            cbond_date, cbond_price = find_data_point("cbonds", add_months(date_obj, x))
 
 
-    # try: 
-    #     #stockondate = stocksdf.loc[stocksdf['date'] == investment_pd_end_obj.strftime('%d/%m/%Y')]
-    #     #stockprice = stocksdf.loc[stocksdf['date'] == '30/12/2020']
-    #     cbondondate = cbondsdf.loc[cbondsdf['date'] == investment_pd_end_obj.strftime('%d/%m/%Y')]
-    #     print(cbondondate)
-    #     cbondprice = cbondondate.iloc[0]['price']
-    #     print(cbondprice)
-    #     # sbondondate = sbondsdf.loc[sbondsdf['date'] == investment_pd_end_obj.strftime('%d/%m/%Y')]
-    #     # sbondprice = sbondondate.iloc[0]['price']
-    #     # goldondate = golddf.loc[golddf['date'] == investment_pd_end_obj.strftime('%d/%m/%Y')]
-    #     # goldprice = goldondate.iloc[0]['price']
+            #calculate units we can buy
+            #stock_units = math.floor(stock_money/stock_price)
+            cbond_units = math.floor(cbond_money/cbond_price)
+            sbond_units = math.floor(sbond_money/sbond_price)
+            gold_units = math.floor(gold_money/gold_price)
+            cash_units = math.floor(cash_money/cash_price)
+            
+            #add data to array for later csv writing
+            # data.append(tuple(["DCA", portf_alloc, stock_money, stock_price, stock_units]))
+            # data.append(tuple(["DCA", portf_alloc, cbond_money, cbond_price, cbond_units]))
+            # data.append(tuple(["DCA", portf_alloc, sbond_money, sbond_price, sbond_units]))
+            # data.append(tuple(["DCA", portf_alloc, gold_money, gold_price, gold_units]))
+            # data.append(tuple(["DCA", portf_alloc, cash_money, cash_price, cash_units]))
 
-        
-
-    # except:
-    #     return print("error, there is not enough data for your investment period")
-
-    #for x in investment_period:
-
-    return 'DCA'
+    return 'DCA has succeeded'
 
 
 

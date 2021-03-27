@@ -6,6 +6,7 @@ import pandas as pd
 import math
 
 from datetime import datetime
+
 #one-off takes the amount of money to be spent, the date on which the investment is made and the portfolio as it should be balanced
 def write_as_csv(data): 
     filename = 'trading_methodologies.csv'  
@@ -80,13 +81,13 @@ def oneoff(startmoney, investment_date):
         cash_units = math.floor(cash_money/cashprice)
         
         #add data to array for later csv writing
-        data.append(tuple([portf_alloc, stock_money, stockprice, stock_units]))
-        data.append(tuple([portf_alloc, cbond_money, cbondprice, cbond_units]))
-        data.append(tuple([portf_alloc, sbond_money, sbondprice, sbond_units]))
-        data.append(tuple([portf_alloc, gold_money, goldprice, gold_units]))
-        data.append(tuple([portf_alloc, cash_money, cashprice, cash_units]))
+        data.append(tuple(["Oneoff", portf_alloc, stock_money, stockprice, stock_units]))
+        data.append(tuple(["Oneoff", portf_alloc, cbond_money, cbondprice, cbond_units]))
+        data.append(tuple(["Oneoff", portf_alloc, sbond_money, sbondprice, sbond_units]))
+        data.append(tuple(["Oneoff", portf_alloc, gold_money, goldprice, gold_units]))
+        data.append(tuple(["Oneoff", portf_alloc, cash_money, cashprice, cash_units]))
 
     #write trading methodologies to CSV
     write_as_csv(data)
     #print("stockprice on the date was " + str(stockprice) + " cbond price was " + str(cbondprice) + " the sbond price was  " +str(sbondprice))
-    return 'success'
+    return 'Oneoff succeeded'
