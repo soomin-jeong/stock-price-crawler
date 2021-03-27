@@ -63,6 +63,7 @@ class Crawler(object):
                 data.append(tuples)
         return data
 
+    #@lena I wrote this. Might be relevant as well. Seems to work for all the other asset classes
     def write_as_csv(self, data): 
         #filename = 'crawled_data_' + self.output_name + datetime.now().strftime("%H%M%S") +'.csv' 
         filename = self.output_name +'.csv' 

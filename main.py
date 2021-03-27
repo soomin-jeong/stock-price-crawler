@@ -8,15 +8,19 @@ from trading_methodologies import oneoff
 #cash
 #cash_crawler.run_crawler()
 
+#@lena you can try running this and you will see it writes the data correctly to the csv file ishares-global-corporate-bond-$
+#https://www.investing.com/etfs/ishares-global-corporate-bond-$-historical-data
 # corporate bonds
-#cbond_crawler.run_crawler()
+cbond_crawler.run_crawler()
 
 
 #gold
 #gold_crawler.run_crawler()
 
+#@lena this is the one that does not work. No data is written to the csv file amundi-msci-wrld-ae-c.csv. The function runs
+#https://www.investing.com/funds/amundi-msci-wrld-ae-c-historical-data
 #stocks
-#stock_crawler.run_crawler()
+stock_crawler.run_crawler()
 
 #sovereign bonds
 #sbond_crawler.run_crawler()
@@ -28,7 +32,7 @@ from trading_methodologies import oneoff
 
 #run trading methodology
 #one-off
-print(oneoff(10000, '30/12/2020'))
+#print(oneoff(10000, '30/12/2020'))
 #one-off rebalanced
 
 #DCA
