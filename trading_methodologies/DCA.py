@@ -5,7 +5,6 @@ import datetime
 import pandas as pd
 import math
 import calendar
-import trading_methodologies.oneoff as oneoff
 import trading_methodologies.trading_util as trading_util
 
 #add months adds months while dealing with end of the month cases where 31/30th is given as days input
@@ -88,7 +87,7 @@ def DCA(startmoney, investment_date, investment_period):
 
     #initialze empty list to recieve tuple of trading info
     data = []
-    
+
     #iterate through every row of the portfolio file to get portfolio logic
     for index, row in portfoliodf.iterrows():
         #get portfolio logic data
@@ -130,7 +129,7 @@ def DCA(startmoney, investment_date, investment_period):
             data.append(tuple(["DCA", portf_alloc, gold_money, gold_price, gold_units]))
             data.append(tuple(["DCA", portf_alloc, cash_money, cash_price, cash_units]))
 
-        trading_util.write_as_csv(data)
+        trading_util.write_as_csv(data, "append")
     return 'DCA has succeeded'
 
 
