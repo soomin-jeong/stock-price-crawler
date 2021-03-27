@@ -6,6 +6,7 @@ import pandas as pd
 import math
 import calendar
 import trading_methodologies.oneoff as oneoff
+import trading_methodologies.trading_util as trading_util
 
 #add months adds months while dealing with end of the month cases where 31/30th is given as days input
 def add_months(sourcedate, months):
@@ -85,6 +86,9 @@ def DCA(startmoney, investment_date, investment_period):
     #load the portfolio logic file
     portfoliodf = pd.read_csv('./portfolio_allocations.csv')
 
+    #initialze empty list to recieve tuple of trading info
+    data = []
+    
     #iterate through every row of the portfolio file to get portfolio logic
     for index, row in portfoliodf.iterrows():
         #get portfolio logic data
@@ -106,6 +110,10 @@ def DCA(startmoney, investment_date, investment_period):
         for x in range(0,investment_period):
             print("iterator value is: " + str(x))
             cbond_date, cbond_price = find_data_point("cbonds", add_months(date_obj, x))
+            sbond_date, sbond_price = find_data_point("sbonds", add_months(date_obj, x))
+            gold_date, gold_price = find_data_point("gold", add_months(date_obj, x))
+            cash_date, cash_price = find_data_point("cash", add_months(date_obj, x))
+            stock_date, stock_price = find_data_point("stocks", add_months(date_obj, x))
 
 
             #calculate units we can buy
@@ -116,12 +124,13 @@ def DCA(startmoney, investment_date, investment_period):
             cash_units = math.floor(cash_money/cash_price)
             
             #add data to array for later csv writing
-            # data.append(tuple(["DCA", portf_alloc, stock_money, stock_price, stock_units]))
-            # data.append(tuple(["DCA", portf_alloc, cbond_money, cbond_price, cbond_units]))
-            # data.append(tuple(["DCA", portf_alloc, sbond_money, sbond_price, sbond_units]))
-            # data.append(tuple(["DCA", portf_alloc, gold_money, gold_price, gold_units]))
-            # data.append(tuple(["DCA", portf_alloc, cash_money, cash_price, cash_units]))
+            #data.append(tuple(["DCA", portf_alloc, stock_money, stock_price, stock_units]))
+            data.append(tuple(["DCA", portf_alloc, cbond_money, cbond_price, cbond_units]))
+            data.append(tuple(["DCA", portf_alloc, sbond_money, sbond_price, sbond_units]))
+            data.append(tuple(["DCA", portf_alloc, gold_money, gold_price, gold_units]))
+            data.append(tuple(["DCA", portf_alloc, cash_money, cash_price, cash_units]))
 
+        trading_util.write_as_csv(data)
     return 'DCA has succeeded'
 
 
