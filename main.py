@@ -1,7 +1,8 @@
 
+import datetime
 from crawler_by_asset import cash_crawler, gold_crawler, sbond_crawler, cbond_crawler, stock_crawler
 from portfolio_allocation import portfolio_generator
-from trading_methodologies import oneoff
+from trading_methodologies import oneoff, DCA
 
 
 #asset classes
@@ -28,9 +29,11 @@ from trading_methodologies import oneoff
 
 #run trading methodology
 #one-off
-print(oneoff(10000, '30/12/2020'))
+#print(oneoff(10000, '30/12/2020'))
 #one-off rebalanced
 
 #DCA
+print(DCA(10000, '01/02/2021', 1))
+
 
 #DCA rebalanced
