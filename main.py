@@ -33,7 +33,7 @@ from trading_methodologies import oneoff, DCA
 #one-off rebalanced
 
 #DCA
-print(DCA(10000, '01/02/2021', 1))
+print(DCA(10000, '03/02/2020', 3))
 
 
 #DCA rebalanced
