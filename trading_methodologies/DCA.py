@@ -111,7 +111,8 @@ def DCA(startmoney, investment_date, investment_period):
             cbond_date, cbond_price = find_data_point("cbonds", add_months(date_obj, x))
             sbond_date, sbond_price = find_data_point("sbonds", add_months(date_obj, x))
             gold_date, gold_price = find_data_point("gold", add_months(date_obj, x))
-            cash_date, cash_price = find_data_point("cash", add_months(date_obj, x))
+            cash_date  = find_data_point("cash", add_months(date_obj, x))[0]
+            cash_price = 1
             stock_date, stock_price = find_data_point("stocks", add_months(date_obj, x))
 
 

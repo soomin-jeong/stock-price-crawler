@@ -44,7 +44,7 @@ def oneoff(startmoney, investment_date):
 
 
     
-    #stocksondate, stockprice = trading_util.find_data_point("stocks", date_obj)
+    stocksondate, stockprice = trading_util.find_data_point("stocks", date_obj)
     cbondondate, cbondprice = trading_util.find_data_point("cbonds", date_obj)
     sbondondate, sbondprice = trading_util.find_data_point("sbonds", date_obj)
     goldondate,  goldprice = trading_util.find_data_point("gold", date_obj)
