@@ -43,17 +43,11 @@ def oneoff(startmoney, investment_date):
     print(portfoliodf.head())
 
 
-    stockondate = stocksdf.loc[stocksdf['date'] == date_obj.strftime('%d/%m/%Y')]
-    stockprice = stockondate.iloc[0]['price']
-    #stockprice = stocksdf.loc[stocksdf['date'] == '30/12/2020']
-    cbondondate = cbondsdf.loc[cbondsdf['date'] == date_obj.strftime('%d/%m/%Y')]
-    cbondprice = cbondondate.iloc[0]['price']
-    sbondondate = sbondsdf.loc[sbondsdf['date'] == date_obj.strftime('%d/%m/%Y')]
-    sbondprice = sbondondate.iloc[0]['price']
-    goldondate = golddf.loc[golddf['date'] == date_obj.strftime('%d/%m/%Y')]
-    goldprice = goldondate.iloc[0]['price']
-    # cashondate = cashdf.loc[cashdf['date'] == date_obj.strftime('%d/%m/%Y')]
-    # cashprice = cashondate.iloc[0]['price']
+    
+    #stocksondate, stockprice = trading_util.find_data_point("stocks", date_obj)
+    cbondondate, cbondprice = trading_util.find_data_point("cbonds", date_obj)
+    sbondondate, sbondprice = trading_util.find_data_point("sbonds", date_obj)
+    goldondate,  goldprice = trading_util.find_data_point("gold", date_obj)
     #cash price is 1 as per instructions
     cashprice = 1
     data = []
@@ -82,13 +76,14 @@ def oneoff(startmoney, investment_date):
         cash_units = math.floor(cash_money/cashprice)
         
         #add data to array for later csv writing
-        data.append(tuple(["Oneoff", portf_alloc, stock_money, stockprice, stock_units]))
-        data.append(tuple(["Oneoff", portf_alloc, cbond_money, cbondprice, cbond_units]))
-        data.append(tuple(["Oneoff", portf_alloc, sbond_money, sbondprice, sbond_units]))
-        data.append(tuple(["Oneoff", portf_alloc, gold_money, goldprice, gold_units]))
-        data.append(tuple(["Oneoff", portf_alloc, cash_money, cashprice, cash_units]))
+        #Date, Trading Method.,Purchase ID,Asset Alloc.,Asset,Amount($),Asset price,#
+        data.append(tuple([date_obj.strftime('%d/%m/%Y'), "Oneoff", str(index+1) + ".1", int(portf_alloc), "stocks", stock_money, stockprice, stock_units]))
+        data.append(tuple([date_obj.strftime('%d/%m/%Y'), "Oneoff", str(index+1) + ".2", int(portf_alloc), "cbonds", cbond_money, cbondprice, cbond_units]))
+        data.append(tuple([date_obj.strftime('%d/%m/%Y'), "Oneoff", str(index+1) + ".3", int(portf_alloc), "sbonds", sbond_money, sbondprice, sbond_units]))
+        data.append(tuple([date_obj.strftime('%d/%m/%Y'), "Oneoff", str(index+1) + ".4", int(portf_alloc), "gold", gold_money, goldprice, gold_units]))
+        data.append(tuple([date_obj.strftime('%d/%m/%Y'), "Oneoff", str(index+1) + ".5", int(portf_alloc), "cash", cash_money, cashprice, cash_units]))
 
     #write trading methodologies to CSV
     trading_util.write_as_csv(data, "overwrite")
     #print("stockprice on the date was " + str(stockprice) + " cbond price was " + str(cbondprice) + " the sbond price was  " +str(sbondprice))
-    return 'Oneoff succeeded'
+    return data, 'Oneoff succeeded'
