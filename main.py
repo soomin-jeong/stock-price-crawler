@@ -7,7 +7,7 @@ from trading_methodologies import oneoff, DCA, rebalance
 
 #asset classes
 #cash
-cash_crawler.run_crawler()
+#cash_crawler.run_crawler()
 
 # corporate bonds
 #cbond_crawler.run_crawler()
@@ -17,7 +17,7 @@ cash_crawler.run_crawler()
 #gold_crawler.run_crawler()
 
 #stocks
-stock_crawler.run_crawler()
+#stock_crawler.run_crawler()
 
 #sovereign bonds
 #sbond_crawler.run_crawler()

@@ -2,6 +2,7 @@ import csv
 import pandas as pd
 import datetime
 import trading_methodologies.trading_util as trading_util
+import math
 
 def rebalance(method, investment_period):
     #load our CSV data files
@@ -58,16 +59,109 @@ def rebalance(method, investment_period):
             #loop through investment period and rebalance
             for x in range(0, int(investment_period)):
                 #print("test")
-                if initial_date_obj.day < 15:
-                    date_of_rebalance, price_of_rebalance_cbonds = trading_util.find_data_point("cbonds", trading_util.add_months(rebalance_initial_date, x))
-                    print(price_of_rebalance_cbonds)
-                    #if we have reached the end of our available data exit the loop
-                    if price_of_rebalance_cbonds == None:
-                        break
-                else:
-                    date_of_rebalance, price_of_rebalance_cbonds = trading_util.find_data_point("cbonds", trading_util.add_months(rebalance_initial_date, x+1))
+                #if the initial investment is made after the 15th we dont rebalnce in the current month
+                if initial_date_obj.day > 15:
+                    x = x + 1
                 
-                #date_of_rebalance, price_of_rebalance_stock = trading_util.find_data_point("stocks", trading_util.add_months(rebalance_initial_date, x))
+                #get the current prices/values of assets
+                date_of_rebalance, price_of_rebalance_cbonds = trading_util.find_data_point("cbonds", trading_util.add_months(rebalance_initial_date, x))
+                
+                #if we have reached the end of our available data exit the loop
+                if price_of_rebalance_cbonds == None:
+                    break
+                price_of_rebalance_stocks = trading_util.find_data_point("stocks", trading_util.add_months(rebalance_initial_date, x))[1]
+                price_of_rebalance_sbonds = trading_util.find_data_point("sbonds", trading_util.add_months(rebalance_initial_date, x))[1]
+                price_of_rebalance_gold = trading_util.find_data_point("gold", trading_util.add_months(rebalance_initial_date, x))[1]
+                price_of_rebalance_cash = 1
+                
+                rebal_value_of_cbonds = price_of_rebalance_cbonds*initial_quant_cbonds
+                rebal_value_of_stocks = price_of_rebalance_stocks*initial_quant_stocks
+                rebal_value_of_sbonds = price_of_rebalance_sbonds*initial_quant_sbonds
+                rebal_value_of_gold = price_of_rebalance_gold*initial_quant_gold
+                rebal_value_of_cash = 1*initial_quant_cash
+                #calculate the current value of our portfolio
+                rebal_portf_value =  rebal_value_of_cbonds + rebal_value_of_stocks + rebal_value_of_sbonds + rebal_value_of_gold + rebal_value_of_cash
+
+                #calculate weights in portfolio
+                # weight_stocks = rebal_value_of_stocks/rebal_portf_value
+                # weight_cbonds = rebal_value_of_cbonds/rebal_portf_value
+                # weight_sbonds = rebal_value_of_sbonds/rebal_portf_value
+                # weight_gold = rebal_value_of_gold/rebal_portf_value
+                # weight_cash = rebal_value_of_cash/rebal_portf_value
+
+                #calculate the value that should be assigned to each asset
+                opt_val_stocks = rebal_portf_value*target_alloc_stocks
+                opt_val_cbonds = rebal_portf_value*target_alloc_cbonds
+                opt_val_sbonds = rebal_portf_value*target_alloc_sbonds
+                opt_val_gold = rebal_portf_value*target_alloc_gold
+                opt_val_cash = rebal_portf_value*target_alloc_cash
+
+                #calculate the amount of each asset that we should have in the balanced portfolio
+                opt_quant_stocks = math.floor(opt_val_stocks/price_of_rebalance_stocks)
+                opt_quant_cbonds = math.floor(opt_val_cbonds/price_of_rebalance_cbonds)
+                opt_quant_sbonds = math.floor(opt_val_sbonds/price_of_rebalance_sbonds)
+                opt_quant_gold = math.floor(opt_val_gold/price_of_rebalance_gold)
+                opt_quant_cash = math.floor(opt_val_gold/1)
+
+                #calculate deltas between optimum and current quantity
+                delta_quant_stocks = initial_quant_stocks - opt_quant_stocks
+                delta_quant_cbonds = initial_quant_cbonds - opt_quant_cbonds
+                delta_quant_sbonds = initial_quant_sbonds - opt_quant_sbonds
+                delta_quant_gold = initial_quant_gold - opt_quant_gold
+                delta_quant_cash = initial_quant_cash - opt_quant_cash
+
+                final_quant_stock = None
+                final_quant_cbonds = None
+                final_quant_sbonds = None
+                final_quant_gold = None
+                final_quant_cash = None
+                money_from_sales = 0
+
+                #conduct sales
+                if delta_quant_stocks < 0:
+                    money_from_sales = money_from_sales + abs(delta_quant_stocks*price_of_rebalance_stocks)
+                    final_quant_stock = initial_quant_stocks - delta_quant_stocks
+                if delta_quant_cbonds < 0:
+                    money_from_sales = money_from_sales + abs(delta_quant_cbonds*price_of_rebalance_cbonds)
+                    final_quant_cbonds = initial_quant_cbonds - delta_quant_cbonds
+                if delta_quant_sbonds < 0:
+                    money_from_sales = money_from_sales + abs(delta_quant_sbonds*price_of_rebalance_sbonds)
+                    final_quant_sbonds = initial_quant_sbonds - delta_quant_sbonds
+                if delta_quant_gold < 0:
+                    money_from_sales = money_from_sales + abs(delta_quant_gold*price_of_rebalance_gold)
+                    final_quant_gold = initial_quant_gold - delta_quant_gold
+                if delta_quant_cash < 0:
+                    money_from_sales = money_from_sales + abs(delta_quant_cash*price_of_rebalance_cash)
+                    final_quant_cash = initial_quant_cash - delta_quant_cash
+                
+                #conduct purchases with money_from_sales
+                if delta_quant_stocks > 0:
+                    purchase_value = delta_quant_stocks*price_of_rebalance_stocks
+                    if purchase_value < money_from_sales:
+                        money_from_sales = money_from_sales - purchase_value
+                        final_quant_stock = initial_quant_stocks + delta_quant_stocks
+                if delta_quant_cbonds > 0:
+                    purchase_value = delta_quant_cbonds*price_of_rebalance_cbonds
+                    if purchase_value < money_from_sales:
+                        money_from_sales = money_from_sales - purchase_value
+                        final_quant_cbonds = initial_quant_cbonds + delta_quant_cbonds
+                if delta_quant_sbonds > 0:
+                    purchase_value = delta_quant_sbonds*price_of_rebalance_sbonds
+                    if purchase_value < money_from_sales:
+                        money_from_sales = money_from_sales - purchase_value
+                        final_quant_sbonds = initial_quant_sbonds + delta_quant_sbonds
+                if delta_quant_gold > 0:
+                    purchase_value = delta_quant_gold*price_of_rebalance_gold
+                    if purchase_value < money_from_sales:
+                        money_from_gold = money_from_gold - purchase_value
+                        final_quant_gold = initial_quant_gold + delta_quant_gold
+                if delta_quant_cash > 0:
+                    purchase_value = delta_quant_cash*price_of_rebalance_cash
+                    if purchase_value < money_from_sales:
+                        money_from_sales = money_from_sales - purchase_value
+                        final_quant_cash = initial_quant_cash + delta_quant_cash
+            
+            #write to CSV
 
     elif method == "DCA":
         print("DCA")
