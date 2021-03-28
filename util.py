@@ -8,7 +8,7 @@ from selenium import webdriver
 
 #use webdriver_manager to ensure support for different driver types in all our dev environments
 #from webdriver_manager.chrome import ChromeDriverManager
-from webdriver_manager.firefox import GeckoDriverManager
+#from webdriver_manager.firefox import GeckoDriverManager
 
 # Date range to search
 START_DATE = '01/01/2020'
@@ -50,11 +50,16 @@ class Crawler(object):
         # get values from table
         table = self.driver.find_element_by_id("results_box").find_elements_by_tag_name("tr")
         time.sleep(1)
-
         # write data
         data = []
         for row in table:
             value = row.find_elements_by_tag_name("td")
+            if (len(value) == 6):
+                date = value[0].get_attribute('data-real-value')
+                date_formatted = time.strftime('%d/%m/%Y', time.localtime(int(date)))
+                price = value[1].get_attribute('data-real-value')
+                tuples = (date_formatted, price)
+                data.append(tuples)
             if (len(value) == 7):
                 date = value[0].get_attribute('data-real-value')
                 date_formatted = time.strftime('%d/%m/%Y', time.localtime(int(date)))
