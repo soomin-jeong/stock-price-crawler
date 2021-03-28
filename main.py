@@ -6,7 +6,7 @@ from trading_methodologies import oneoff
 
 #asset classes
 #cash
-#cash_crawler.run_crawler()
+cash_crawler.run_crawler()
 
 # corporate bonds
 #cbond_crawler.run_crawler()
@@ -16,7 +16,7 @@ from trading_methodologies import oneoff
 #gold_crawler.run_crawler()
 
 #stocks
-#stock_crawler.run_crawler()
+stock_crawler.run_crawler()
 
 #sovereign bonds
 #sbond_crawler.run_crawler()
@@ -28,7 +28,7 @@ from trading_methodologies import oneoff
 
 #run trading methodology
 #one-off
-print(oneoff(10000, '30/12/2020'))
+#print(oneoff(10000, '30/12/2020'))
 #one-off rebalanced
 
 #DCA
