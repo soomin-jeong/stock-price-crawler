@@ -53129,3 +53129,9 @@ Date,Trading Method.,Purchase ID,Asset Alloc.,Asset,Amount($),Asset price,#
 01/03/2020,Oneoff,10626.3,10626,sbonds,0.0,262.95,0
 01/03/2020,Oneoff,10626.4,10626,gold,0.0,149.2,0
 01/03/2020,Oneoff,10626.5,10626,cash,10000.0,1,10000
+Date,Trading Method.,Purchase ID,Asset Alloc.,Asset,Amount($),Asset price,#
+2020-03-15,oneoff-rebal.,1.12,1,stocks,0.0,171.16,0
+2020-03-15,oneoff-rebal.,1.22,1,cbonds,9908.84,81.22,0
+2020-03-15,oneoff-rebal.,1.32,1,sbonds,0.0,268.33,0
+2020-03-15,oneoff-rebal.,1.42,1,gold,0.0,163.93,0
+2020-03-15,oneoff-rebal.,1.52,1,cash,0,1,0
