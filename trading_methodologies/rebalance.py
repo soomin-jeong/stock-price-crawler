@@ -53,7 +53,7 @@ def rebalance(method, investment_period):
             target_alloc_cash = target_alloc_df.iloc[0]['CA']
 
             #get trade amount for each allocation
-            initial_quant_stocks = tradedatadf.loc[tradedatadf['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer]) & (tradedatadf['Asset'] == "stocks")].iloc[0]['#']
+            initial_quant_stocks = tradedatadf.loc[(tradedatadf['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer])) & (tradedatadf['Asset'] == "stocks")].iloc[0]['#']
             print(initial_quant_stocks) 
             initial_quant_cbonds = tradedatadf.loc[(tradedatadf['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer])) & (tradedatadf['Asset'] == "cbonds")].iloc[0]['#']
             initial_quant_sbonds = tradedatadf.loc[(tradedatadf['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer])) & (tradedatadf['Asset'] == "sbonds")].iloc[0]['#']
