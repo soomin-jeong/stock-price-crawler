@@ -19,7 +19,6 @@ def write_as_csv(data, write_mode):
     elif write_mode == "append":
         with open(filename, 'a+', newline='') as file:
             writer = csv.writer(file)
-            writer.writerow(["Date", "Trading Method.", "Purchase ID", "Asset Alloc.", "Asset", "Amount($)", "Asset price", "#"])
             for x in data:
                 writer.writerow(x)
 
