@@ -8,7 +8,7 @@ from selenium import webdriver
 
 #use webdriver_manager to ensure support for different driver types in all our dev environments
 #from webdriver_manager.chrome import ChromeDriverManager
-#from webdriver_manager.firefox import GeckoDriverManager
+from webdriver_manager.firefox import GeckoDriverManager
 
 # Date range to search
 START_DATE = '01/01/2020'
