@@ -33,9 +33,14 @@ def rebalance(method, investment_period):
         print(portfolio_allocation_IDs[:5])
 
         #prepare data array to write to CSV at the end
-        data = []
+        #moved into for loop so the scope is smaller and we can write to csv after every loop. Less efficient if we run the whole thing but if we 
+        #dont want to write all 150k lines every time this is better
+        #data = []
 
         for i in portfolio_allocation_IDs:
+            #prepare data array to write to CSV at the end
+            data = []
+
             #get target allocation
             print("the vaue of i is " + str(i))
             pointer = i-1
@@ -243,13 +248,13 @@ def rebalance(method, investment_period):
                 data.append(tuple([date_of_rebalance.strftime("%d/%m/%Y"), "oneoff-rebal.", str(portfolio_allocation_IDs[pointer]) +"."+ str(y) + ".sb", portfolio_allocation_IDs[pointer], "sbonds", rebal_value_of_sbonds, price_of_rebalance_sbonds, final_quant_sbonds]))
                 data.append(tuple([date_of_rebalance.strftime("%d/%m/%Y"), "oneoff-rebal.", str(portfolio_allocation_IDs[pointer]) +"."+ str(y) + ".go", portfolio_allocation_IDs[pointer], "gold", rebal_value_of_gold, price_of_rebalance_gold, final_quant_gold]))
                 data.append(tuple([date_of_rebalance.strftime("%d/%m/%Y"), "oneoff-rebal.", str(portfolio_allocation_IDs[pointer]) +"."+ str(y) + ".ca", portfolio_allocation_IDs[pointer], "cash", rebal_value_of_cash, 1, final_quant_cash]))
-
-        #write trade data to csv 
-        print("Now writing to CSV")
-        #just in case remove any duplicates
-        data = list(dict.fromkeys(data))
-        trading_util.write_as_csv(data, "append")
-        print("finished writing trade to CSV")
+        #if we where to run this to get all 150k lines every time it would be more efficient to take write csv out of the for loop (unindent one lvl)
+            #write trade data to csv 
+            print("Now writing to CSV")
+            #just in case remove any duplicates
+            data = list(dict.fromkeys(data))
+            trading_util.write_as_csv(data, "append")
+            print("finished writing trade to CSV")
 
     elif method == "DCA":
         print("DCA")
