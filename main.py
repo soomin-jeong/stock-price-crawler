@@ -29,15 +29,15 @@ from trading_methodologies import oneoff, DCA, rebalance
 
 #run trading methodology
 #one-off
-#data, message = oneoff(10000, '01/03/2020')
-#print (message)
+data, message = oneoff(10000, '01/03/2020')
+print (message)
 
 
 #one-off rebalanced
-#rebalance("oneoff", 3)
+#oneoff_rebalance("oneoff", 3)
 #DCA
 #print(DCA(10000, '03/02/2020', 3, "FALSE"))
 
 
 #DCA rebalanced
-print(DCA(10000, '03/02/2020', 2, "TRUE"))
+print(DCA(10000, '01/03/2020', 2, "TRUE"))
