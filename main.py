@@ -34,9 +34,10 @@ print (message)
 
 
 #one-off rebalanced
-rebalance("oneoff", 3)
+#oneoff_rebalance("oneoff", 3)
 #DCA
-#print(DCA(10000, '03/02/2020', 3))
+#print(DCA(10000, '03/02/2020', 3, "FALSE"))
 
 
 #DCA rebalanced
+print(DCA(10000, '01/03/2020', 2, "TRUE"))
