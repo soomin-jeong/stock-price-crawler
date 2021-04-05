@@ -270,13 +270,14 @@ def DCA_rebalance(Rebal_ST_Q, Rebal_CB_Q, Rebal_SB_Q, Rebal_GO_Q, Rebal_CA_Q, st
     cash_percentage = cash_percentage
     Rebal_Money = Rebal_Money
     DCA_date = DCA_date
-
+    print("dca date is ")
+    print(DCA_date)
     #rebalance in the same month on the 15th
     rebalance_date = datetime.date(DCA_date.year, DCA_date.month, 15)
     #get price of assets on date
     #get the current prices/values of assets
     try:
-        date_of_rebalance, price_of_rebalance_cbonds = trading_util.find_data_point("cbonds", trading_util.add_months(rebalance_initial_date, y))
+        date_of_rebalance, price_of_rebalance_cbonds = trading_util.find_data_point("cbonds", rebalance_date)
     except:
         return ("there is an error. Has the end of the available asset data been reached?")
     price_of_rebalance_stocks = trading_util.find_data_point("stocks", date_of_rebalance)[1]
@@ -292,24 +293,105 @@ def DCA_rebalance(Rebal_ST_Q, Rebal_CB_Q, Rebal_SB_Q, Rebal_GO_Q, Rebal_CA_Q, st
     rebal_value_of_sbonds = price_of_rebalance_sbonds*Rebal_SB_Q
     rebal_value_of_gold = price_of_rebalance_gold*Rebal_GO_Q
     rebal_value_of_cash = 1*Rebal_CA_Q
+    
     #calculate the current value of our portfolio
     rebal_portf_value =  rebal_value_of_cbonds + rebal_value_of_stocks + rebal_value_of_sbonds + rebal_value_of_gold + rebal_value_of_cash
     print("the current total value of the protfolio is " + str(rebal_portf_value))
 
     #calculate optimum quantity of assets 
     #current portfolio value * asset weight in portfolio / asset price
-    #use floored division for whole numbers
+    #use floored division to get whole units of assets
     opt_quant_stocks = math.floor((rebal_portf_value*stock_percentage)/price_of_rebalance_stocks)
-    opt_quant_cbonds = math.floor((rebal_portf_value*stock_percentage)/price_of_rebalance_cbonds)
-    opt_quant_sbonds = math.floor((rebal_portf_value*stock_percentage)/price_of_rebalance_sbonds)
-    opt_quant_gold = math.floor((rebal_portf_value*stock_percentage)/price_of_rebalance_gold)
-    opt_quant_cash = math.floor((rebal_portf_value*stock_percentage)/1)
+    opt_quant_cbonds = math.floor((rebal_portf_value*cbond_percentage)/price_of_rebalance_cbonds)
+    opt_quant_sbonds = math.floor((rebal_portf_value*sbond_percentage)/price_of_rebalance_sbonds)
+    opt_quant_gold = math.floor((rebal_portf_value*gold_percentage)/price_of_rebalance_gold)
+    opt_quant_cash = math.floor((rebal_portf_value*cash_percentage)/1)
     print("Your balanced portfolio should have " + str(opt_quant_stocks) + " stock units " + str(opt_quant_cbonds)+ " cbond units " + str(opt_quant_sbonds) +" sbond units " + str(opt_quant_gold) + " gold units " + str(opt_quant_cash) + " cash units " )
-    #print reminder of current portfolio composition for debugging
-    print("Your current portfolio consists of " + str(initial_quant_stocks) + " stock units " + str(initial_quant_cbonds)+ " cbond units " + str(initial_quant_sbonds) +" sbond units " + str(initial_quant_gold) + " gold units " + str(initial_quant_cash) + " cash units")
-
+   
     #calculate deltas
-    #sell
-    #buy
+    #calculate deltas between optimum and current quantity
+    delta_quant_stocks = opt_quant_stocks - Rebal_ST_Q 
+    delta_quant_cbonds = opt_quant_cbonds - Rebal_CB_Q
+    delta_quant_sbonds = opt_quant_sbonds - Rebal_SB_Q
+    delta_quant_gold =  opt_quant_gold - Rebal_GO_Q
+    delta_quant_cash = opt_quant_cash - Rebal_CA_Q
 
-    return ("DCA rebalance succeeded")
+    #if there is no need to rebalance then do not run the rest of the loop
+    # if delta_quant_stocks == 0 and delta_quant_cbonds==0 and delta_quant_sbonds==0 and delta_quant_gold==0 and delta_quant_cash==0: 
+    #     print("Your portfolio is balanced")
+    #     continue
+    final_quant_stock = 0
+    final_quant_cbonds = 0
+    final_quant_sbonds = 0
+    final_quant_gold = 0
+    final_quant_cash = 0
+    #use starting money from previous rebalances
+    money_from_sales = 0 + Rebal_Money
+
+    #conduct sales if needed
+    if delta_quant_stocks < 0:
+        money_from_sales = money_from_sales + abs(delta_quant_stocks*price_of_rebalance_stocks)
+        final_quant_stock = Rebal_ST_Q + delta_quant_stocks
+        print("stocks sold. The new amount of stocks held is " + str(final_quant_stock) + " your current spendable balance is " + str(money_from_sales))
+    if delta_quant_cbonds < 0:
+        money_from_sales = money_from_sales + abs(delta_quant_cbonds*price_of_rebalance_cbonds)
+        final_quant_cbonds = Rebal_CB_Q + delta_quant_cbonds
+        print("cbonds sold. The new amount of cbonds held is " + str(final_quant_cbonds) + " your current spendable balance is " + str(money_from_sales))
+    if delta_quant_sbonds < 0:
+        money_from_sales = money_from_sales + abs(delta_quant_sbonds*price_of_rebalance_sbonds)
+        final_quant_sbonds = Rebal_SB_Q + delta_quant_sbonds
+        print("sbonds sold. The new amount of sbonds held is " + str(final_quant_sbonds) + " your current spendable balance is " + str(money_from_sales))
+    if delta_quant_gold < 0:
+        money_from_sales = money_from_sales + abs(delta_quant_gold*price_of_rebalance_gold)
+        final_quant_gold = Rebal_GO_Q + delta_quant_gold
+        print("gold sold. The new amount of gold held is " + str(final_quant_gold) + " your current spendable balance is " + str(money_from_sales))
+    if delta_quant_cash < 0:
+        money_from_sales = money_from_sales + abs(delta_quant_cash*price_of_rebalance_cash)
+        final_quant_cash = Rebal_CA_Q + delta_quant_cash
+        print("cash sold. The new amount of cash held is " + str(final_quant_cash) + " your current spendable balance is " + str(money_from_sales))
+    
+    #conduct purchases with money_from_sales
+    if delta_quant_stocks > 0:
+        purchase_value = delta_quant_stocks*price_of_rebalance_stocks
+        if purchase_value < money_from_sales:
+            money_from_sales = money_from_sales - purchase_value
+            final_quant_stock = Rebal_ST_Q + delta_quant_stocks
+            print("stocks bought. The new amount of stocks held is " + str(final_quant_stock) + " your current spendable balance is " + str(money_from_sales))
+    if delta_quant_cbonds > 0:
+        purchase_value = delta_quant_cbonds*price_of_rebalance_cbonds
+        if purchase_value < money_from_sales:
+            money_from_sales = money_from_sales - purchase_value
+            final_quant_cbonds = Rebal_CB_Q + delta_quant_cbonds
+            print("cbonds bought. The new amount of cbonds held is " + str(final_quant_cbonds) + " your current spendable balance is " + str(money_from_sales))
+    if delta_quant_sbonds > 0:
+        purchase_value = delta_quant_sbonds*price_of_rebalance_sbonds
+        if purchase_value < money_from_sales:
+            money_from_sales = money_from_sales - purchase_value
+            final_quant_sbonds = Rebal_SB_Q + delta_quant_sbonds
+            print("sbonds bought. The new amount of sbonds held is " + str(final_quant_sbonds) + " your current spendable balance is " + str(money_from_sales))
+    if delta_quant_gold > 0:
+        purchase_value = delta_quant_gold*price_of_rebalance_gold
+        if purchase_value < money_from_sales:
+            money_from_sales = money_from_sales - purchase_value
+            final_quant_gold = Rebal_GO_Q + delta_quant_gold
+            print("gold bought. The new amount of gold held is " + str(final_quant_gold) + " your current spendable balance is " + str(money_from_sales))
+    if delta_quant_cash > 0:
+        purchase_value = delta_quant_cash*price_of_rebalance_cash
+        if purchase_value < money_from_sales:
+            money_from_sales = money_from_sales - purchase_value
+            final_quant_cash = Rebal_CA_Q + delta_quant_cash
+            print("cash bought. The new amount of cash held is " + str(final_quant_cash) + " your current spendable balance is " + str(money_from_sales))
+    
+    #if neither purchase or sale is needed keep the original quanitity
+    if delta_quant_stocks == 0:
+        final_quant_stock = Rebal_ST_Q
+    if delta_quant_cbonds == 0:
+        final_quant_cbonds = Rebal_CB_Q
+    if delta_quant_sbonds == 0:
+        final_quant_sbonds = Rebal_SB_Q
+    if delta_quant_gold == 0:
+        final_quant_gold = Rebal_GO_Q
+    if delta_quant_cash == 0:
+        final_quant_cash = Rebal_CA_Q
+
+    return "DCA rebalance succeeded", final_quant_stock, price_of_rebalance_stocks, final_quant_cbonds, price_of_rebalance_cbonds, final_quant_sbonds, price_of_rebalance_sbonds, final_quant_gold, price_of_rebalance_gold, final_quant_cash, price_of_rebalance_cash, money_from_sales, rebal_portf_value, date_of_rebalance
