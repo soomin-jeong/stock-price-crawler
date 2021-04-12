@@ -7,14 +7,14 @@ import math
 
 def oneoff_rebalance(investment_period):
     #load our CSV data files
-    portfoliodf = pd.read_csv('./portfolio_allocations.csv', low_memory=False, dtype={'Asset Alloc.':int})
+    portfoliodf = pd.read_csv('portfolio_allocations.csv', low_memory=False, dtype={'Asset Alloc.':int})
     portfoliodf['Asset Alloc.'] = portfoliodf['Asset Alloc.'].astype(int)
-    tradedatadf = pd.read_csv('./trading_methodologies.csv', low_memory=False)
-    stocksdf = pd.read_csv('./amundi-msci-wrld-ae-c.csv', low_memory=False)
-    cbondsdf = pd.read_csv('./ishares-global-corporate-bond-$.csv', low_memory=False)
-    sbondsdf = pd.read_csv('./db-x-trackers-ii-global-sovereign-5.csv', low_memory=False)
-    golddf = pd.read_csv('./spdr-gold-trust.csv', low_memory=False)
-    cashdf = pd.read_csv('./usdollar.csv', low_memory=False)
+    tradedatadf = pd.read_csv('trading_methodologies.csv', low_memory=False)
+    stocksdf = pd.read_csv('crawled_data/amundi-msci-wrld-ae-c.csv', low_memory=False)
+    cbondsdf = pd.read_csv('crawled_data/ishares-global-corporate-bond-$.csv', low_memory=False)
+    sbondsdf = pd.read_csv('crawled_data/db-x-trackers-ii-global-sovereign-5.csv', low_memory=False)
+    golddf = pd.read_csv('crawled_data/spdr-gold-trust.csv', low_memory=False)
+    cashdf = pd.read_csv('crawled_data/usdollar.csv', low_memory=False)
 
     #load all trade data which was made with oneoff method
     oneoff_trades_df = tradedatadf[tradedatadf['Trading Method.'] == "Oneoff"]
