@@ -28,19 +28,19 @@ def find_data_point(asset_class, sourcedate):
     price_on_date = None
     data_source = None
     if (asset_class == "stocks"):
-        data_source = pd.read_csv('./amundi-msci-wrld-ae-c.csv')
+        data_source = pd.read_csv('./crawled_data/amundi-msci-wrld-ae-c.csv')
         print("loaded stock data")
     elif (asset_class == "cbonds"):
-        data_source = pd.read_csv('./ishares-global-corporate-bond-$.csv')
+        data_source = pd.read_csv('./crawled_data/ishares-global-corporate-bond-$.csv')
         print("loaded cbond data")
     elif (asset_class == "sbonds"):
-        data_source = pd.read_csv('./db-x-trackers-ii-global-sovereign-5.csv')
+        data_source = pd.read_csv('./crawled_data/db-x-trackers-ii-global-sovereign-5.csv')
         print("loaded sbond data")
     elif (asset_class == "gold"):
-        data_source = pd.read_csv('./spdr-gold-trust.csv')
+        data_source = pd.read_csv('./crawled_data/spdr-gold-trust.csv')
         print("loaded gold data")
     elif (asset_class == "cash"):
-        data_source = pd.read_csv('./usdollar.csv')
+        data_source = pd.read_csv('./crawled_data/usdollar.csv')
         print("loaded cash data")
 
     try: 
@@ -84,7 +84,7 @@ def DCA(startmoney, investment_date, investment_period, rebal):
     
     #if we have the data we can continue
     #load the portfolio logic file
-    portfoliodf = pd.read_csv('./portfolio_allocations.csv')
+    portfoliodf = pd.read_csv('./crawled_data/portfolio_allocations.csv')
 
     #initialze empty list to recieve tuple of trading info
     data = []

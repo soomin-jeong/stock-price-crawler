@@ -65,8 +65,8 @@ class Crawler(object):
     def write_as_csv(self, data): 
         #filename = 'crawled_data_' + self.output_name + datetime.now().strftime("%H%M%S") +'.csv' 
         filename = self.output_name +'.csv' 
-        #file_path = os.path.join('crawled_data', self.output_name, '.csv')
-        with open(filename, 'w+', newline='') as file:
+        file_path = os.path.join('crawled_data', self.output_name, '.csv')
+        with open(file_path, 'w+', newline='') as file:
             writer = csv.writer(file)
             writer.writerow(["date", "price"])
             for x in data:
