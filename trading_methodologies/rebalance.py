@@ -7,7 +7,7 @@ import math
 
 def oneoff_rebalance(investment_period):
     #load our CSV data files
-    portfoliodf = pd.read_csv('portfolio_allocations.csv', low_memory=False, dtype={'Asset Alloc.':int})
+    portfoliodf = pd.read_csv('portfolio_allocations/portfolio_allocations.csv', low_memory=False, dtype={'Asset Alloc.':int})
     portfoliodf['Asset Alloc.'] = portfoliodf['Asset Alloc.'].astype(int)
     tradedatadf = pd.read_csv('trading_methodologies.csv', low_memory=False)
     stocksdf = pd.read_csv('crawled_data/amundi-msci-wrld-ae-c.csv', low_memory=False)

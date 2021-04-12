@@ -84,7 +84,7 @@ def DCA(startmoney, investment_date, investment_period, rebal):
     
     #if we have the data we can continue
     #load the portfolio logic file
-    portfoliodf = pd.read_csv('./crawled_data/portfolio_allocations.csv')
+    portfoliodf = pd.read_csv('../portfolio_allocation/portfolio_allocations.csv')
 
     #initialze empty list to recieve tuple of trading info
     data = []
