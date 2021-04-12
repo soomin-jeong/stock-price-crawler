@@ -18,7 +18,7 @@ class PerformanceAnalyst:
     def __init__(self, aggregated_data):
         self.data = aggregated_data
         self.trade_methods = np.unique(self.data['Trading Method.'])
-        self.assets = [np.unique(self.data['Asset'])]
+        self.assets = np.unique(self.data['Asset'])
         # sort them alphabetically to keep the order
         self.trade_methods.sort()
         self.assets.sort()
@@ -48,7 +48,10 @@ class PerformanceAnalyst:
     def get_return(self):
         portfolio_return = []
         for each_method in self.trade_methods:
-            buy_amount = 0
+            data_for_method = self.data[self.data['Trading Method.'] == each_method]
+            buy_amount = data_for_method['total_amount'].sum()
+            share_count = data_for_method[data_for_method['total_amount'] > 0].groupby('Asset')['#'].sum()
+            last_date = data_for_method['Date'][:-len(self.assets)]
             current_val = 0
             ret = (current_val - buy_amount) / buy_amount * 100
             portfolio_return.append(ret)
