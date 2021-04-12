@@ -9,8 +9,8 @@ from trading_methodologies import oneoff, DCA, rebalance
 #     each.run_crawler()
 
 #generate portfolio
-#portfolio = portfolio_generator.generatePortfolioAllocation()
-#portfolio_generator.write_as_csv(portfolio)
+portfolio = portfolio_generator.generatePortfolioAllocation()
+portfolio_generator.write_as_csv(portfolio)
 
 #run trading methodology
 #one-off

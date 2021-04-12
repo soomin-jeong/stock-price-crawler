@@ -54,13 +54,7 @@ class Crawler(object):
         data = []
         for row in table:
             value = row.find_elements_by_tag_name("td")
-            if (len(value) == 6):
-                date = value[0].get_attribute('data-real-value')
-                date_formatted = time.strftime('%d/%m/%Y', time.localtime(int(date)))
-                price = value[1].get_attribute('data-real-value')
-                tuples = (date_formatted, price)
-                data.append(tuples)
-            if (len(value) == 7):
+            if (len(value) in (6, 7)):
                 date = value[0].get_attribute('data-real-value')
                 date_formatted = time.strftime('%d/%m/%Y', time.localtime(int(date)))
                 price = value[1].get_attribute('data-real-value')
