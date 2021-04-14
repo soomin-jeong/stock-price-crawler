@@ -1,4 +1,4 @@
-from util import Crawler
+from crawler import Crawler
 
 CBOND_PAGE = 'https://www.investing.com/etfs/ishares-global-corporate-bond-$-historical-data'
 CBOND_OUTPUT = 'ishares-global-corporate-bond-$'
