@@ -1,4 +1,4 @@
-from util import Crawler
+from crawler import Crawler
 
 CASH_PAGE = 'https://www.investing.com/indices/usdollar-historical-data'
 CASH_OUTPUT = 'usdollar'

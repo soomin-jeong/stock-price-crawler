@@ -9,11 +9,13 @@ from selenium import webdriver
 #use webdriver_manager to ensure support for different driver types in all our dev environments
 #from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.firefox import GeckoDriverManager
+from utils import write_as_csv
 
 # Date range to search
 START_DATE = '01/01/2020'
 END_DATE = '12/31/2020'
 COMBINED_DATE = '01/01/2020 - 12/31/2020'
+
 
 class Crawler(object):
     def __init__(self, start_page, output_name):
@@ -62,24 +64,13 @@ class Crawler(object):
                 data.append(tuples)
         return data
 
-    def write_as_csv(self, data): 
-        #filename = 'crawled_data_' + self.output_name + datetime.now().strftime("%H%M%S") +'.csv' 
-        filename = self.output_name +'.csv' 
-        file_path = os.path.join('crawled_data', self.output_name, '.csv')
-        with open(file_path, 'w+', newline='') as file:
-            writer = csv.writer(file)
-            writer.writerow(["date", "price"])
-            for x in data:
-                writer.writerow(x)
-            
-        #with open(file_path, "a") as f:
-            #f.write(data)
-
     def close_webdriver(self):
         self.driver.close()
 
     def run_crawler(self):
+        filepath = os.path.join('crawled_data', self.output_name, '.csv')
+
         self.start_webdriver()
         data = self.access_the_data()
-        self.write_as_csv(data)
+        write_as_csv(filepath, data)
         self.close_webdriver()
