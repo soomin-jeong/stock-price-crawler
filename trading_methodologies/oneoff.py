@@ -19,7 +19,7 @@ from datetime import datetime
 #             writer.writerow(x)
 
 def oneoff(startmoney, investment_date):
-    portfoliodf = pd.read_csv('portfolio_allocations/portfolio_allocations.csv')
+    portfoliodf = pd.read_csv('portfolio_allocation/portfolio_allocations.csv')
     stocksdf = pd.read_csv('crawled_data/amundi-msci-wrld-ae-c.csv')
     cbondsdf = pd.read_csv('crawled_data/ishares-global-corporate-bond-$.csv')
     sbondsdf = pd.read_csv('crawled_data/db-x-trackers-ii-global-sovereign-5.csv')

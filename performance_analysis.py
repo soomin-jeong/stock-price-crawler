@@ -18,10 +18,12 @@ class PerformanceAnalyst:
 
     def __init__(self, portfolios):
         self.portfolios = portfolios
-        self.portfolio_names = np.unique(self.portfolios['Trading Method.'])
+        self.trade_methods = np.unique(self.portfolios['Trading Method.'])
         self.assets = np.unique(self.portfolios['Asset'])
+        self.portfolio_ids = np.unique(self.portfolios['Purchase ID'])
+
         # sort them alphabetically to keep the order
-        self.portfolio_names.sort()
+        self.trade_methods.sort()
         self.assets.sort()
         self.cost_per_asset = [0.0, 0.2, 0.1, 0.2, 0.4]
         self.portfolios['total_amount'] = self.portfolios['Asset price'] * self.portfolios['#']
@@ -31,18 +33,19 @@ class PerformanceAnalyst:
     # cost of each asset * weight of each asset
     @property
     def cost(self):
-        portfolio_cost = []
-        for each_method in self.portfolio_names:
-            data_for_method = self.portfolios[self.portfolios['Trading Method.'] == each_method]
-            total_investment = data_for_method['total_amount'].sum()
-            costs = data_for_method.groupby('Asset')['total_amount'].sum() / total_investment * self.cost_per_asset
-            portfolio_cost.append(costs.sum())
+        portfolio_cost = pd.DataFrame(columns=self.trade_methods)
+        for each_portfolio_id in self.portfolio_ids:
+            for each_method in self.trade_methods:
+                data_for_method = self.portfolios[self.portfolios['Purchase ID'] == each_portfolio_id][self.portfolios['Trading Method.'] == each_method]
+                total_investment = data_for_method['total_amount'].sum()
+                costs = data_for_method.groupby('Asset')['total_amount'].sum() / total_investment * self.cost_per_asset
+                portfolio_cost.append(costs.sum())
         return portfolio_cost
 
     @property
     def volatility(self):
         portfolio_volatility = []
-        for each_method in self.portfolio_names:
+        for each_method in self.trade_methods:
             data_for_method = self.portfolios[self.portfolios['Trading Method.'] == each_method]
             mean_per_asset = data_for_method['total_amount'].mean()
             standard_dev = stdev(data_for_method['total_amount'])
@@ -54,7 +57,7 @@ class PerformanceAnalyst:
     @property
     def asset_return(self):
         portfolio_return = []
-        for each_method in self.portfolio_names:
+        for each_method in self.trade_methods:
             data_for_method = self.portfolios[self.portfolios['Trading Method.'] == each_method]
             buy_amount = data_for_method['total_amount'].sum()
             share_count = data_for_method[data_for_method['total_amount'] > 0].groupby('Asset')['#'].sum()
@@ -68,10 +71,9 @@ class PerformanceAnalyst:
         performance_df['cost'] = self.cost
         performance_df['volatility'] = self.volatility
         performance_df['return'] = self.asset_return
-        performance_df.index = list(self.portfolio_names)
+        performance_df.index = list(self.trade_methods)
 
         filepath = 'portfolio_metrics.csv'
         write_as_csv(filepath, performance_df)
         return performance_df
-
 
