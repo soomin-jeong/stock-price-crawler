@@ -21,7 +21,7 @@ from trading_methodologies import oneoff, DCA, rebalance, oneoff_rebalance
 
 
 #one-off rebalanced
-oneoff_rebalance(3)
+# oneoff_rebalance(3)
 #DCA
 #print(DCA(10000, '03/02/2020', 3, "FALSE"))
 
