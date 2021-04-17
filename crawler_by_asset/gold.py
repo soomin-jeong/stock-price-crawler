@@ -1,4 +1,4 @@
-from crawler import Crawler
+from crawler_by_asset.crawler import Crawler
 
 GOLD_PAGE = 'https://www.investing.com/etfs/spdr-gold-trust-historical-data'
 GOLD_OUTPUT = 'spdr-gold-trust'

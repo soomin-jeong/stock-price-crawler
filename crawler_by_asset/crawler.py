@@ -68,7 +68,7 @@ class Crawler(object):
         self.driver.close()
 
     def run_crawler(self):
-        filepath = os.path.join('crawled_data', self.output_name, '.csv')
+        filepath = os.path.join('../crawled_data', self.output_name, '.csv')
 
         self.start_webdriver()
         data = self.access_the_data()
