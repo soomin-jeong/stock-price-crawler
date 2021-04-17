@@ -33,13 +33,12 @@ class PerformanceAnalyst:
     # cost of each asset * weight of each asset
     @property
     def cost(self):
-        portfolio_cost = pd.DataFrame(columns=self.trade_methods)
-        for each_portfolio_id in self.portfolio_ids:
-            for each_method in self.trade_methods:
-                data_for_method = self.portfolios[self.portfolios['Purchase ID'] == each_portfolio_id][self.portfolios['Trading Method.'] == each_method]
-                total_investment = data_for_method['total_amount'].sum()
-                costs = data_for_method.groupby('Asset')['total_amount'].sum() / total_investment * self.cost_per_asset
-                portfolio_cost.append(costs.sum())
+        portfolio_cost = []
+        for each_method in self.trade_methods:
+            data_for_method = self.portfolios[self.portfolios['Trading Method.'] == each_method]
+            total_investment = data_for_method['total_amount'].sum()
+            costs = data_for_method.groupby('Asset')['total_amount'].sum() / total_investment * self.cost_per_asset
+            portfolio_cost.append(costs.sum())
         return portfolio_cost
 
     @property
