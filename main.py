@@ -6,7 +6,7 @@ from crawler_by_asset import crawlers
 from portfolio_allocation.portfolio_generator import portfolio_generator
 from trading_methodologies import oneoff, DCA, rebalance, oneoff_rebalance
 
-# dDeactivate cralwers as they are complete
+# Deactivate cralwers as they are complete
 # for each in crawlers:
 #     each.run_crawler()
 
@@ -14,20 +14,28 @@ from trading_methodologies import oneoff, DCA, rebalance, oneoff_rebalance
 # portfolio = portfolio_generator.generate_allocation()
 # portfolio_generator.write_as_csv(portfolio)
 
-#run trading methodology
-#one-off
-# data, message = oneoff(10000, '01/03/2020')
-# print(message)
+#run trading methodologies
+#The performance metrics are based on 1 month, 3 month, 6 month, 9 month and 12 month investment periods starting 01/01/2020
+#We will assume we have 100.000 USD to invest
 
+#run all trades for 1 month investment period
+
+#one-off
+#data, message = oneoff(100000, '01/01/2020')
+#print(message)
 
 #one-off rebalanced
-# oneoff_rebalance(3)
+#oneoff_rebalance(1)
+
 #DCA
-#print(DCA(10000, '03/02/2020', 3, "FALSE"))
+#setting the flase flag here means we are not rebalancing
+#print(DCA(100000, '01/01/2020', 1, "FALSE"))
 
 
 #DCA rebalanced
-# print(DCA(10000, '01/03/2020', 2, "TRUE"))
+#setting the true flag means we will rebalance
+#print(DCA(100000, '01/01/2020', 1, "TRUE"))
+
 trading_methodology_filename = 'trading_methodologies.csv'
 
 
