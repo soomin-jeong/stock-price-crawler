@@ -26,12 +26,12 @@ class Crawler(object):
     def start_webdriver(self):
         ##Webdrivers managed by webdriver-manager. Preferred use.
 
-        self.driver = webdriver.Firefox(executable_path=GeckoDriverManager().install())
+        #self.driver = webdriver.Firefox(executable_path=GeckoDriverManager().install())
         #self.driverdriver = webdriver.Chrome(ChromeDriverManager().install())
         
         ##Webdrivers if locally installed
 
-        #self.driver = webdriver.Safari()
+        self.driver = webdriver.Safari()
         #self.driver = webdriver.Firefox()
         self.driver.get(self.start_page)
         time.sleep(2)
@@ -69,8 +69,11 @@ class Crawler(object):
 
     def run_crawler(self):
         filepath = os.path.join('crawled_data', self.output_name, '.csv')
-
+        # start the driver
         self.start_webdriver()
+        # gets the data
         data = self.access_the_data()
+        # write the data
         write_as_csv(filepath, data)
+        # close the driver
         self.close_webdriver()

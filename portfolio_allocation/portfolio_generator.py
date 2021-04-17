@@ -20,7 +20,7 @@ class PortfolioGeneartor:
                                 tuples = (len(data) + 1, pbValue/100, stValue/100, cbValue/100, goValue/100, caValue/100)
                                 data.append(tuples)
         return data
-
+    # write the data to a csv file
     def write_as_csv(self, data):
         filename = 'portfolio_allocations'+'.csv'
         with open(filename, 'w+', newline='') as file:
