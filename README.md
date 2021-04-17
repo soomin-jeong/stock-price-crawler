@@ -43,24 +43,24 @@ Inside the crawler_drivers forlder, an instance of chrome and firefox (gecko) dr
 │   ├── spdr-gold-trust.csv
 │   └── usdollar.csv
 ├── crawler_by_asset               -- crawlers          
-│   ├── __init__.py
-│   ├── cash.py
-│   ├── corporate_bonds.py
+│   ├── __init__.py                -- initiate the different crawlers with url and currency
+│   ├── cash.py                    -- cash crawler instance with page and output
+│   ├── corporate_bonds.py         -- corporate bonds crawler instance with page and output
 │   ├── crawler.py                 -- a core trigger to run scrawlers in each asset
-│   ├── global_stocks.py
-│   ├── gold.py
-│   └── soverign_bond.py
+│   ├── global_stocks.py           -- global stocks crawler instance with page and output
+│   ├── gold.py                    -- gold crawler instance with page and output
+│   └── soverign_bond.py           -- soreign bond crawler instance with page and output
 ├── crawler_drivers                -- a set of crawler drivers to offer options for a web browser
-│   ├── chromedriver
-│   └── geckodriver
-├── exercise_statement.pdf    
+│   ├── chromedriver               -- an installed chrome driver for web scraping
+│   └── geckodriver                -- an installed firefox driver for web sraping
+├── exercise_statement.pdf         -- the description of the exercise from moodle
 ├── main.py                        -- a core trigger to start crawling, make porfolios, and analyze their performance
 ├── performance_analysis.py        -- a performance analyzer to evalute cost, volatility, and return
 ├── portfolio_allocation      
-│   ├── portfolio_allocations.csv
+│   ├── portfolio_allocations.csv  -- the generated portfolio as csv export
 │   └── portfolio_generator.py     -- a trigger to generate porfolios
 ├── portfolio_metrics.csv
-├── requirements.txt
+├── requirements.txt               -- the packages which needs to be installed with pip prior to run
 ├── trading_methodologies          -- a porfolio developer (DCA, oneoff, rebalance)
 │   ├── DCA.py
 │   ├── trading_methodologies.csv
