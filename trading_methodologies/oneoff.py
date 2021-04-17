@@ -18,29 +18,26 @@ from datetime import datetime
 #         for x in data:
 #             writer.writerow(x)
 
-def oneoff(startmoney, investment_date):
-    portfoliodf = pd.read_csv('portfolio_allocation/portfolio_allocations.csv')
-    stocksdf = pd.read_csv('crawled_data/amundi-msci-wrld-ae-c.csv')
-    cbondsdf = pd.read_csv('crawled_data/ishares-global-corporate-bond-$.csv')
-    sbondsdf = pd.read_csv('crawled_data/db-x-trackers-ii-global-sovereign-5.csv')
-    golddf = pd.read_csv('crawled_data/spdr-gold-trust.csv')
-    cashdf = pd.read_csv('crawled_data/usdollar.csv')
+def oneoff(startmoney, investment_date, timeframe):
+    portfoliodf = trading_util.get_portfolio_dataframe()
+    stocksdf, cbondsdf, sbondsdf, golddf, cashdf  = trading_util.dataframes_from_crawler()
     date_obj = datetime.strptime(investment_date, '%d/%m/%Y')
     money = startmoney
-    #create trading_methodologies.csv
+    timeframe = timeframe
+   
     #testing with head
-    print("printing stocks dataframe")
-    print(stocksdf.head())
-    print("printing corporate bonds dataframe")
-    print(cbondsdf.head())
-    print("printing sovereign bonds dataframe")
-    print(sbondsdf.head())
-    print("printing gold dataframe")
-    print(golddf.head())
-    print("printing cash dataframe")
-    print(cashdf.head())
-    print("printing portfoliodf")
-    print(portfoliodf.head())
+    # print("printing stocks dataframe")
+    # print(stocksdf.head())
+    # print("printing corporate bonds dataframe")
+    # print(cbondsdf.head())
+    # print("printing sovereign bonds dataframe")
+    # print(sbondsdf.head())
+    # print("printing gold dataframe")
+    # print(golddf.head())
+    # print("printing cash dataframe")
+    # print(cashdf.head())
+    # print("printing portfoliodf")
+    # print(portfoliodf.head())
 
 
     
@@ -76,14 +73,17 @@ def oneoff(startmoney, investment_date):
         cash_units = math.floor(cash_money/cashprice)
         
         #add data to array for later csv writing
-        #Date, Trading Method.,Purchase ID,Asset Alloc.,Asset,Amount($),Asset price,#
-        data.append(tuple([date_obj.strftime('%d/%m/%Y'), "Oneoff", str(index+1) + ".1", int(portf_alloc), "stocks", stock_money, stockprice, stock_units]))
-        data.append(tuple([date_obj.strftime('%d/%m/%Y'), "Oneoff", str(index+1) + ".2", int(portf_alloc), "cbonds", cbond_money, cbondprice, cbond_units]))
-        data.append(tuple([date_obj.strftime('%d/%m/%Y'), "Oneoff", str(index+1) + ".3", int(portf_alloc), "sbonds", sbond_money, sbondprice, sbond_units]))
-        data.append(tuple([date_obj.strftime('%d/%m/%Y'), "Oneoff", str(index+1) + ".4", int(portf_alloc), "gold", gold_money, goldprice, gold_units]))
-        data.append(tuple([date_obj.strftime('%d/%m/%Y'), "Oneoff", str(index+1) + ".5", int(portf_alloc), "cash", cash_money, cashprice, cash_units]))
+        #Date, Trading Method.,Purchase ID,Asset Alloc.,Asset,Amount($),Asset price,#, Timeframe
+        data.append(tuple([date_obj.strftime('%d/%m/%Y'), "Oneoff", str(index+1) + ".ST", int(portf_alloc), "stocks", stock_money, stockprice, stock_units, timeframe]))
+        data.append(tuple([date_obj.strftime('%d/%m/%Y'), "Oneoff", str(index+1) + ".CB", int(portf_alloc), "cbonds", cbond_money, cbondprice, cbond_units, timeframe]))
+        data.append(tuple([date_obj.strftime('%d/%m/%Y'), "Oneoff", str(index+1) + ".SB", int(portf_alloc), "sbonds", sbond_money, sbondprice, sbond_units, timeframe]))
+        data.append(tuple([date_obj.strftime('%d/%m/%Y'), "Oneoff", str(index+1) + ".GO", int(portf_alloc), "gold", gold_money, goldprice, gold_units, timeframe]))
+        data.append(tuple([date_obj.strftime('%d/%m/%Y'), "Oneoff", str(index+1) + ".CA", int(portf_alloc), "cash", cash_money, cashprice, cash_units, timeframe]))
 
     #write trading methodologies to CSV
-    trading_util.write_as_csv(data, "overwrite")
-    #print("stockprice on the date was " + str(stockprice) + " cbond price was " + str(cbondprice) + " the sbond price was  " +str(sbondprice))
+    if timeframe == 1:
+        trading_util.write_as_csv(data, "overwrite")
+    else:
+        trading_util.write_as_csv(data, "append")
+    
     return data, 'Oneoff succeeded'
