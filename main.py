@@ -21,7 +21,7 @@ portfolio_generator.write_as_csv(portfolio)
 #run all trades for 1 month investment period
 
 #one-off
-#data, message = oneoff(100000, '01/01/2020')
+#data, message = oneoff(100000, '01/01/2020', 1)
 #print(message)
 
 #one-off rebalanced
@@ -29,30 +29,31 @@ portfolio_generator.write_as_csv(portfolio)
 
 #DCA
 #setting the flase flag here means we are not rebalancing
-#print(DCA(100000, '01/01/2020', 1, "FALSE"))
-
+print(DCA(100000, '01/01/2020', 1, "FALSE"))
+print ("regular DCA finished")
 
 #DCA rebalanced
 #setting the true flag means we will rebalance
-#print(DCA(100000, '01/01/2020', 1, "TRUE"))
+print(DCA(100000, '01/01/2020', 1, "TRUE"))
+print ("DCA rebal finished")
 
 #run all trades for 3 month investment period
 
 #one-off
-data, message = oneoff(100000, '01/01/2020')
+#data, message = oneoff(100000, '01/01/2020', 3)
 #print(message)
 
 #one-off rebalanced
-oneoff_rebalance(3)
+#oneoff_rebalance(3)
 
 #DCA
 #setting the flase flag here means we are not rebalancing
-print(DCA(100000, '01/01/2020', 3, "FALSE"))
+#print(DCA(100000, '01/01/2020', 3, "FALSE"))
 
 
 #DCA rebalanced
 #setting the true flag means we will rebalance
-print(DCA(100000, '01/01/2020', 3, "TRUE"))
+#print(DCA(100000, '01/01/2020', 3, "TRUE"))
 
 # trading_methodology_filename = 'trading_methodologies.csv'
 
