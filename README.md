@@ -7,6 +7,7 @@ pip install -r requirements.txt
 Please refer to the file 'exercise_statement.pdf' in the repository.
 
 # Architecture
+```
 ├── README.md
 ├── crawled_data               -- craweled dattaset from www.investing.com
 │   ├── amundi-msci-wrld-ae-c.csv
@@ -41,7 +42,7 @@ Please refer to the file 'exercise_statement.pdf' in the repository.
 │   ├── rebalance.py
 │   └── trading_util.py
 └── utils.py
-
+```
 
 # Acknowledgment
 The dataset was scraped from www.investing.com
