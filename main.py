@@ -36,12 +36,30 @@ from trading_methodologies import oneoff, DCA, rebalance, oneoff_rebalance
 #setting the true flag means we will rebalance
 #print(DCA(100000, '01/01/2020', 1, "TRUE"))
 
-trading_methodology_filename = 'trading_methodologies.csv'
+#run all trades for 3 month investment period
+
+#one-off
+data, message = oneoff(100000, '01/01/2020')
+#print(message)
+
+#one-off rebalanced
+oneoff_rebalance(3)
+
+#DCA
+#setting the flase flag here means we are not rebalancing
+print(DCA(100000, '01/01/2020', 3, "FALSE"))
+
+
+#DCA rebalanced
+#setting the true flag means we will rebalance
+print(DCA(100000, '01/01/2020', 3, "TRUE"))
+
+# trading_methodology_filename = 'trading_methodologies.csv'
 
 
 # Performance Analysis
-data = pd.read_csv(trading_methodology_filename, header=0, parse_dates=['Date'])
-pa = PerformanceAnalyst(data)
-pa.run_performance_analysis()
+# data = pd.read_csv(trading_methodology_filename, header=0, parse_dates=['Date'])
+# pa = PerformanceAnalyst(data)
+# pa.run_performance_analysis()
 
 
