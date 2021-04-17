@@ -28,7 +28,21 @@ For the portfolio allocation the portfolio_generator.py and the PortfolioGenerat
 
 Inside the crawled_data folder, the crawled data is stored and saved to the git repository. 
 Inside the crawler_by_asset folder, the initiation python file is stored as well as the different stocks with the page and ouput currency. 
-Inside the crawler_drivers forlder, an instance of chrome and firefox (gecko) driver are stored so you don't need to download them
+Inside the crawler_drivers forlder, an instance of chrome and firefox (gecko) driver are stored so you don't need to download them.
+
+# Functionality about web scraping has been addressed in:
+
+├── crawler_by_asset                       
+│   ├── __init__.py
+│   ├── cash.py                   
+│   ├── corporate_bonds.py        
+│   ├── crawler.py                 
+│   ├── global_stocks.py           
+│   ├── gold.py                   
+│   └── soverign_bond.py
+├── crawler_drivers                
+│   ├── chromedriver         
+│   └── geckodriver       
 
 # Task 2 (Data Generation)
 
