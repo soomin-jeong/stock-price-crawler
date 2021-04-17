@@ -77,11 +77,15 @@ def DCA(startmoney, investment_date, investment_period, rebal):
     date_obj = datetime.datetime.strptime(investment_date, '%d/%m/%Y')
 
     #test if we have data for the whole time period
-    investment_pd_end_obj= add_months(date_obj, investment_period)
+    #If we enter an investment period of 1 we would expect DCA to run only for that one month so we shouldnt add 1
+    investment_pd_end_obj= add_months(date_obj, (investment_period-1))
     date_obj, price = find_data_point("cbonds", investment_pd_end_obj)
     if (date_obj == None) or (price == None):
         return print("the specified date or investment period are outside of the dataset")
     
+    #reset date object to original investment date
+    date_obj = datetime.datetime.strptime(investment_date, '%d/%m/%Y')
+
     #if we have the data we can continue
     #load the portfolio logic file
     portfoliodf = trading_util.get_portfolio_dataframe()
@@ -113,7 +117,7 @@ def DCA(startmoney, investment_date, investment_period, rebal):
         #execute trade with portfolio logic for every month of investment period
         for x in range(0,investment_period):
             
-            print("DCA iterator value is: " + str(x))
+            #print("DCA iterator value is: " + str(x))
             stock_date, stock_price = find_data_point("stocks", add_months(date_obj, x))
             DCA_date = stock_date
             cbond_date, cbond_price = find_data_point("cbonds", DCA_date)
@@ -130,11 +134,11 @@ def DCA(startmoney, investment_date, investment_period, rebal):
             cash_units = math.floor(cash_money/cash_price)
             
             #add data to array for later csv writing
-            data.append(tuple([DCA_date.strftime('%d/%m/%Y'), "DCA", str(portf_alloc) + "ST", portf_alloc, "stocks", stock_money, stock_price, stock_units]))
-            data.append(tuple([DCA_date.strftime('%d/%m/%Y'), "DCA", str(portf_alloc) + "CB", portf_alloc, "cbonds", cbond_money, cbond_price, cbond_units]))
-            data.append(tuple([DCA_date.strftime('%d/%m/%Y'), "DCA", str(portf_alloc) + "SB", portf_alloc, "sbonds", sbond_money, sbond_price, sbond_units]))
-            data.append(tuple([DCA_date.strftime('%d/%m/%Y'), "DCA", str(portf_alloc) + "GO", portf_alloc, "gold", gold_money, gold_price, gold_units]))
-            data.append(tuple([DCA_date.strftime('%d/%m/%Y'), "DCA", str(portf_alloc) + "CA", portf_alloc, "cash", cash_money, cash_price, cash_units]))
+            data.append(tuple([DCA_date.strftime('%d/%m/%Y'), "DCA", str(portf_alloc) + "ST", portf_alloc, "stocks", stock_money, stock_price, stock_units, investment_period]))
+            data.append(tuple([DCA_date.strftime('%d/%m/%Y'), "DCA", str(portf_alloc) + "CB", portf_alloc, "cbonds", cbond_money, cbond_price, cbond_units, investment_period]))
+            data.append(tuple([DCA_date.strftime('%d/%m/%Y'), "DCA", str(portf_alloc) + "SB", portf_alloc, "sbonds", sbond_money, sbond_price, sbond_units, investment_period]))
+            data.append(tuple([DCA_date.strftime('%d/%m/%Y'), "DCA", str(portf_alloc) + "GO", portf_alloc, "gold", gold_money, gold_price, gold_units, investment_period]))
+            data.append(tuple([DCA_date.strftime('%d/%m/%Y'), "DCA", str(portf_alloc) + "CA", portf_alloc, "cash", cash_money, cash_price, cash_units, investment_period]))
             
             #if we want to rebalance then we need to make sure to rebalance the whole portfolio
             if rebal == "TRUE":
@@ -234,12 +238,12 @@ def DCA(startmoney, investment_date, investment_period, rebal):
 
                 previous_rebalance = previous_rebalance.append(trade_data, ignore_index=True)
                 #Add to data list to be written to CSV
-                data.append(tuple([date_of_rebalance.strftime('%d/%m/%Y'), "DCA-rebalance", str(portf_alloc) + ".ST", portf_alloc, "stocks", stock_money, stock_price, stock_units]))
-                data.append(tuple([date_of_rebalance.strftime('%d/%m/%Y'), "DCA-rebalance", str(portf_alloc) + ".CB", portf_alloc, "cbonds", cbond_money, cbond_price, cbond_units]))
-                data.append(tuple([date_of_rebalance.strftime('%d/%m/%Y'), "DCA-rebalance", str(portf_alloc) + ".SB", portf_alloc, "sbonds", sbond_money, sbond_price, sbond_units]))
-                data.append(tuple([date_of_rebalance.strftime('%d/%m/%Y'), "DCA-rebalance", str(portf_alloc) + ".GO", portf_alloc, "gold", gold_money, gold_price, gold_units]))
-                data.append(tuple([date_of_rebalance.strftime('%d/%m/%Y'), "DCA-rebalance", str(portf_alloc) + ".CA", portf_alloc, "cash", cash_money, cash_price, cash_units]))
-
+                data.append(tuple([date_of_rebalance.strftime('%d/%m/%Y'), "DCA-rebalance", int(portf_alloc) + ".ST", portf_alloc, "stocks", stock_money, stock_price, stock_units, investment_period]))
+                data.append(tuple([date_of_rebalance.strftime('%d/%m/%Y'), "DCA-rebalance", int(portf_alloc) + ".CB", portf_alloc, "cbonds", cbond_money, cbond_price, cbond_units, investment_period]))
+                data.append(tuple([date_of_rebalance.strftime('%d/%m/%Y'), "DCA-rebalance", int(portf_alloc) + ".SB", portf_alloc, "sbonds", sbond_money, sbond_price, sbond_units, investment_period]))
+                data.append(tuple([date_of_rebalance.strftime('%d/%m/%Y'), "DCA-rebalance", int(portf_alloc) + ".GO", portf_alloc, "gold", gold_money, gold_price, gold_units, investment_period]))
+                data.append(tuple([date_of_rebalance.strftime('%d/%m/%Y'), "DCA-rebalance", int(portf_alloc) + ".CA", portf_alloc, "cash", cash_money, cash_price, cash_units, investment_period]))
+                print("current portfolio ID is" + str(portf_alloc))
         trading_util.write_as_csv(data, "append")
     return 'DCA has succeeded'
 
