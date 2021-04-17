@@ -6,6 +6,19 @@ import pandas as pd
 import math
 import calendar
 
+#loads all the csv files of crawled data for each asset and returns them as a pandas dataframe
+def dataframes_from_crawler():
+    stocks_data_df = pd.read_csv('./crawled_data/amundi-msci-wrld-ae-c.csv')
+    cbonds_data_df = pd.read_csv('./crawled_data/ishares-global-corporate-bond-$.csv')
+    sbonds_data_df = pd.read_csv('./crawled_data/db-x-trackers-ii-global-sovereign-5.csv')
+    gold_data_df = pd.read_csv('./crawled_data/spdr-gold-trust.csv')
+    cash_data_df = pd.read_csv('./crawled_data/usdollar.csv')
+    return stocks_data_df, cbonds_data_df, sbonds_data_df, gold_data_df, cash_data_df
+
+def get_portfolio_dataframe():
+    portfolio_df = pd.read_csv('portfolio_allocation/portfolio_allocations.csv')
+    return portfolio_df
+
 def write_as_csv(data, write_mode): 
     filename = 'trading_methodologies.csv'  
     #pass overwrite as argument to write the contents fresh
@@ -36,7 +49,7 @@ def add_days(sourcedate, days_delta):
     #date_1 = datetime.datetime.strptime(sourcedate, "%d/%m/%Y")
     end_date = sourcedate + datetime.timedelta(days=days_delta)
     return end_date
-
+#finds the data for a specific date and asset. If the date is on a weekend it finds the next available data point
 def find_data_point(asset_class, sourcedate):
     date_on_date = None
     price_on_date = None

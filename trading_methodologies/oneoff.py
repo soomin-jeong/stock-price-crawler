@@ -19,12 +19,9 @@ from datetime import datetime
 #             writer.writerow(x)
 
 def oneoff(startmoney, investment_date):
-    portfoliodf = pd.read_csv('portfolio_allocation/portfolio_allocations.csv')
-    stocksdf = pd.read_csv('crawled_data/amundi-msci-wrld-ae-c.csv')
-    cbondsdf = pd.read_csv('crawled_data/ishares-global-corporate-bond-$.csv')
-    sbondsdf = pd.read_csv('crawled_data/db-x-trackers-ii-global-sovereign-5.csv')
-    golddf = pd.read_csv('crawled_data/spdr-gold-trust.csv')
-    cashdf = pd.read_csv('crawled_data/usdollar.csv')
+    
+    portfoliodf = trading_util.get_portfolio_dataframe()
+    stocksdf,cbondsdf, sbondsdf, golddf, cashdf = trading_util.dataframes_from_crawler()
     date_obj = datetime.strptime(investment_date, '%d/%m/%Y')
     money = startmoney
     #create trading_methodologies.csv

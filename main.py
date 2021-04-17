@@ -6,7 +6,7 @@ from crawler_by_asset import crawlers
 from portfolio_allocation.portfolio_generator import portfolio_generator
 from trading_methodologies import oneoff, DCA, rebalance, oneoff_rebalance
 
-# dDeactivate cralwers as they are complete
+# Deactivate cralwers as they are complete
 # for each in crawlers:
 #     each.run_crawler()
 
@@ -16,8 +16,8 @@ from trading_methodologies import oneoff, DCA, rebalance, oneoff_rebalance
 
 #run trading methodology
 #one-off
-# data, message = oneoff(10000, '01/03/2020')
-# print(message)
+#data, message = oneoff(10000, '01/03/2020')
+#print(message)
 
 
 #one-off rebalanced
@@ -28,12 +28,12 @@ from trading_methodologies import oneoff, DCA, rebalance, oneoff_rebalance
 
 #DCA rebalanced
 # print(DCA(10000, '01/03/2020', 2, "TRUE"))
-trading_methodology_filename = 'trading_methodologies.csv'
+#trading_methodology_filename = 'trading_methodologies.csv'
 
 
 # Performance Analysis
-data = pd.read_csv(trading_methodology_filename, header=0, parse_dates=['Date'])
-pa = PerformanceAnalyst(data)
-pa.run_performance_analysis()
+#data = pd.read_csv(trading_methodology_filename, header=0, parse_dates=['Date'])
+#pa = PerformanceAnalyst(data)
+#pa.run_performance_analysis()
 
 
