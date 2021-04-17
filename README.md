@@ -9,7 +9,7 @@ Please refer to the file 'exercise_statement.pdf' in the repository.
 # Architecture
 ```
 ├── README.md
-├── crawled_data               -- craweled dattaset from www.investing.com
+├── crawled_data                   -- craweled dattaset from www.investing.com
 │   ├── amundi-msci-wrld-ae-c.csv
 │   ├── db-x-trackers-ii-global-sovereign-5.csv
 │   ├── ishares-global-corporate-bond-$.csv
