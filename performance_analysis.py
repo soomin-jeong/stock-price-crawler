@@ -72,7 +72,7 @@ class PerformanceAnalyst:
         performance_df['return'] = self.asset_return
         performance_df.index = list(self.trade_methods)
 
-        filepath = 'portfolio_metrics.csv'
+        filepath = 'trading_methodologies/portfolio_metrics.csv'
         write_as_csv(filepath, performance_df)
         return performance_df
 
