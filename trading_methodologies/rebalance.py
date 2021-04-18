@@ -12,7 +12,6 @@ def oneoff_rebalance(investment_period):
     stocksdf,cbondsdf, sbondsdf, golddf, cashdf =  trading_util.dataframes_from_crawler()
    
     #load all trade data which was made with oneoff method
-    #to-do: add and investment period is the same
     #tradedatadf.loc[(tradedatadf['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer])) & (tradedatadf['Asset'] == "stocks")].iloc[0]['#']
     oneoff_trades_df = tradedatadf.loc[(tradedatadf['Trading Method.'] == "Oneoff") & (tradedatadf['Timeframe'] == investment_period)]
     
@@ -49,6 +48,7 @@ def oneoff_rebalance(investment_period):
         #print("the stored value of the portfolio at pointer is " + str(portfolio_allocation_IDs[pointer]))
         #print(portfolio_allocation_IDs[pointer])
 
+        
         pointer = i-1
         target_alloc_df = portfoliodf.loc[portfoliodf['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer])]
         target_alloc_stocks = target_alloc_df.iloc[0]['ST']
@@ -58,17 +58,17 @@ def oneoff_rebalance(investment_period):
         target_alloc_cash = target_alloc_df.iloc[0]['CA']
 
         #get trade amount for each allocation
-        initial_quant_stocks = tradedatadf.loc[(tradedatadf['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer])) & (tradedatadf['Asset'] == "stocks")].iloc[0]['#']
-        initial_quant_cbonds = tradedatadf.loc[(tradedatadf['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer])) & (tradedatadf['Asset'] == "cbonds")].iloc[0]['#']
-        initial_quant_sbonds = tradedatadf.loc[(tradedatadf['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer])) & (tradedatadf['Asset'] == "sbonds")].iloc[0]['#']
-        initial_quant_gold = tradedatadf.loc[(tradedatadf['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer])) & (tradedatadf['Asset'] == "gold")].iloc[0]['#']
-        initial_quant_cash = tradedatadf.loc[(tradedatadf['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer])) & (tradedatadf['Asset'] == "cash")].iloc[0]['#']
+        initial_quant_stocks = tradedatadf.loc[(tradedatadf['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer]))].iloc[0]['stock_units']
+        initial_quant_cbonds = tradedatadf.loc[(tradedatadf['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer]))].iloc[0]['cbond_units']
+        initial_quant_sbonds = tradedatadf.loc[(tradedatadf['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer]))].iloc[0]['sbond_units']
+        initial_quant_gold = tradedatadf.loc[(tradedatadf['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer]))].iloc[0]['gold_units']
+        initial_quant_cash = tradedatadf.loc[(tradedatadf['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer]))].iloc[0]['cash_units']
         
         ##uncomment for debugging
         #print("Your current portfolio consists of " + str(initial_quant_stocks) + " stock units " + str(initial_quant_cbonds)+ " cbond units " + str(initial_quant_sbonds) +" sbond units " + str(initial_quant_gold) + " gold units " + str(initial_quant_cash) + " cash units")
 
         #get initial investment date
-        initial_date = tradedatadf.loc[(tradedatadf['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer])) & (tradedatadf['Asset'] == "cbonds")].iloc[0]['Date']
+        initial_date = tradedatadf.loc[(tradedatadf['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer]))].iloc[0]['Date']
         initial_date_obj = datetime.datetime.strptime(initial_date, '%d/%m/%Y')
         #rebalance for the first time in the same month on the 15th
         rebalance_initial_date = datetime.date(initial_date_obj.year, initial_date_obj.month, 15)
@@ -100,33 +100,31 @@ def oneoff_rebalance(investment_period):
             #if we previously rebalanced we need to use that data and not the original trade data
             #get trade amount for each rebalance 
             if previous_rebalance.empty == False:
-                initial_quant_stocks = previous_rebalance.loc[(previous_rebalance['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer])) & (previous_rebalance['Asset'] == "stocks")].iloc[0]['#']
-                initial_quant_cbonds = previous_rebalance.loc[(previous_rebalance['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer])) & (previous_rebalance['Asset'] == "cbonds")].iloc[0]['#']
-                initial_quant_sbonds = previous_rebalance.loc[(previous_rebalance['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer])) & (previous_rebalance['Asset'] == "sbonds")].iloc[0]['#']
-                initial_quant_gold = previous_rebalance.loc[(previous_rebalance['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer])) & (previous_rebalance['Asset'] == "gold")].iloc[0]['#']
-                initial_quant_cash = previous_rebalance.loc[(previous_rebalance['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer])) & (previous_rebalance['Asset'] == "cash")].iloc[0]['#']
+               
+                initial_quant_stocks = previous_rebalance.loc[(previous_rebalance['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer]))].iloc[0]['stock_units']
+                initial_quant_cbonds = previous_rebalance.loc[(previous_rebalance['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer]))].iloc[0]['cbond_units']
+                initial_quant_sbonds = previous_rebalance.loc[(previous_rebalance['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer]))].iloc[0]['sbond_units']
+                initial_quant_gold = previous_rebalance.loc[(previous_rebalance['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer]))].iloc[0]['gold_units']
+                initial_quant_cash = previous_rebalance.loc[(previous_rebalance['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer]))].iloc[0]['cash_units']
                 
                 ##uncomment for debugging
                 #print("Your portfolio was previously rebalanced. It consists of " + str(initial_quant_stocks) + " stock units " + str(initial_quant_cbonds)+ " cbond units " + str(initial_quant_sbonds) +" sbond units " + str(initial_quant_gold) + " gold units " + str(initial_quant_cash) + " cash units")
             
             #we need to write the original trade to the csv as a rebalance trade too so that it will be counted in our performance analysis
             if previous_rebalance.empty == True:
-                rebal_value_of_stocks = tradedatadf.loc[(tradedatadf['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer])) & (tradedatadf['Asset'] == "stocks")].iloc[0]['Amount($)']
-                price_of_rebalance_stocks = tradedatadf.loc[(tradedatadf['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer])) & (tradedatadf['Asset'] == "stocks")].iloc[0]['Asset price']
-                rebal_value_of_cbonds = tradedatadf.loc[(tradedatadf['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer])) & (tradedatadf['Asset'] == "cbonds")].iloc[0]['Amount($)']
-                price_of_rebalance_cbonds = tradedatadf.loc[(tradedatadf['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer])) & (tradedatadf['Asset'] == "cbonds")].iloc[0]['Asset price']
-                rebal_value_of_sbonds = tradedatadf.loc[(tradedatadf['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer])) & (tradedatadf['Asset'] == "sbonds")].iloc[0]['Amount($)']
-                price_of_rebalance_sbonds = tradedatadf.loc[(tradedatadf['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer])) & (tradedatadf['Asset'] == "sbonds")].iloc[0]['Asset price']
-                rebal_value_of_gold = tradedatadf.loc[(tradedatadf['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer])) & (tradedatadf['Asset'] == "gold")].iloc[0]['Amount($)']
-                price_of_rebalance_gold = tradedatadf.loc[(tradedatadf['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer])) & (tradedatadf['Asset'] == "gold")].iloc[0]['Asset price']
-                rebal_value_of_cash = tradedatadf.loc[(tradedatadf['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer])) & (tradedatadf['Asset'] == "cash")].iloc[0]['Amount($)']
-                price_of_rebalance_cash = tradedatadf.loc[(tradedatadf['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer])) & (tradedatadf['Asset'] == "cash")].iloc[0]['Asset price']
+                rebal_value_of_stocks = tradedatadf.loc[(tradedatadf['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer]))].iloc[0]['stock_money']
+                price_of_rebalance_stocks = tradedatadf.loc[(tradedatadf['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer]))].iloc[0]['stock_price']
+                rebal_value_of_cbonds = tradedatadf.loc[(tradedatadf['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer]))].iloc[0]['cbond_money']
+                price_of_rebalance_cbonds = tradedatadf.loc[(tradedatadf['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer]))].iloc[0]['cbond_price']
+                rebal_value_of_sbonds = tradedatadf.loc[(tradedatadf['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer]))].iloc[0]['sbond_money']
+                price_of_rebalance_sbonds = tradedatadf.loc[(tradedatadf['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer]))].iloc[0]['sbond_price']
+                rebal_value_of_gold = tradedatadf.loc[(tradedatadf['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer]))].iloc[0]['gold_money']
+                price_of_rebalance_gold = tradedatadf.loc[(tradedatadf['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer]))].iloc[0]['gold_price']
+                rebal_value_of_cash = tradedatadf.loc[(tradedatadf['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer]))].iloc[0]['cash_money']
+                price_of_rebalance_cash = tradedatadf.loc[(tradedatadf['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer]))].iloc[0]['cash_price']
                 
-                data.append(tuple([initial_date_obj.strftime("%d/%m/%Y"), "oneoff-rebal.", str(portfolio_allocation_IDs[pointer]) +"."+ str(y) + ".st", portfolio_allocation_IDs[pointer], "stocks", rebal_value_of_stocks, price_of_rebalance_stocks, initial_quant_stocks, investment_period]))
-                data.append(tuple([initial_date_obj.strftime("%d/%m/%Y"), "oneoff-rebal.", str(portfolio_allocation_IDs[pointer]) +"."+ str(y) + ".cb", portfolio_allocation_IDs[pointer], "cbonds", rebal_value_of_cbonds, price_of_rebalance_cbonds, initial_quant_cbonds, investment_period]))
-                data.append(tuple([initial_date_obj.strftime("%d/%m/%Y"), "oneoff-rebal.", str(portfolio_allocation_IDs[pointer]) +"."+ str(y) + ".sb", portfolio_allocation_IDs[pointer], "sbonds", rebal_value_of_sbonds, price_of_rebalance_sbonds, initial_quant_sbonds, investment_period]))
-                data.append(tuple([initial_date_obj.strftime("%d/%m/%Y"), "oneoff-rebal.", str(portfolio_allocation_IDs[pointer]) +"."+ str(y) + ".go", portfolio_allocation_IDs[pointer], "gold", rebal_value_of_gold, price_of_rebalance_gold, initial_quant_gold, investment_period]))
-                data.append(tuple([initial_date_obj.strftime("%d/%m/%Y"), "oneoff-rebal.", str(portfolio_allocation_IDs[pointer]) +"."+ str(y) + ".ca", portfolio_allocation_IDs[pointer], "cash", rebal_value_of_cash, 1, initial_quant_cash, investment_period]))
+                #"Date", "Trading Method.", "Purchase ID", "Asset Alloc.", "stock_money", "stock_price", "stock_units", "cbond_money", "cbond_price", "cbond_units", "sbond_money", "sbond_price", "sbond_units", "gold_money", "gold_price", "gold_units", "cash_money", "cash_price", "cash_units", "Timeframe"
+                data.append(tuple([initial_date_obj.strftime("%d/%m/%Y"), "oneoff-rebal.", str(portfolio_allocation_IDs[pointer]) +"."+ str(int(y)) + ".ALL", portfolio_allocation_IDs[pointer], rebal_value_of_stocks, price_of_rebalance_stocks, initial_quant_stocks, rebal_value_of_cbonds, price_of_rebalance_cbonds, initial_quant_cbonds, rebal_value_of_sbonds, price_of_rebalance_sbonds, initial_quant_sbonds, rebal_value_of_gold, price_of_rebalance_gold, initial_quant_gold, rebal_value_of_cash, 1, initial_quant_cash, investment_period]))
             #get the current prices/values of assets
             date_of_rebalance, price_of_rebalance_cbonds = trading_util.find_data_point("cbonds", trading_util.add_months(rebalance_initial_date, y))
             
@@ -289,12 +287,8 @@ def oneoff_rebalance(investment_period):
             #Write trade to data list for later writing to CSV
             ##uncomment for debugging
             #print(final_quant_stock, final_quant_cbonds, final_quant_sbonds, final_quant_gold, final_quant_cash)
-            
-            data.append(tuple([date_of_rebalance.strftime("%d/%m/%Y"), "oneoff-rebal.", str(portfolio_allocation_IDs[pointer]) +"."+ str(y) + ".ST", int(portfolio_allocation_IDs[pointer]), "stocks", rebal_value_of_stocks, price_of_rebalance_stocks, final_quant_stock, investment_period]))
-            data.append(tuple([date_of_rebalance.strftime("%d/%m/%Y"), "oneoff-rebal.", str(portfolio_allocation_IDs[pointer]) +"."+ str(y) + ".CB", int(portfolio_allocation_IDs[pointer]), "cbonds", rebal_value_of_cbonds, price_of_rebalance_cbonds, final_quant_cbonds, investment_period]))
-            data.append(tuple([date_of_rebalance.strftime("%d/%m/%Y"), "oneoff-rebal.", str(portfolio_allocation_IDs[pointer]) +"."+ str(y) + ".SB", int(portfolio_allocation_IDs[pointer]), "sbonds", rebal_value_of_sbonds, price_of_rebalance_sbonds, final_quant_sbonds, investment_period]))
-            data.append(tuple([date_of_rebalance.strftime("%d/%m/%Y"), "oneoff-rebal.", str(portfolio_allocation_IDs[pointer]) +"."+ str(y) + ".GO", int(portfolio_allocation_IDs[pointer]), "gold", rebal_value_of_gold, price_of_rebalance_gold, final_quant_gold, investment_period]))
-            data.append(tuple([date_of_rebalance.strftime("%d/%m/%Y"), "oneoff-rebal.", str(portfolio_allocation_IDs[pointer]) +"."+ str(y) + ".CA", int(portfolio_allocation_IDs[pointer]), "cash", rebal_value_of_cash, 1, final_quant_cash, investment_period]))
+            #"Date", "Trading Method.", "Purchase ID", "Asset Alloc.", "stock_money", "stock_price", "stock_units", "cbond_money", "cbond_price", "cbond_units", "sbond_money", "sbond_price", "sbond_units", "gold_money", "gold_price", "gold_units", "cash_money", "cash_price", "cash_units", "Timeframe"
+            data.append(tuple([date_of_rebalance.strftime("%d/%m/%Y"), "oneoff-rebal.", str(portfolio_allocation_IDs[pointer]) +"."+ str(y) + ".ALL", int(portfolio_allocation_IDs[pointer]), rebal_value_of_stocks, price_of_rebalance_stocks, final_quant_stock, rebal_value_of_cbonds, price_of_rebalance_cbonds, final_quant_cbonds, rebal_value_of_sbonds, price_of_rebalance_sbonds, final_quant_sbonds, rebal_value_of_gold, price_of_rebalance_gold, final_quant_gold, rebal_value_of_cash, 1, final_quant_cash, investment_period]))
             trading_util.write_as_csv(data, "append")
 
     #if we where to run this to get all 150k lines every time it would be more efficient to take write csv out of the for loop (unindent one lvl)

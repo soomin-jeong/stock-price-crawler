@@ -25,7 +25,7 @@ def write_as_csv(data, write_mode):
     if write_mode == "overwrite":
         with open(filename, 'w+', newline='') as file:
             writer = csv.writer(file)
-            writer.writerow(["Date", "Trading Method.", "Purchase ID", "Asset Alloc.", "Asset", "Amount($)", "Asset price", "#", "Timeframe"])
+            writer.writerow(["Date", "Trading Method.", "Purchase ID", "Asset Alloc.", "stock_money", "stock_price", "stock_units", "cbond_money", "cbond_price", "cbond_units", "sbond_money", "sbond_price", "sbond_units", "gold_money", "gold_price", "gold_units", "cash_money", "cash_price", "cash_units", "Timeframe"])
             for x in data:
                 writer.writerow(x)
     #or pass append if you just want to write to the end of the file

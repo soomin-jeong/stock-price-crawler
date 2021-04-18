@@ -81,11 +81,8 @@ def DCA(startmoney, investment_date, investment_period, rebal):
                 trade_type = "DCA"
             #add data to array for later csv writing
             data = []
-            data.append(tuple([DCA_date.strftime('%d/%m/%Y'), trade_type, str(int(portf_alloc)) + ".ST", int(portf_alloc), "stocks", stock_money, stock_price, int(stock_units), investment_period]))
-            data.append(tuple([DCA_date.strftime('%d/%m/%Y'), trade_type, str(int(portf_alloc)) + ".CB", int(portf_alloc), "cbonds", cbond_money, cbond_price, int(cbond_units), investment_period]))
-            data.append(tuple([DCA_date.strftime('%d/%m/%Y'), trade_type, str(int(portf_alloc)) + ".SB", int(portf_alloc), "sbonds", sbond_money, sbond_price, int(sbond_units), investment_period]))
-            data.append(tuple([DCA_date.strftime('%d/%m/%Y'), trade_type, str(int(portf_alloc)) + ".GO", int(portf_alloc), "gold", gold_money, gold_price, int(gold_units), investment_period]))
-            data.append(tuple([DCA_date.strftime('%d/%m/%Y'), trade_type, str(int(portf_alloc)) + ".CA", int(portf_alloc), "cash", cash_money, cash_price, int(cash_units), investment_period]))
+            #"Date", "Trading Method.", "Purchase ID", "Asset Alloc.", "stock_money", "stock_price", "stock_units", "cbond_money", "cbond_price", "cbond_units", "sbond_money", "sbond_price", "sbond_units", "gold_money", "gold_price", "gold_units", "cash_money", "cash_price", "cash_units", "Timeframe"
+            data.append(tuple([DCA_date.strftime('%d/%m/%Y'), trade_type, str(int(portf_alloc)) + ".ALL", int(portf_alloc), stock_money, stock_price, int(stock_units), cbond_money, cbond_price, int(cbond_units), sbond_money, sbond_price, int(sbond_units), gold_money, gold_price, int(gold_units), cash_money, cash_price, int(cash_units), investment_period]))
             trading_util.write_as_csv(data, "append")
 
             #write all data to a single line
@@ -193,11 +190,8 @@ def DCA(startmoney, investment_date, investment_period, rebal):
                 previous_rebalance = previous_rebalance.append(trade_data, ignore_index=True)
                 #Add to data list to be written to CSV
                 data = []
-                data.append(tuple([date_of_rebalance.strftime('%d/%m/%Y'), "DCA-rebalance", str(int(portf_alloc)) + ".ST", int(portf_alloc), "stocks", stock_money, stock_price, int(stock_units), investment_period]))
-                data.append(tuple([date_of_rebalance.strftime('%d/%m/%Y'), "DCA-rebalance", str(int(portf_alloc)) + ".CB", int(portf_alloc), "cbonds", cbond_money, cbond_price, int(cbond_units), investment_period]))
-                data.append(tuple([date_of_rebalance.strftime('%d/%m/%Y'), "DCA-rebalance", str(int(portf_alloc)) + ".SB", int(portf_alloc), "sbonds", sbond_money, sbond_price, int(sbond_units), investment_period]))
-                data.append(tuple([date_of_rebalance.strftime('%d/%m/%Y'), "DCA-rebalance", str(int(portf_alloc)) + ".GO", int(portf_alloc), "gold", gold_money, gold_price, int(gold_units), investment_period]))
-                data.append(tuple([date_of_rebalance.strftime('%d/%m/%Y'), "DCA-rebalance", str(int(portf_alloc)) + ".CA", int(portf_alloc), "cash", cash_money, cash_price, int(cash_units), investment_period]))
+                #"Date", "Trading Method.", "Purchase ID", "Asset Alloc.", "stock_money", "stock_price", "stock_units", "cbond_money", "cbond_price", "cbond_units", "sbond_money", "sbond_price", "sbond_units", "gold_money", "gold_price", "gold_units", "cash_money", "cash_price", "cash_units", "Timeframe"
+                data.append(tuple([date_of_rebalance.strftime('%d/%m/%Y'), "DCA-rebalance", str(int(portf_alloc)) + ".ALL", int(portf_alloc), stock_money, stock_price, int(stock_units), cbond_money, cbond_price, int(cbond_units), gold_money, gold_price, int(gold_units), gold_money, gold_price, int(gold_units), cash_money, cash_price, int(cash_units), investment_period]))
                 ##uncomment for debugging
                 #print("current portfolio ID is" + str(portf_alloc))
                 ##for testing it may be helpful to write to the csv within the loop
