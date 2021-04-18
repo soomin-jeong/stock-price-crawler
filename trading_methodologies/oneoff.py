@@ -79,12 +79,23 @@ def oneoff(startmoney, investment_date, timeframe):
         # data.append(tuple([date_obj.strftime('%d/%m/%Y'), "Oneoff", str(index+1) + ".SB", int(portf_alloc), "sbonds", sbond_money, sbondprice, sbond_units, timeframe]))
         # data.append(tuple([date_obj.strftime('%d/%m/%Y'), "Oneoff", str(index+1) + ".GO", int(portf_alloc), "gold", gold_money, goldprice, gold_units, timeframe]))
         # data.append(tuple([date_obj.strftime('%d/%m/%Y'), "Oneoff", str(index+1) + ".CA", int(portf_alloc), "cash", cash_money, cashprice, cash_units, timeframe]))
+        
+        ##trying to improve efficiency of program
         #write all data to a single line
         data.append(tuple([date_obj.strftime('%d/%m/%Y'), "Oneoff", str(index+1) + ".ST", int(portf_alloc), "stocks", stock_money, stockprice, stock_units, "cbonds", cbond_money, cbondprice, cbond_units, "sbonds", sbond_money, sbondprice, sbond_units, "gold", gold_money, goldprice, gold_units, "cash", cash_money, cashprice, cash_units, timeframe]))
-    #write trading methodologies to CSV
-    if timeframe == 1:
-        trading_util.write_as_csv(data, "overwrite")
-    else:
-        trading_util.write_as_csv(data, "append")
+        #try to write to CSV after every line so object doesnt take up tons of memory
+        data = (tuple([date_obj.strftime('%d/%m/%Y'), "Oneoff", str(index+1) + ".ST", int(portf_alloc), "stocks", stock_money, stockprice, stock_units, "cbonds", cbond_money, cbondprice, cbond_units, "sbonds", sbond_money, sbondprice, sbond_units, "gold", gold_money, goldprice, gold_units, "cash", cash_money, cashprice, cash_units, timeframe]))
+        #write trading methodologies to CSV
+        if index == 0 and timeframe == 1:
+            trading_util.write_as_csv(data, "overwrite")
+        else:
+            trading_util.write_as_csv(data, "append")
+    
+    
+    #write trading methodologies to CSV after all lines have been generated
+    # if timeframe == 1:
+    #     trading_util.write_as_csv(data, "overwrite")
+    # else:
+    #     trading_util.write_as_csv(data, "append")
     
     return data, 'Oneoff succeeded'
