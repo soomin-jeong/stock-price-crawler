@@ -23,7 +23,7 @@ def oneoff(startmoney, investment_date, timeframe):
     stocksdf, cbondsdf, sbondsdf, golddf, cashdf  = trading_util.dataframes_from_crawler()
     date_obj = datetime.strptime(investment_date, '%d/%m/%Y')
     money = startmoney
-    timeframe = timeframe
+    timeframe = int(timeframe)
    
     #testing with head
     # print("printing stocks dataframe")
@@ -81,7 +81,7 @@ def oneoff(startmoney, investment_date, timeframe):
         data.append(tuple([date_obj.strftime('%d/%m/%Y'), "Oneoff", str(index+1) + ".CA", int(portf_alloc), "cash", cash_money, cashprice, cash_units, timeframe]))
 
     #write trading methodologies to CSV
-    if timeframe == 1:
+    if timeframe == 1 and index == 0:
         trading_util.write_as_csv(data, "overwrite")
     else:
         trading_util.write_as_csv(data, "append")
