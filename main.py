@@ -25,7 +25,7 @@ from trading_methodologies import oneoff, DCA, rebalance, oneoff_rebalance
 #uncomment these lines to run all trades for 1 month investment period
 
 #one-off
-data, message = oneoff(100000, '01/01/2020', 1)
+#data, message = oneoff(100000, '01/01/2020', 1)
 #print(message)
 
 #one-off rebalanced

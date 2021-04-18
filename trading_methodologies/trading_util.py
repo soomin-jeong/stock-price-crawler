@@ -25,16 +25,25 @@ def write_as_csv(data, write_mode):
     if write_mode == "overwrite":
         with open(filename, 'w+', newline='') as file:
             writer = csv.writer(file)
-            writer.writerow(["Date", "Trading Method.", "Purchase ID", "Asset Alloc.", "Asset", "Amount($)", "Asset price", "#", "Timeframe"])
-            for x in data:
-                writer.writerow(x)
+            writer.writerow(["Date", "Trading Method.", "Purchase ID", "Asset Alloc.", "stock_money", "stockprice", "stock_units", "cbond_money", "cbondprice", "cbond_units", "sbond_money", "sbondprice", "sbond_units", "gold_money", "goldprice", "gold_units", "cash_money", "cashprice", "cash_units", "Timeframe"])
+            #depending on whether we want to write to the csv line by line or pass an single line we use this try except
+            try:
+                #print("entered try")
+                for x in data:
+                    writer.writerow(x)
+                    #print("entered for in try")
+            except: 
+                #print("entered except")
+                writer.writerow(data)
     #or pass append if you just want to write to the end of the file
     elif write_mode == "append":
         with open(filename, 'a+', newline='') as file:
             writer = csv.writer(file)
-            for x in data:
-                writer.writerow(x)
-
+            try:
+                for x in data:
+                    writer.writerow(x)
+            except: 
+                writer.writerow(data)
 #add months adds months while dealing with end of the month cases where 31/30th is given as days input
 def add_months(sourcedate, months):
     month = sourcedate.month - 1 + months
@@ -97,7 +106,7 @@ def find_data_point(asset_class, sourcedate):
                 price_on_date =  info_for_date.iloc[0]['price']
                 date_on_date = new_date
                 ##uncomment for debugging
-                #print ("The date you're looking for may be on the weekend. On the date " + new_date.strftime('%d/%m/%Y') + " the asset " + str(asset_class) + " cost " + str(price_on_date))
+                print ("The date you're looking for may be on the weekend. On the date " + new_date.strftime('%d/%m/%Y') + " the asset " + str(asset_class) + " cost " + str(price_on_date))
                 break
             except:
                 print("there is no data for " + new_date.strftime('%d/%m/%Y'))

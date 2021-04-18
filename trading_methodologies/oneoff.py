@@ -47,7 +47,7 @@ def oneoff(startmoney, investment_date, timeframe):
     goldondate,  goldprice = trading_util.find_data_point("gold", date_obj)
     #cash price is 1 as per instructions
     cashprice = 1
-    data = []
+   
 
     for index, row in portfoliodf.iterrows():
         #get percent of each asset in portfolio
@@ -82,9 +82,10 @@ def oneoff(startmoney, investment_date, timeframe):
         
         ##trying to improve efficiency of program
         #write all data to a single line
-        data.append(tuple([date_obj.strftime('%d/%m/%Y'), "Oneoff", str(index+1) + ".ST", int(portf_alloc), "stocks", stock_money, stockprice, stock_units, "cbonds", cbond_money, cbondprice, cbond_units, "sbonds", sbond_money, sbondprice, sbond_units, "gold", gold_money, goldprice, gold_units, "cash", cash_money, cashprice, cash_units, timeframe]))
+        #data.append(tuple([date_obj.strftime('%d/%m/%Y'), "Oneoff", str(index+1) + ".ST", int(portf_alloc), "stocks", stock_money, stockprice, stock_units, "cbonds", cbond_money, cbondprice, cbond_units, "sbonds", sbond_money, sbondprice, sbond_units, "gold", gold_money, goldprice, gold_units, "cash", cash_money, cashprice, cash_units, timeframe]))
         #try to write to CSV after every line so object doesnt take up tons of memory
-        data = (tuple([date_obj.strftime('%d/%m/%Y'), "Oneoff", str(index+1) + ".ST", int(portf_alloc), "stocks", stock_money, stockprice, stock_units, "cbonds", cbond_money, cbondprice, cbond_units, "sbonds", sbond_money, sbondprice, sbond_units, "gold", gold_money, goldprice, gold_units, "cash", cash_money, cashprice, cash_units, timeframe]))
+        data = []
+        data.append(tuple([date_obj.strftime('%d/%m/%Y'), "Oneoff", str(index+1) + ".ALL", int(portf_alloc), stock_money, stockprice, stock_units, cbond_money, cbondprice, cbond_units, sbond_money, sbondprice, sbond_units, gold_money, goldprice, gold_units, cash_money, cashprice, cash_units, timeframe]))
         #write trading methodologies to CSV
         if index == 0 and timeframe == 1:
             trading_util.write_as_csv(data, "overwrite")
