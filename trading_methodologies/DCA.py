@@ -8,7 +8,6 @@ import calendar
 import trading_methodologies.trading_util as trading_util
 import trading_methodologies.rebalance as rebalancer
 
-
 def DCA(startmoney, investment_date, investment_period, rebal):
 
     #floored division to find the amount to be invested per month
@@ -80,6 +79,11 @@ def DCA(startmoney, investment_date, investment_period, rebal):
             data.append(tuple([DCA_date.strftime('%d/%m/%Y'), "DCA", str(portf_alloc) + "SB", portf_alloc, "sbonds", sbond_money, sbond_price, sbond_units, investment_period]))
             data.append(tuple([DCA_date.strftime('%d/%m/%Y'), "DCA", str(portf_alloc) + "GO", portf_alloc, "gold", gold_money, gold_price, gold_units, investment_period]))
             data.append(tuple([DCA_date.strftime('%d/%m/%Y'), "DCA", str(portf_alloc) + "CA", portf_alloc, "cash", cash_money, cash_price, cash_units, investment_period]))
+            #write all data to a single line
+            #data.append(tuple([date_obj.strftime('%d/%m/%Y'), "Oneoff", str(index+1) + ".ST", int(portf_alloc), "stocks", stock_money, stockprice, stock_units, "cbonds", cbond_money, cbondprice, cbond_units, "sbonds", sbond_money, sbondprice, sbond_units, "gold", gold_money, goldprice, gold_units, "cash", cash_money, cashprice, cash_units, timeframe]))
+            #data.append(tuple([DCA_date.strftime('%d/%m/%Y'), "DCA", str(portf_alloc) + "ST", portf_alloc, "stocks", stock_money, stock_price, stock_units, "cbonds", cbond_money, cbond_price, cbond_units, "sbonds", sbond_money, sbond_price, sbond_units, "gold", gold_money, gold_price, gold_units, "cash", cash_money, cash_price, cash_units, investment_period]))
+            #write to csv now 
+            data = (tuple([DCA_date.strftime('%d/%m/%Y'), "DCA", str(portf_alloc) + "ST", portf_alloc, "stocks", stock_money, stock_price, stock_units, "cbonds", cbond_money, cbond_price, cbond_units, "sbonds", sbond_money, sbond_price, sbond_units, "gold", gold_money, gold_price, gold_units, "cash", cash_money, cash_price, cash_units, investment_period]))
             
             #if we want to rebalance then we need to make sure to rebalance the whole portfolio
             if rebal == "TRUE":
@@ -116,7 +120,7 @@ def DCA(startmoney, investment_date, investment_period, rebal):
                 previous_rebalance["Portf_Val"] = pd.to_numeric(previous_rebalance["Portf_Val"], errors='coerce')
 
                 #The previous rebalance will be the sum of all previous trades in portfolio alloc so drop all the other trade except the last
-                print("The dataframe length is" + str(len(previous_rebalance)))
+                #print("The dataframe length is" + str(len(previous_rebalance)))
                 if len(previous_rebalance) == 4:
                     previous_rebalance = previous_rebalance.drop(previous_rebalance.index[0])
 
