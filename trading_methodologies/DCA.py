@@ -31,7 +31,8 @@ def DCA(startmoney, investment_date, investment_period, rebal):
     portfoliodf = trading_util.get_portfolio_dataframe()
 
     #initialze empty list to recieve tuple of trading info
-    data = []
+    #uncomment if you only want to write once at the end
+    #data = []
 
     #iterate through every row of the portfolio file to get portfolio logic
     for index, row in portfoliodf.iterrows():
@@ -183,6 +184,7 @@ def DCA(startmoney, investment_date, investment_period, rebal):
 
                 previous_rebalance = previous_rebalance.append(trade_data, ignore_index=True)
                 #Add to data list to be written to CSV
+                data = []
                 data.append(tuple([date_of_rebalance.strftime('%d/%m/%Y'), "DCA-rebalance", int(portf_alloc) + ".ST", portf_alloc, "stocks", stock_money, stock_price, stock_units, investment_period]))
                 data.append(tuple([date_of_rebalance.strftime('%d/%m/%Y'), "DCA-rebalance", int(portf_alloc) + ".CB", portf_alloc, "cbonds", cbond_money, cbond_price, cbond_units, investment_period]))
                 data.append(tuple([date_of_rebalance.strftime('%d/%m/%Y'), "DCA-rebalance", int(portf_alloc) + ".SB", portf_alloc, "sbonds", sbond_money, sbond_price, sbond_units, investment_period]))
@@ -191,7 +193,7 @@ def DCA(startmoney, investment_date, investment_period, rebal):
                 print("current portfolio ID is" + str(portf_alloc))
                 ##for testing it may be helpful to write to the csv within the loop
                 #trading_util.write_as_csv(data, "append")
-        trading_util.write_as_csv(data, "append")
+                trading_util.write_as_csv(data, "append")
     return 'DCA has succeeded'
 
 

@@ -100,6 +100,8 @@ def find_data_point(asset_class, sourcedate):
                 #print ("The date you're looking for may be on the weekend. On the date " + new_date.strftime('%d/%m/%Y') + " the asset " + str(asset_class) + " cost " + str(price_on_date))
                 break
             except:
-                print("there is no data for " + new_date.strftime('%d/%m/%Y'))
+                continue
+                ##uncomment for debugging
+                #print("there is no data for " + new_date.strftime('%d/%m/%Y'))
 
     return date_on_date, price_on_date
