@@ -23,7 +23,7 @@ def oneoff(startmoney, investment_date, timeframe):
     stocksdf, cbondsdf, sbondsdf, golddf, cashdf  = trading_util.dataframes_from_crawler()
     date_obj = datetime.strptime(investment_date, '%d/%m/%Y')
     money = startmoney
-    timeframe = int(timeframe)
+    timeframe = timeframe
    
     #testing with head
     # print("printing stocks dataframe")
@@ -47,7 +47,7 @@ def oneoff(startmoney, investment_date, timeframe):
     goldondate,  goldprice = trading_util.find_data_point("gold", date_obj)
     #cash price is 1 as per instructions
     cashprice = 1
-    
+    data = []
 
     for index, row in portfoliodf.iterrows():
         #get percent of each asset in portfolio
@@ -74,17 +74,28 @@ def oneoff(startmoney, investment_date, timeframe):
         
         #add data to array for later csv writing
         #Date, Trading Method.,Purchase ID,Asset Alloc.,Asset,Amount($),Asset price,#, Timeframe
-        data = []
-        data.append(tuple([date_obj.strftime('%d/%m/%Y'), "Oneoff", str(index+1) + ".ST", int(portf_alloc), "stocks", stock_money, stockprice, stock_units, timeframe]))
-        data.append(tuple([date_obj.strftime('%d/%m/%Y'), "Oneoff", str(index+1) + ".CB", int(portf_alloc), "cbonds", cbond_money, cbondprice, cbond_units, timeframe]))
-        data.append(tuple([date_obj.strftime('%d/%m/%Y'), "Oneoff", str(index+1) + ".SB", int(portf_alloc), "sbonds", sbond_money, sbondprice, sbond_units, timeframe]))
-        data.append(tuple([date_obj.strftime('%d/%m/%Y'), "Oneoff", str(index+1) + ".GO", int(portf_alloc), "gold", gold_money, goldprice, gold_units, timeframe]))
-        data.append(tuple([date_obj.strftime('%d/%m/%Y'), "Oneoff", str(index+1) + ".CA", int(portf_alloc), "cash", cash_money, cashprice, cash_units, timeframe]))
-
+        # data.append(tuple([date_obj.strftime('%d/%m/%Y'), "Oneoff", str(index+1) + ".ST", int(portf_alloc), "stocks", stock_money, stockprice, stock_units, timeframe]))
+        # data.append(tuple([date_obj.strftime('%d/%m/%Y'), "Oneoff", str(index+1) + ".CB", int(portf_alloc), "cbonds", cbond_money, cbondprice, cbond_units, timeframe]))
+        # data.append(tuple([date_obj.strftime('%d/%m/%Y'), "Oneoff", str(index+1) + ".SB", int(portf_alloc), "sbonds", sbond_money, sbondprice, sbond_units, timeframe]))
+        # data.append(tuple([date_obj.strftime('%d/%m/%Y'), "Oneoff", str(index+1) + ".GO", int(portf_alloc), "gold", gold_money, goldprice, gold_units, timeframe]))
+        # data.append(tuple([date_obj.strftime('%d/%m/%Y'), "Oneoff", str(index+1) + ".CA", int(portf_alloc), "cash", cash_money, cashprice, cash_units, timeframe]))
+        
+        ##trying to improve efficiency of program
+        #write all data to a single line
+        data.append(tuple([date_obj.strftime('%d/%m/%Y'), "Oneoff", str(index+1) + ".ST", int(portf_alloc), "stocks", stock_money, stockprice, stock_units, "cbonds", cbond_money, cbondprice, cbond_units, "sbonds", sbond_money, sbondprice, sbond_units, "gold", gold_money, goldprice, gold_units, "cash", cash_money, cashprice, cash_units, timeframe]))
+        #try to write to CSV after every line so object doesnt take up tons of memory
+        data = (tuple([date_obj.strftime('%d/%m/%Y'), "Oneoff", str(index+1) + ".ST", int(portf_alloc), "stocks", stock_money, stockprice, stock_units, "cbonds", cbond_money, cbondprice, cbond_units, "sbonds", sbond_money, sbondprice, sbond_units, "gold", gold_money, goldprice, gold_units, "cash", cash_money, cashprice, cash_units, timeframe]))
         #write trading methodologies to CSV
-        if timeframe == 1 and index == 0:
+        if index == 0 and timeframe == 1:
             trading_util.write_as_csv(data, "overwrite")
         else:
             trading_util.write_as_csv(data, "append")
+    
+    
+    #write trading methodologies to CSV after all lines have been generated
+    # if timeframe == 1:
+    #     trading_util.write_as_csv(data, "overwrite")
+    # else:
+    #     trading_util.write_as_csv(data, "append")
     
     return data, 'Oneoff succeeded'

@@ -8,66 +8,6 @@ import calendar
 import trading_methodologies.trading_util as trading_util
 import trading_methodologies.rebalance as rebalancer
 
-#add months adds months while dealing with end of the month cases where 31/30th is given as days input
-def add_months(sourcedate, months):
-    month = sourcedate.month - 1 + months
-    year = sourcedate.year + month // 12
-    month = month % 12 + 1
-    day = min(sourcedate.day, calendar.monthrange(year,month)[1])
-    end_date = datetime.date(year, month, day)
-    return end_date
-
-#add days adds days while dealing with changes in months    
-def add_days(sourcedate, days_delta):
-    #date_1 = datetime.datetime.strptime(sourcedate, "%d/%m/%Y")
-    end_date = sourcedate + datetime.timedelta(days=days_delta)
-    return end_date
-
-def find_data_point(asset_class, sourcedate):
-    date_on_date = None
-    price_on_date = None
-    data_source = None
-    if (asset_class == "stocks"):
-        data_source = pd.read_csv('./crawled_data/amundi-msci-wrld-ae-c.csv')
-        print("loaded stock data")
-    elif (asset_class == "cbonds"):
-        data_source = pd.read_csv('./crawled_data/ishares-global-corporate-bond-$.csv')
-        print("loaded cbond data")
-    elif (asset_class == "sbonds"):
-        data_source = pd.read_csv('./crawled_data/db-x-trackers-ii-global-sovereign-5.csv')
-        print("loaded sbond data")
-    elif (asset_class == "gold"):
-        data_source = pd.read_csv('./crawled_data/spdr-gold-trust.csv')
-        print("loaded gold data")
-    elif (asset_class == "cash"):
-        data_source = pd.read_csv('./crawled_data/usdollar.csv')
-        print("loaded cash data")
-
-    try: 
-        info_for_date = data_source.loc[data_source['date'] == sourcedate.strftime('%d/%m/%Y')]
-        price_on_date =  info_for_date.iloc[0]['price']
-        date_on_date = sourcedate
-        print ("on the date " + sourcedate.strftime('%d/%m/%Y') + " the asset " + str(asset_class) + " cost " + str(price_on_date))
-    except: 
-        #because there is no trading on the weekend if our investment is on the weekend we might not get data so we will try 
-        #incrementing days till we arrive at monday 
-        print("there is no data for " + sourcedate.strftime('%d/%m/%Y' + " this date may fall on the weekend. We will try to get data for Monday"))
-        new_date = None
-        for i in range(1, 4):
-            try:
-                #becuase incrementing dates could pring us to the next month we call add days function
-                print("We incremented your date by:" + str(i))
-                new_date = add_days(sourcedate,i)
-                info_for_date = data_source.loc[data_source['date'] == new_date.strftime('%d/%m/%Y')]
-                price_on_date =  info_for_date.iloc[0]['price']
-                date_on_date = new_date
-                print ("The date you're looking for may be on the weekend. On the date " + new_date.strftime('%d/%m/%Y') + " the asset " + str(asset_class) + " cost " + str(price_on_date))
-                break
-            except:
-                print("there is no data for " + new_date.strftime('%d/%m/%Y'))
-
-    return date_on_date, price_on_date
-
 def DCA(startmoney, investment_date, investment_period, rebal):
 
     #floored division to find the amount to be invested per month
@@ -78,8 +18,8 @@ def DCA(startmoney, investment_date, investment_period, rebal):
 
     #test if we have data for the whole time period
     #If we enter an investment period of 1 we would expect DCA to run only for that one month so we shouldnt add 1
-    investment_pd_end_obj= add_months(date_obj, (investment_period-1))
-    date_obj, price = find_data_point("cbonds", investment_pd_end_obj)
+    investment_pd_end_obj= trading_util.add_months(date_obj, (investment_period-1))
+    date_obj, price = trading_util.find_data_point("cbonds", investment_pd_end_obj)
     if (date_obj == None) or (price == None):
         return print("the specified date or investment period are outside of the dataset")
     
@@ -118,12 +58,12 @@ def DCA(startmoney, investment_date, investment_period, rebal):
         for x in range(0,investment_period):
             
             #print("DCA iterator value is: " + str(x))
-            stock_date, stock_price = find_data_point("stocks", add_months(date_obj, x))
+            stock_date, stock_price = trading_util.find_data_point("stocks", trading_util.add_months(date_obj, x))
             DCA_date = stock_date
-            cbond_date, cbond_price = find_data_point("cbonds", DCA_date)
-            sbond_date, sbond_price = find_data_point("sbonds", DCA_date)
-            gold_date, gold_price = find_data_point("gold", DCA_date)
-            cash_date  = find_data_point("cash", DCA_date)[0]
+            cbond_date, cbond_price = trading_util.find_data_point("cbonds", DCA_date)
+            sbond_date, sbond_price = trading_util.find_data_point("sbonds", DCA_date)
+            gold_date, gold_price = trading_util.find_data_point("gold", DCA_date)
+            cash_date  = trading_util.find_data_point("cash", DCA_date)[0]
             cash_price = 1
 
             #calculate units we can buy
@@ -139,11 +79,16 @@ def DCA(startmoney, investment_date, investment_period, rebal):
             data.append(tuple([DCA_date.strftime('%d/%m/%Y'), "DCA", str(portf_alloc) + "SB", portf_alloc, "sbonds", sbond_money, sbond_price, sbond_units, investment_period]))
             data.append(tuple([DCA_date.strftime('%d/%m/%Y'), "DCA", str(portf_alloc) + "GO", portf_alloc, "gold", gold_money, gold_price, gold_units, investment_period]))
             data.append(tuple([DCA_date.strftime('%d/%m/%Y'), "DCA", str(portf_alloc) + "CA", portf_alloc, "cash", cash_money, cash_price, cash_units, investment_period]))
+            #write all data to a single line
+            #data.append(tuple([date_obj.strftime('%d/%m/%Y'), "Oneoff", str(index+1) + ".ST", int(portf_alloc), "stocks", stock_money, stockprice, stock_units, "cbonds", cbond_money, cbondprice, cbond_units, "sbonds", sbond_money, sbondprice, sbond_units, "gold", gold_money, goldprice, gold_units, "cash", cash_money, cashprice, cash_units, timeframe]))
+            #data.append(tuple([DCA_date.strftime('%d/%m/%Y'), "DCA", str(portf_alloc) + "ST", portf_alloc, "stocks", stock_money, stock_price, stock_units, "cbonds", cbond_money, cbond_price, cbond_units, "sbonds", sbond_money, sbond_price, sbond_units, "gold", gold_money, gold_price, gold_units, "cash", cash_money, cash_price, cash_units, investment_period]))
+            #write to csv now 
+            data = (tuple([DCA_date.strftime('%d/%m/%Y'), "DCA", str(portf_alloc) + "ST", portf_alloc, "stocks", stock_money, stock_price, stock_units, "cbonds", cbond_money, cbond_price, cbond_units, "sbonds", sbond_money, sbond_price, sbond_units, "gold", gold_money, gold_price, gold_units, "cash", cash_money, cash_price, cash_units, investment_period]))
             
             #if we want to rebalance then we need to make sure to rebalance the whole portfolio
             if rebal == "TRUE":
                 #add the current DCA trade to DF 
-                print("entered if block for rebalance")
+                #print("entered if block for rebalance")
                 trade_port_value = stock_units*stock_price + cbond_units*cbond_price + sbond_price*sbond_units + gold_units*gold_price + cash_units*cash_price
                 trade_data = {
                     'ST_Q': stock_units,
@@ -165,7 +110,7 @@ def DCA(startmoney, investment_date, investment_period, rebal):
                 #typecast to int/float
                 #previous_rebalance = previous_rebalance.apply(pd.to_numeric)
                 #previous_rebalance[['ST_Q', 'CB_Q']] = previous_rebalance[['ST_Q', 'CB_Q']].apply(pd.to_numeric)
-                #above two raise errors
+                #the above two options raise errors
                 previous_rebalance["ST_Q"] = pd.to_numeric(previous_rebalance["ST_Q"], errors='coerce')
                 previous_rebalance["CB_Q"] = pd.to_numeric(previous_rebalance["CB_Q"], errors='coerce')
                 previous_rebalance["SB_Q"] = pd.to_numeric(previous_rebalance["SB_Q"], errors='coerce')
@@ -175,7 +120,7 @@ def DCA(startmoney, investment_date, investment_period, rebal):
                 previous_rebalance["Portf_Val"] = pd.to_numeric(previous_rebalance["Portf_Val"], errors='coerce')
 
                 #The previous rebalance will be the sum of all previous trades in portfolio alloc so drop all the other trade except the last
-                print("The dataframe length is" + str(len(previous_rebalance)))
+                #print("The dataframe length is" + str(len(previous_rebalance)))
                 if len(previous_rebalance) == 4:
                     previous_rebalance = previous_rebalance.drop(previous_rebalance.index[0])
 
@@ -192,16 +137,16 @@ def DCA(startmoney, investment_date, investment_period, rebal):
                 #Rebal_CA_P = previous_rebalance['CA_P'].sum()
                 Rebal_Money = previous_rebalance['Money'].sum()
                 Rebal_Portf_Val = previous_rebalance['Portf_Val'].sum()
-                print("The sum of the portfolio value is " + str(Rebal_Portf_Val))
+                #print("The sum of the portfolio value is " + str(Rebal_Portf_Val))
                 
                 #Execute rebalance
                 #"DCA rebalance succeeded", final_quant_stock, price_of_rebalance_stocks, final_quant_cbonds, price_of_rebalance_cbonds, final_quant_sbonds, price_of_rebalance_sbonds, final_quant_gold, price_of_rebalance_gold, final_quant_cash, price_of_rebalance_cash, money_from_sales, rebal_portf_value
                 result = rebalancer.DCA_rebalance(Rebal_ST_Q, Rebal_CB_Q, Rebal_SB_Q, Rebal_GO_Q, Rebal_CA_Q, stock_percentage, cbond_percentage, sbond_percentage, gold_percentage, cash_percentage, Rebal_Money, DCA_date)
-                print(result)
+                #print(result)
 
                 #if we get an error we only get the error message back 
                 message = result[0]
-                print(message)
+                #print(message)
                 if message == "there is an error. Has the end of the available asset data been reached?":
                     continue
 
@@ -244,6 +189,8 @@ def DCA(startmoney, investment_date, investment_period, rebal):
                 data.append(tuple([date_of_rebalance.strftime('%d/%m/%Y'), "DCA-rebalance", int(portf_alloc) + ".GO", portf_alloc, "gold", gold_money, gold_price, gold_units, investment_period]))
                 data.append(tuple([date_of_rebalance.strftime('%d/%m/%Y'), "DCA-rebalance", int(portf_alloc) + ".CA", portf_alloc, "cash", cash_money, cash_price, cash_units, investment_period]))
                 print("current portfolio ID is" + str(portf_alloc))
+                ##for testing it may be helpful to write to the csv within the loop
+                #trading_util.write_as_csv(data, "append")
         trading_util.write_as_csv(data, "append")
     return 'DCA has succeeded'
 
