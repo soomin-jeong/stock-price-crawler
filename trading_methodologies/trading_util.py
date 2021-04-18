@@ -25,7 +25,7 @@ def write_as_csv(data, write_mode):
     if write_mode == "overwrite":
         with open(filename, 'w+', newline='') as file:
             writer = csv.writer(file)
-            writer.writerow(["Date", "Trading Method.", "Purchase ID", "Asset Alloc.", "Asset", "Amount($)", "Asset price", "#"])
+            writer.writerow(["Date", "Trading Method.", "Purchase ID", "Asset Alloc.", "Asset", "Amount($)", "Asset price", "#", "Timeframe"])
             for x in data:
                 writer.writerow(x)
     #or pass append if you just want to write to the end of the file
@@ -56,39 +56,48 @@ def find_data_point(asset_class, sourcedate):
     data_source = None
     if (asset_class == "stocks"):
         data_source = pd.read_csv('./crawled_data/amundi-msci-wrld-ae-c.csv')
-        print("loaded stock data")
+        ##uncomment for debugging
+        #print("loaded stock data")
     elif (asset_class == "cbonds"):
         data_source = pd.read_csv('./crawled_data/ishares-global-corporate-bond-$.csv')
-        print("loaded cbond data")
+        ##uncomment for debugging
+        #print("loaded cbond data")
     elif (asset_class == "sbonds"):
         data_source = pd.read_csv('./crawled_data/db-x-trackers-ii-global-sovereign-5.csv')
-        print("loaded sbond data")
+        ##uncomment for debugging
+        #print("loaded sbond data")
     elif (asset_class == "gold"):
         data_source = pd.read_csv('./crawled_data/spdr-gold-trust.csv')
-        print("loaded gold data")
+        ##uncomment for debugging
+        #print("loaded gold data")
     elif (asset_class == "cash"):
         data_source = pd.read_csv('./crawled_data/usdollar.csv')
-        print("loaded cash data")
+        ##uncomment for debugging
+        #print("loaded cash data")
 
     try: 
         info_for_date = data_source.loc[data_source['date'] == sourcedate.strftime('%d/%m/%Y')]
         price_on_date =  info_for_date.iloc[0]['price']
         date_on_date = sourcedate
-        print ("on the date " + sourcedate.strftime('%d/%m/%Y') + " the asset " + str(asset_class) + " cost " + str(price_on_date))
+        ##uncomment for debugging
+        #print ("on the date " + sourcedate.strftime('%d/%m/%Y') + " the asset " + str(asset_class) + " cost " + str(price_on_date))
     except: 
         #because there is no trading on the weekend if our investment is on the weekend we might not get data so we will try 
         #incrementing days till we arrive at monday 
-        print("there is no data for " + sourcedate.strftime('%d/%m/%Y' + " this date may fall on the weekend. We will try to get data for Monday"))
+        ##uncomment for debugging
+        #print("there is no data for " + sourcedate.strftime('%d/%m/%Y' + " this date may fall on the weekend. We will try to get data for Monday"))
         new_date = None
         for i in range(1, 4):
             try:
                 #becuase incrementing dates could pring us to the next month we call add days function
-                print("We incremented your date by:" + str(i))
+                ##uncomment for debugging
+                #print("We incremented your date by:" + str(i))
                 new_date = add_days(sourcedate,i)
                 info_for_date = data_source.loc[data_source['date'] == new_date.strftime('%d/%m/%Y')]
                 price_on_date =  info_for_date.iloc[0]['price']
                 date_on_date = new_date
-                print ("The date you're looking for may be on the weekend. On the date " + new_date.strftime('%d/%m/%Y') + " the asset " + str(asset_class) + " cost " + str(price_on_date))
+                ##uncomment for debugging
+                #print ("The date you're looking for may be on the weekend. On the date " + new_date.strftime('%d/%m/%Y') + " the asset " + str(asset_class) + " cost " + str(price_on_date))
                 break
             except:
                 print("there is no data for " + new_date.strftime('%d/%m/%Y'))
