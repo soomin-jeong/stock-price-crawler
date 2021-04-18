@@ -26,10 +26,11 @@ def oneoff_rebalance(investment_period):
     portfolio_allocation_IDs = z.tolist()
     # using list comprehension to perform str to int conversion
     portfolio_allocation_IDs = [int(i) for i in portfolio_allocation_IDs]
-
+    
     ##uncomment for debugging
-    # print("printing portfolio_allocation_IDs list")
-    # print(portfolio_allocation_IDs[:5])
+    print("printing portfolio_allocation_IDs list")
+    print(portfolio_allocation_IDs[:5])
+    print(len(portfolio_allocation_IDs))
 
     #prepare data array to write to CSV at the end
     #moved into for loop so the scope is smaller and we can write to csv after every loop. Less efficient if we run the whole thing but if we 
@@ -84,7 +85,9 @@ def oneoff_rebalance(investment_period):
 
         #loop through investment period and rebalance
         for y in range(0, int(investment_period)):
-    
+            
+            data = []
+
             #if the initial investment is made after the 15th we dont rebalnce in the current month
             
             ##uncomment for debugging
@@ -118,7 +121,7 @@ def oneoff_rebalance(investment_period):
                 price_of_rebalance_gold = tradedatadf.loc[(tradedatadf['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer])) & (tradedatadf['Asset'] == "gold")].iloc[0]['Asset price']
                 rebal_value_of_cash = tradedatadf.loc[(tradedatadf['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer])) & (tradedatadf['Asset'] == "cash")].iloc[0]['Amount($)']
                 price_of_rebalance_cash = tradedatadf.loc[(tradedatadf['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer])) & (tradedatadf['Asset'] == "cash")].iloc[0]['Asset price']
-                data = []
+                
                 data.append(tuple([initial_date_obj.strftime("%d/%m/%Y"), "oneoff-rebal.", str(portfolio_allocation_IDs[pointer]) +"."+ str(y) + ".st", portfolio_allocation_IDs[pointer], "stocks", rebal_value_of_stocks, price_of_rebalance_stocks, initial_quant_stocks, investment_period]))
                 data.append(tuple([initial_date_obj.strftime("%d/%m/%Y"), "oneoff-rebal.", str(portfolio_allocation_IDs[pointer]) +"."+ str(y) + ".cb", portfolio_allocation_IDs[pointer], "cbonds", rebal_value_of_cbonds, price_of_rebalance_cbonds, initial_quant_cbonds, investment_period]))
                 data.append(tuple([initial_date_obj.strftime("%d/%m/%Y"), "oneoff-rebal.", str(portfolio_allocation_IDs[pointer]) +"."+ str(y) + ".sb", portfolio_allocation_IDs[pointer], "sbonds", rebal_value_of_sbonds, price_of_rebalance_sbonds, initial_quant_sbonds, investment_period]))
@@ -184,9 +187,11 @@ def oneoff_rebalance(investment_period):
 
 
             #if there is no need to rebalance then do not run the rest of the loop
+            #still write the first oneoff trade as rebalance
             if delta_quant_stocks == 0 and delta_quant_cbonds==0 and delta_quant_sbonds==0 and delta_quant_gold==0 and delta_quant_cash==0: 
                 ##uncomment for debugging
                 #print("Your portfolio is balanced")
+                trading_util.write_as_csv(data, "append")
                 continue
 
             final_quant_stock = 0
