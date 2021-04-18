@@ -14,8 +14,7 @@ def oneoff_rebalance(investment_period):
     #load all trade data which was made with oneoff method
     #to-do: add and investment period is the same
     #tradedatadf.loc[(tradedatadf['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer])) & (tradedatadf['Asset'] == "stocks")].iloc[0]['#']
-    #df.loc[(df['column_name'] >= A) & (df['column_name'] <= B)]
-    oneoff_trades_df = tradedatadf.loc[(tradedatadf['Trading Method.'] == "Oneoff") & (tradedatadf['Timeframe'] == investment_period)]
+    oneoff_trades_df = tradedatadf[tradedatadf['Trading Method.'] == "Oneoff"]
     
     ##uncomment for debugging
     #print("printing oneoff_trades_df dataframe")

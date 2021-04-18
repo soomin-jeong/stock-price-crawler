@@ -74,6 +74,7 @@ def oneoff(startmoney, investment_date, timeframe):
         
         #add data to array for later csv writing
         #Date, Trading Method.,Purchase ID,Asset Alloc.,Asset,Amount($),Asset price,#, Timeframe
+<<<<<<< HEAD
         # data.append(tuple([date_obj.strftime('%d/%m/%Y'), "Oneoff", str(index+1) + ".ST", int(portf_alloc), "stocks", stock_money, stockprice, stock_units, timeframe]))
         # data.append(tuple([date_obj.strftime('%d/%m/%Y'), "Oneoff", str(index+1) + ".CB", int(portf_alloc), "cbonds", cbond_money, cbondprice, cbond_units, timeframe]))
         # data.append(tuple([date_obj.strftime('%d/%m/%Y'), "Oneoff", str(index+1) + ".SB", int(portf_alloc), "sbonds", sbond_money, sbondprice, sbond_units, timeframe]))
@@ -90,6 +91,19 @@ def oneoff(startmoney, investment_date, timeframe):
             trading_util.write_as_csv(data, "overwrite")
         else:
             trading_util.write_as_csv(data, "append")
+=======
+        data.append(tuple([date_obj.strftime('%d/%m/%Y'), "Oneoff", str(index+1) + ".ST", int(portf_alloc), "stocks", stock_money, stockprice, stock_units, timeframe]))
+        data.append(tuple([date_obj.strftime('%d/%m/%Y'), "Oneoff", str(index+1) + ".CB", int(portf_alloc), "cbonds", cbond_money, cbondprice, cbond_units, timeframe]))
+        data.append(tuple([date_obj.strftime('%d/%m/%Y'), "Oneoff", str(index+1) + ".SB", int(portf_alloc), "sbonds", sbond_money, sbondprice, sbond_units, timeframe]))
+        data.append(tuple([date_obj.strftime('%d/%m/%Y'), "Oneoff", str(index+1) + ".GO", int(portf_alloc), "gold", gold_money, goldprice, gold_units, timeframe]))
+        data.append(tuple([date_obj.strftime('%d/%m/%Y'), "Oneoff", str(index+1) + ".CA", int(portf_alloc), "cash", cash_money, cashprice, cash_units, timeframe]))
+
+    #write trading methodologies to CSV
+    if timeframe == 1 and index == 0:
+        trading_util.write_as_csv(data, "overwrite")
+    else:
+        trading_util.write_as_csv(data, "append")
+>>>>>>> parent of 015fe91 (Timeframe check)
     
     
     #write trading methodologies to CSV after all lines have been generated
