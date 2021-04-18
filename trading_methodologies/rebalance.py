@@ -34,7 +34,7 @@ def oneoff_rebalance(investment_period):
     #prepare data array to write to CSV at the end
     #moved into for loop so the scope is smaller and we can write to csv after every loop. Less efficient if we run the whole thing but if we 
     #dont want to write all 150k lines every time this is better
-    #data = []
+    data = []
 
     for i in portfolio_allocation_IDs:
         #prepare data array to write to CSV at the end
