@@ -14,7 +14,7 @@ def oneoff_rebalance(investment_period):
     #load all trade data which was made with oneoff method
     #to-do: add and investment period is the same
     #tradedatadf.loc[(tradedatadf['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer])) & (tradedatadf['Asset'] == "stocks")].iloc[0]['#']
-    oneoff_trades_df = tradedatadf[tradedatadf['Trading Method.'] == "Oneoff"]
+    oneoff_trades_df = tradedatadf.loc[(tradedatadf['Trading Method.'] == "Oneoff") & (tradedatadf['Timeframe'] == investment_period)]
     
     ##uncomment for debugging
     #print("printing oneoff_trades_df dataframe")
@@ -37,8 +37,7 @@ def oneoff_rebalance(investment_period):
     #data = []
 
     for i in portfolio_allocation_IDs:
-        #prepare data array to write to CSV at the end
-        data = []
+        
         
 
         #get target allocation
@@ -119,7 +118,7 @@ def oneoff_rebalance(investment_period):
                 price_of_rebalance_gold = tradedatadf.loc[(tradedatadf['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer])) & (tradedatadf['Asset'] == "gold")].iloc[0]['Asset price']
                 rebal_value_of_cash = tradedatadf.loc[(tradedatadf['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer])) & (tradedatadf['Asset'] == "cash")].iloc[0]['Amount($)']
                 price_of_rebalance_cash = tradedatadf.loc[(tradedatadf['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer])) & (tradedatadf['Asset'] == "cash")].iloc[0]['Asset price']
-                
+                data = []
                 data.append(tuple([initial_date_obj.strftime("%d/%m/%Y"), "oneoff-rebal.", str(portfolio_allocation_IDs[pointer]) +"."+ str(y) + ".st", portfolio_allocation_IDs[pointer], "stocks", rebal_value_of_stocks, price_of_rebalance_stocks, initial_quant_stocks, investment_period]))
                 data.append(tuple([initial_date_obj.strftime("%d/%m/%Y"), "oneoff-rebal.", str(portfolio_allocation_IDs[pointer]) +"."+ str(y) + ".cb", portfolio_allocation_IDs[pointer], "cbonds", rebal_value_of_cbonds, price_of_rebalance_cbonds, initial_quant_cbonds, investment_period]))
                 data.append(tuple([initial_date_obj.strftime("%d/%m/%Y"), "oneoff-rebal.", str(portfolio_allocation_IDs[pointer]) +"."+ str(y) + ".sb", portfolio_allocation_IDs[pointer], "sbonds", rebal_value_of_sbonds, price_of_rebalance_sbonds, initial_quant_sbonds, investment_period]))
@@ -285,20 +284,22 @@ def oneoff_rebalance(investment_period):
             #Write trade to data list for later writing to CSV
             ##uncomment for debugging
             #print(final_quant_stock, final_quant_cbonds, final_quant_sbonds, final_quant_gold, final_quant_cash)
+            
             data.append(tuple([date_of_rebalance.strftime("%d/%m/%Y"), "oneoff-rebal.", str(portfolio_allocation_IDs[pointer]) +"."+ str(y) + ".ST", portfolio_allocation_IDs[pointer], "stocks", rebal_value_of_stocks, price_of_rebalance_stocks, final_quant_stock, investment_period]))
             data.append(tuple([date_of_rebalance.strftime("%d/%m/%Y"), "oneoff-rebal.", str(portfolio_allocation_IDs[pointer]) +"."+ str(y) + ".CB", portfolio_allocation_IDs[pointer], "cbonds", rebal_value_of_cbonds, price_of_rebalance_cbonds, final_quant_cbonds, investment_period]))
             data.append(tuple([date_of_rebalance.strftime("%d/%m/%Y"), "oneoff-rebal.", str(portfolio_allocation_IDs[pointer]) +"."+ str(y) + ".SB", portfolio_allocation_IDs[pointer], "sbonds", rebal_value_of_sbonds, price_of_rebalance_sbonds, final_quant_sbonds, investment_period]))
             data.append(tuple([date_of_rebalance.strftime("%d/%m/%Y"), "oneoff-rebal.", str(portfolio_allocation_IDs[pointer]) +"."+ str(y) + ".GO", portfolio_allocation_IDs[pointer], "gold", rebal_value_of_gold, price_of_rebalance_gold, final_quant_gold, investment_period]))
             data.append(tuple([date_of_rebalance.strftime("%d/%m/%Y"), "oneoff-rebal.", str(portfolio_allocation_IDs[pointer]) +"."+ str(y) + ".CA", portfolio_allocation_IDs[pointer], "cash", rebal_value_of_cash, 1, final_quant_cash, investment_period]))
-            
+            trading_util.write_as_csv(data, "append")
+
     #if we where to run this to get all 150k lines every time it would be more efficient to take write csv out of the for loop (unindent one lvl)
         #write trade data to csv 
         ##uncomment for debugging
         #print("Now writing to CSV")
         #just in case remove any duplicates
-        data = list(dict.fromkeys(data))
-        trading_util.write_as_csv(data, "append")
-        ##uncomment for debugging
+        # data = list(dict.fromkeys(data))
+        # trading_util.write_as_csv(data, "append")
+        # ##uncomment for debugging
         #print("finished writing trade to CSV")
             
     return 'rebalance succeeded'
