@@ -74,7 +74,7 @@ print(DCA(100000, '01/01/2020', 1, "TRUE"))
 
 As with DCA the parameters included here are how much money should be invested, the second is the date of the investment, the third parameter is the investment period in months. The TRUE flag means rebalance will be applied to the DCA trades. 
 
-#Functionality about trading data generation has been addressed in:
+# Functionality about trading data generation has been addressed in:
 ```
 ├── trading_methodologies          
 │   ├── DCA.py                     
