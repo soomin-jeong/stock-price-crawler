@@ -44,7 +44,7 @@ Inside the crawler_drivers forlder, an instance of chrome and firefox (gecko) dr
 │   ├── chromedriver         
 │   └── geckodriver       
 
-# Task 2 (Investment Strategies Generation)
+# Task 2 (Data Generation)
 In order to execute the trading the user needs to specify the amount of money to be invested, the date of the investment and the investment period in months. They also need to decided which trading strategy to use. 
 
 In order to run the oneoff trading methodology uncomment the following line in main.py:
