@@ -76,12 +76,12 @@ Inside the crawler_drivers forlder, an instance of chrome and firefox (gecko) dr
 ├── portfolio_metrics.csv
 ├── requirements.txt               -- the packages which needs to be installed with pip prior to run
 ├── trading_methodologies          -- a porfolio developer (DCA, oneoff, rebalance)
-│   ├── DCA.py
-│   ├── trading_methodologies.csv
-│   ├── __init__.py
-│   ├── oneoff.py
-│   ├── rebalance.py
-│   └── trading_util.py
+│   ├── DCA.py                     -- Defines and executes the logic for DCA trading methodology
+│   ├── trading_methodologies.csv  -- Output file which trading methodologies write their actions to
+│   ├── __init__.py                -- Makes packages and functions in trading methodologies importable for others
+│   ├── oneoff.py                  -- Defines and executes logic for oneoff trading method
+│   ├── rebalance.py               -- Defines and executes logic for oneoff rebalance and DCA rebalance trading methods
+│   └── trading_util.py            -- Utility function which supports trading methodologies with shared functionalities
 └── utils.py
 ```
 
