@@ -11,7 +11,7 @@ from trading_methodologies import oneoff, DCA, oneoff_rebalance
 # set the tasks to run here
 RUN_CRAWLER = False
 GENERATE_PORTFOLIOS = False
-GENERATE_STRATEGIES = False
+GENERATE_STRATEGIES = True
 ANALYZE_PERFORMANCE = True
 
 
@@ -27,12 +27,13 @@ def main():
     if GENERATE_STRATEGIES:
         startmoney = 100000
         investment_date = '01/01/2020'
-        timeframe = 1
+        timeframes = [1, 3, 6, 9, 12]
 
-        oneoff(startmoney, investment_date, timeframe)
-        oneoff_rebalance(timeframe)
-        DCA(startmoney, investment_date, timeframe)
-        DCA(startmoney, investment_date, timeframe, True)
+        for each_tf in timeframes:
+            oneoff(startmoney, investment_date, each_tf)
+            oneoff_rebalance(each_tf)
+            DCA(startmoney, investment_date, each_tf)
+            DCA(startmoney, investment_date, each_tf, True)
 
     if ANALYZE_PERFORMANCE:
         trading_methodology_filename = 'trading_methodologies/trading_methodologies.csv'

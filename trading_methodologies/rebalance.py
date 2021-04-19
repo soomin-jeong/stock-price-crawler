@@ -8,7 +8,7 @@ import math
 def oneoff_rebalance(investment_period):
     #load our CSV data files
     portfoliodf = trading_util.get_portfolio_dataframe()
-    tradedatadf = pd.read_csv('./trading_methodologies.csv', low_memory=False)
+    tradedatadf = pd.read_csv('trading_methodologies/trading_methodologies.csv', low_memory=False)
     stocksdf,cbondsdf, sbondsdf, golddf, cashdf =  trading_util.dataframes_from_crawler()
    
     #load all trade data which was made with oneoff method
@@ -206,18 +206,8 @@ def oneoff_rebalance(investment_period):
                 trading_util.write_as_csv(data, "append")
                 continue
 
-            final_quant_stock = 0
-            final_quant_cbonds = 0
-            final_quant_sbonds = 0
-            final_quant_gold = 0
-            final_quant_cash = 0
-            money_from_sales = 0
-
-            purchase_value_stocks = float(0)
-            purchase_value_cbonds = float(0)
-            purchase_value_sbonds = float(0)
-            purchase_value_gold = float(0)
-            purchase_value_cash = float(0)
+            final_quant_stock = final_quant_cbonds = final_quant_sbonds = final_quant_gold = final_quant_cash = money_from_sales = 0
+            purchase_value_stocks = purchase_value_cbonds  = purchase_value_sbonds = purchase_value_gold = purchase_value_cash = float(0)
 
             #conduct sales if needed
             if delta_quant_stocks < 0:
@@ -512,5 +502,3 @@ def DCA_rebalance(Rebal_ST_Q, Rebal_CB_Q, Rebal_SB_Q, Rebal_GO_Q, Rebal_CA_Q, st
         final_quant_gold = Rebal_GO_Q
     if delta_quant_cash == 0:
         final_quant_cash = Rebal_CA_Q
-
-    return "DCA rebalance succeeded", final_quant_stock, price_of_rebalance_stocks, final_quant_cbonds, price_of_rebalance_cbonds, final_quant_sbonds, price_of_rebalance_sbonds, final_quant_gold, price_of_rebalance_gold, final_quant_cash, price_of_rebalance_cash, money_from_sales, rebal_portf_value, date_of_rebalance, invest_buy_stocks, invest_buy_cbonds, invest_buy_sbonds, invest_buy_gold, invest_buy_cash
