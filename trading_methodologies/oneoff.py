@@ -71,15 +71,22 @@ def oneoff(startmoney, investment_date, timeframe):
         sbond_units = math.floor(sbond_money/sbondprice)
         gold_units = math.floor(gold_money/goldprice)
         cash_units = math.floor(cash_money/cashprice)
+
+        #set real spent money
+        stock_money = round(stock_units*stockprice,2)
+        cbond_money = round(cbond_units*cbondprice,2)
+        sbond_money = round(sbond_units*sbondprice,2)
+        gold_money = round(gold_units*goldprice,2)
+        cash_money = round(cash_units*cashprice,2)
         
         #add data to array for later csv writing
         #Date, Trading Method.,Purchase ID,Asset Alloc.,Asset,Amount($),Asset price,#, Timeframe
         data = []
-        data.append(tuple([date_obj.strftime('%d/%m/%Y'), "Oneoff", str(index+1) + ".ST", int(portf_alloc), "stocks", stock_money, stockprice, stock_units, timeframe]))
-        data.append(tuple([date_obj.strftime('%d/%m/%Y'), "Oneoff", str(index+1) + ".CB", int(portf_alloc), "cbonds", cbond_money, cbondprice, cbond_units, timeframe]))
-        data.append(tuple([date_obj.strftime('%d/%m/%Y'), "Oneoff", str(index+1) + ".SB", int(portf_alloc), "sbonds", sbond_money, sbondprice, sbond_units, timeframe]))
-        data.append(tuple([date_obj.strftime('%d/%m/%Y'), "Oneoff", str(index+1) + ".GO", int(portf_alloc), "gold", gold_money, goldprice, gold_units, timeframe]))
-        data.append(tuple([date_obj.strftime('%d/%m/%Y'), "Oneoff", str(index+1) + ".CA", int(portf_alloc), "cash", cash_money, cashprice, cash_units, timeframe]))
+        data.append(tuple([date_obj.strftime('%d/%m/%Y'), "Oneoff", str(index+1) + ".ST", int(portf_alloc), "stocks", stock_money, stockprice, stock_units, stock_money, timeframe]))
+        data.append(tuple([date_obj.strftime('%d/%m/%Y'), "Oneoff", str(index+1) + ".CB", int(portf_alloc), "cbonds", cbond_money, cbondprice, cbond_units, cbond_money, timeframe]))
+        data.append(tuple([date_obj.strftime('%d/%m/%Y'), "Oneoff", str(index+1) + ".SB", int(portf_alloc), "sbonds", sbond_money, sbondprice, sbond_units, sbond_money, timeframe]))
+        data.append(tuple([date_obj.strftime('%d/%m/%Y'), "Oneoff", str(index+1) + ".GO", int(portf_alloc), "gold", gold_money, goldprice, gold_units, gold_money, timeframe]))
+        data.append(tuple([date_obj.strftime('%d/%m/%Y'), "Oneoff", str(index+1) + ".CA", int(portf_alloc), "cash", cash_money, cashprice, cash_units, cash_money, timeframe]))
 
         #write trading methodologies to CSV
         if timeframe == 1 and index == 0:
