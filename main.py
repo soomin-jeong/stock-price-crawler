@@ -38,8 +38,8 @@ print(message)
 
 #DCA rebalanced
 #setting the true flag means we will rebalance
-print(DCA(100000, '01/01/2020', 1, "TRUE"))
-print ("DCA rebal finished")
+#print(DCA(100000, '01/01/2020', 1, "TRUE"))
+#print ("DCA rebal finished")
 
 #*******************************************
 #uncomment these lines to run all trades for 3 month investment period
@@ -53,7 +53,7 @@ print ("DCA rebal finished")
 
 #DCA
 #setting the flase flag here means we are not rebalancing
-#print(DCA(100000, '01/01/2020', 3, "FALSE"))
+print(DCA(100000, '01/01/2020', 3, "FALSE"))
 
 
 #DCA rebalanced
