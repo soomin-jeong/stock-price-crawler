@@ -20,7 +20,9 @@ class PerformanceAnalyst:
         self.portfolios = portfolios
         self.trade_methods = np.unique(self.portfolios['Trading Method.'])
         self.assets = np.unique(self.portfolios['Asset'])
+        self.timeframes = np.unique(self.portfolios['Timeframe'])
         self.portfolio_ids = np.unique(self.portfolios['Purchase ID'])
+        # self.portfolio_amount =
 
         # sort them alphabetically to keep the order
         self.trade_methods.sort()
@@ -31,48 +33,35 @@ class PerformanceAnalyst:
         self.current_asset_value = portfolios[portfolios['Date'] == portfolios['Date'].max()].groupby('Asset').max()['Asset price']
 
     # cost of each asset * weight of each asset
-    @property
-    def cost(self):
-        portfolio_cost = []
-        for each_method in self.trade_methods:
-            data_for_method = self.portfolios[self.portfolios['Trading Method.'] == each_method]
-            total_investment = data_for_method['total_amount'].sum()
-            costs = data_for_method.groupby('Asset')['total_amount'].sum() / total_investment * self.cost_per_asset
-            portfolio_cost.append(costs.sum())
-        return portfolio_cost
+    def calculate_cost(self, portfolio_method_tf):
+        total_investment = portfolio_method_tf['total_amount'].sum()
+        cost_per_asset = portfolio_method_tf.groupby('Asset')['total_amount'].sum() / total_investment * self.cost_per_asset
+        return cost_per_asset.sum()
 
-    @property
-    def volatility(self):
-        portfolio_volatility = []
-        for each_method in self.trade_methods:
-            data_for_method = self.portfolios[self.portfolios['Trading Method.'] == each_method]
-            mean_per_asset = data_for_method['total_amount'].mean()
-            standard_dev = stdev(data_for_method['total_amount'])
-            volatility = standard_dev / mean_per_asset
-            portfolio_volatility.append(volatility)
-        return portfolio_volatility
+    def calculate_volatility(self, portfolio_method_tf):
+        mean_per_asset = portfolio_method_tf['total_amount'].mean()
+        standard_dev = stdev(portfolio_method_tf['total_amount'])
+        return standard_dev / mean_per_asset
 
     # renamed `return` into `asset_return` because it is a predefiend variable
-    @property
-    def asset_return(self):
-        portfolio_return = []
-        for each_method in self.trade_methods:
-            data_for_method = self.portfolios[self.portfolios['Trading Method.'] == each_method]
-            buy_amount = data_for_method['total_amount'].sum()
-            share_count = data_for_method[data_for_method['total_amount'] > 0].groupby('Asset')['#'].sum()
-            current_val = (share_count * self.current_asset_value).sum()
-            ret = (current_val - buy_amount) / buy_amount * 100
-            portfolio_return.append(ret)
-        return portfolio_return
+    def calculate_return(self, portfolio_method_tf):
+        buy_amount = portfolio_method_tf['total_amount'].sum()
+        share_count = portfolio_method_tf[portfolio_method_tf['total_amount'] > 0].groupby('Asset')['#'].sum()
+        current_val = (share_count * self.current_asset_value).sum()
+        return (current_val - buy_amount) / buy_amount * 100
 
     def run_performance_analysis(self):
-        performance_df = pd.DataFrame(columns=['cost', 'volatility', 'return'])
-        performance_df['cost'] = self.cost
-        performance_df['volatility'] = self.volatility
-        performance_df['return'] = self.asset_return
-        performance_df.index = list(self.trade_methods)
-
-        filepath = 'trading_methodologies/portfolio_metrics.csv'
+        performance_df = pd.DataFrame(columns=['method', 'timeframe', 'cost', 'volatility', 'return'])
+        for each_method in self.trade_methods:
+            data_for_method = self.portfolios[self.portfolios['Trading Method.'] == each_method]
+            for each_tf in self.timeframes:
+                data_method_tf = data_for_method[self.portfolios['Timeframe'] == each_tf]
+                cost = self.calculate_cost(data_method_tf)
+                volatility = self.calculate_volatility(data_method_tf)
+                ret = self.calculate_return(data_method_tf)
+                performance_df = performance_df.append({'method': each_method, 'timeframe': each_tf, 'cost': cost, 'volatility': volatility,
+                                       'return': ret}, ignore_index=True)
+        filepath = 'portfolio_metrics.csv'
         write_as_csv(filepath, performance_df)
         return performance_df
 
