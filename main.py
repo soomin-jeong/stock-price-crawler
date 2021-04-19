@@ -12,7 +12,7 @@ from trading_methodologies import oneoff, DCA, rebalance, oneoff_rebalance
 # set the tasks to run here
 RUN_CRAWLER = False
 GENERATE_PORTFOLIOS = False
-GENERATE_STRATEGIES = False
+GENERATE_STRATEGIES = True
 ANALYZE_PERFORMANCE = True
 
 
