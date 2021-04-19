@@ -35,22 +35,22 @@ def main():
 
         #DCA
         #setting the false flag here means we are not rebalancing
-        print(DCA(100000, '01/01/2020', 1, "FALSE"))
+        print(DCA(100000, '01/01/2020', 1))
         print ("regular DCA finished")
 
         #DCA rebalanced
         #setting the true flag means we will rebalance
-        print(DCA(100000, '01/01/2020', 1, "TRUE"))
+        print(DCA(100000, '01/01/2020', 1, True))
         print("DCA rebal finished")
 
     if ANALYZE_PERFORMANCE:
         trading_methodology_filename = 'trading_methodologies.csv'
 
-
         # Performance Analysis
         data = pd.read_csv(trading_methodology_filename, header=0, parse_dates=['Date'], dtype={'#': np.int32})
         pa = PerformanceAnalyst(data)
         pa.run_performance_analysis()
+
 
 if __name__ == "__main__":
     main()

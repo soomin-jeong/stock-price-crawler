@@ -8,7 +8,7 @@ import calendar
 import trading_methodologies.trading_util as trading_util
 import trading_methodologies.rebalance as rebalancer
 
-def DCA(startmoney, investment_date, investment_period, rebal):
+def DCA(startmoney, investment_date, investment_period, rebal=False):
 
     #floored division to find the amount to be invested per month
     money_per_month = math.floor(startmoney/investment_period)
@@ -133,7 +133,7 @@ def DCA(startmoney, investment_date, investment_period, rebal):
             DCA_Portf_Val = previous_trades['Portf_Val'].sum()
 
             #depending on what type of trade this is the trade methodology needs to be changed for the csv so we can identify it later
-            if rebal == "TRUE":
+            if rebal:
                 trade_type = "DCA-rebalance"
             else:
                 trade_type = "DCA"
@@ -153,7 +153,7 @@ def DCA(startmoney, investment_date, investment_period, rebal):
             #data = (tuple([DCA_date.strftime('%d/%m/%Y'), "DCA", str(portf_alloc) + "ST", portf_alloc, "stocks", stock_money, stock_price, stock_units, "cbonds", cbond_money, cbond_price, cbond_units, "sbonds", sbond_money, sbond_price, sbond_units, "gold", gold_money, gold_price, gold_units, "cash", cash_money, cash_price, cash_units, investment_period]))
             
             #if we want to rebalance then we need to make sure to rebalance the whole portfolio
-            if rebal == "TRUE":
+            if rebal:
                 
                 #to-do: get rid of this but only write additions/subtractions of rebal
                 #The previous rebalance will be the sum of all previous trades in portfolio alloc so drop all the other trade except the last
