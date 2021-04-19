@@ -425,6 +425,13 @@ def DCA_rebalance(Rebal_ST_Q, Rebal_CB_Q, Rebal_SB_Q, Rebal_GO_Q, Rebal_CA_Q, st
     #use starting money from previous rebalances
     money_from_sales = 0 + Rebal_Money
 
+    #if we buy we need to return this later for calculating the return
+    invest_buy_stocks = float(0)
+    invest_buy_cbonds = float(0)
+    invest_buy_sbonds = float(0)
+    invest_buy_gold = float(0)
+    invest_buy_cash = float(0)
+
     #conduct sales if needed
     if delta_quant_stocks < 0:
         money_from_sales = money_from_sales + abs(delta_quant_stocks*price_of_rebalance_stocks)
@@ -458,6 +465,7 @@ def DCA_rebalance(Rebal_ST_Q, Rebal_CB_Q, Rebal_SB_Q, Rebal_GO_Q, Rebal_CA_Q, st
         if purchase_value < money_from_sales:
             money_from_sales = money_from_sales - purchase_value
             final_quant_stock = Rebal_ST_Q + delta_quant_stocks
+            invest_buy_stocks = round(purchase_value,2)
             ##uncomment for debugging
             #print("stocks bought. The new amount of stocks held is " + str(final_quant_stock) + " your current spendable balance is " + str(money_from_sales))
     if delta_quant_cbonds > 0:
@@ -465,6 +473,7 @@ def DCA_rebalance(Rebal_ST_Q, Rebal_CB_Q, Rebal_SB_Q, Rebal_GO_Q, Rebal_CA_Q, st
         if purchase_value < money_from_sales:
             money_from_sales = money_from_sales - purchase_value
             final_quant_cbonds = Rebal_CB_Q + delta_quant_cbonds
+            invest_buy_cbonds = round(purchase_value,2)
             ##uncomment for debugging
             #print("cbonds bought. The new amount of cbonds held is " + str(final_quant_cbonds) + " your current spendable balance is " + str(money_from_sales))
     if delta_quant_sbonds > 0:
@@ -472,6 +481,7 @@ def DCA_rebalance(Rebal_ST_Q, Rebal_CB_Q, Rebal_SB_Q, Rebal_GO_Q, Rebal_CA_Q, st
         if purchase_value < money_from_sales:
             money_from_sales = money_from_sales - purchase_value
             final_quant_sbonds = Rebal_SB_Q + delta_quant_sbonds
+            invest_buy_sbonds = round(purchase_value,2)
             ##uncomment for debugging
             #print("sbonds bought. The new amount of sbonds held is " + str(final_quant_sbonds) + " your current spendable balance is " + str(money_from_sales))
     if delta_quant_gold > 0:
@@ -479,6 +489,7 @@ def DCA_rebalance(Rebal_ST_Q, Rebal_CB_Q, Rebal_SB_Q, Rebal_GO_Q, Rebal_CA_Q, st
         if purchase_value < money_from_sales:
             money_from_sales = money_from_sales - purchase_value
             final_quant_gold = Rebal_GO_Q + delta_quant_gold
+            invest_buy_gold = round(purchase_value,2)
             ##uncomment for debugging
             #print("gold bought. The new amount of gold held is " + str(final_quant_gold) + " your current spendable balance is " + str(money_from_sales))
     if delta_quant_cash > 0:
@@ -486,6 +497,7 @@ def DCA_rebalance(Rebal_ST_Q, Rebal_CB_Q, Rebal_SB_Q, Rebal_GO_Q, Rebal_CA_Q, st
         if purchase_value < money_from_sales:
             money_from_sales = money_from_sales - purchase_value
             final_quant_cash = Rebal_CA_Q + delta_quant_cash
+            invest_buy_cash = round(purchase_value,2)
             ##uncomment for debugging
             #print("cash bought. The new amount of cash held is " + str(final_quant_cash) + " your current spendable balance is " + str(money_from_sales))
     
@@ -501,4 +513,4 @@ def DCA_rebalance(Rebal_ST_Q, Rebal_CB_Q, Rebal_SB_Q, Rebal_GO_Q, Rebal_CA_Q, st
     if delta_quant_cash == 0:
         final_quant_cash = Rebal_CA_Q
 
-    return "DCA rebalance succeeded", final_quant_stock, price_of_rebalance_stocks, final_quant_cbonds, price_of_rebalance_cbonds, final_quant_sbonds, price_of_rebalance_sbonds, final_quant_gold, price_of_rebalance_gold, final_quant_cash, price_of_rebalance_cash, money_from_sales, rebal_portf_value, date_of_rebalance
+    return "DCA rebalance succeeded", final_quant_stock, price_of_rebalance_stocks, final_quant_cbonds, price_of_rebalance_cbonds, final_quant_sbonds, price_of_rebalance_sbonds, final_quant_gold, price_of_rebalance_gold, final_quant_cash, price_of_rebalance_cash, money_from_sales, rebal_portf_value, date_of_rebalance, invest_buy_stocks, invest_buy_cbonds, invest_buy_sbonds, invest_buy_gold, invest_buy_cash
