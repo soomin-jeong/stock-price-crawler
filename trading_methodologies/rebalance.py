@@ -502,3 +502,5 @@ def DCA_rebalance(Rebal_ST_Q, Rebal_CB_Q, Rebal_SB_Q, Rebal_GO_Q, Rebal_CA_Q, st
         final_quant_gold = Rebal_GO_Q
     if delta_quant_cash == 0:
         final_quant_cash = Rebal_CA_Q
+
+    return "DCA rebalance succeeded", final_quant_stock, price_of_rebalance_stocks, final_quant_cbonds, price_of_rebalance_cbonds, final_quant_sbonds, price_of_rebalance_sbonds, final_quant_gold, price_of_rebalance_gold, final_quant_cash, price_of_rebalance_cash, money_from_sales, rebal_portf_value, date_of_rebalance, invest_buy_stocks, invest_buy_cbonds, invest_buy_sbonds, invest_buy_gold, invest_buy_cash
