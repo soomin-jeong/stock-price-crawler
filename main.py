@@ -1,18 +1,17 @@
 
-import datetime
 import pandas as pd
 import numpy as np
 
-from performance_analysis import PerformanceAnalyst
+from performance_analyzer.performance_analysis import PerformanceAnalyst
 from crawler_by_asset import crawlers
 from portfolio_allocation.portfolio_generator import portfolio_generator
-from trading_methodologies import oneoff, DCA, rebalance, oneoff_rebalance
+from trading_methodologies import oneoff, DCA, oneoff_rebalance
 
 
 # set the tasks to run here
 RUN_CRAWLER = False
 GENERATE_PORTFOLIOS = False
-GENERATE_STRATEGIES = True
+GENERATE_STRATEGIES = False
 ANALYZE_PERFORMANCE = True
 
 
@@ -26,25 +25,17 @@ def main():
         portfolio_generator.write_as_csv(portfolio)
 
     if GENERATE_STRATEGIES:
-        #one-off
-        data, message = oneoff(100000, '01/01/2020', 1)
-        print(message)
+        startmoney = 100000
+        investment_date = '01/01/2020'
+        timeframe = 1
 
-        #one-off rebalanced
-        oneoff_rebalance(1)
-
-        #DCA
-        #setting the false flag here means we are not rebalancing
-        print(DCA(100000, '01/01/2020', 1))
-        print ("regular DCA finished")
-
-        #DCA rebalanced
-        #setting the true flag means we will rebalance
-        print(DCA(100000, '01/01/2020', 1, True))
-        print("DCA rebal finished")
+        oneoff(startmoney, investment_date, timeframe)
+        oneoff_rebalance(timeframe)
+        DCA(startmoney, investment_date, timeframe)
+        DCA(startmoney, investment_date, timeframe, True)
 
     if ANALYZE_PERFORMANCE:
-        trading_methodology_filename = 'trading_methodologies.csv'
+        trading_methodology_filename = 'trading_methodologies/trading_methodologies.csv'
 
         # Performance Analysis
         data = pd.read_csv(trading_methodology_filename, header=0, parse_dates=['Date'], dtype={'#': np.int32})

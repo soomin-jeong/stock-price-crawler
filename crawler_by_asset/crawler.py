@@ -1,9 +1,6 @@
 import time
 import os
-import csv
-import datetime
-
-from datetime import datetime
+import pandas as pd
 from selenium import webdriver
 
 #use webdriver_manager to ensure support for different driver types in all our dev environments
@@ -52,16 +49,15 @@ class Crawler(object):
         # get values from table
         table = self.driver.find_element_by_id("results_box").find_elements_by_tag_name("tr")
         time.sleep(1)
-        # write data
-        data = []
+        # write data given a header
+        data = pd.DateFrame(columns=["date", "price"])
         for row in table:
             value = row.find_elements_by_tag_name("td")
             if (len(value) in (6, 7)):
                 date = value[0].get_attribute('data-real-value')
                 date_formatted = time.strftime('%d/%m/%Y', time.localtime(int(date)))
                 price = value[1].get_attribute('data-real-value')
-                tuples = (date_formatted, price)
-                data.append(tuples)
+                data = data.append({'date': date_formatted, 'price': price})
         return data
 
     def close_webdriver(self):

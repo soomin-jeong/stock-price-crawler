@@ -20,7 +20,7 @@ def get_portfolio_dataframe():
     return portfolio_df
 
 def write_as_csv(data, write_mode): 
-    filename = 'trading_methodologies.csv'  
+    filename = 'trading_methodologies/trading_methodologies.csv'
     #pass overwrite as argument to write the contents fresh
     if write_mode == "overwrite":
         with open(filename, 'w+', newline='') as file:

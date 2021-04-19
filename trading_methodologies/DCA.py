@@ -8,6 +8,7 @@ import calendar
 import trading_methodologies.trading_util as trading_util
 import trading_methodologies.rebalance as rebalancer
 
+
 def DCA(startmoney, investment_date, investment_period, rebal=False):
 
     #floored division to find the amount to be invested per month
@@ -242,7 +243,7 @@ def DCA(startmoney, investment_date, investment_period, rebal=False):
                 ##for testing it may be helpful to write to the csv within the loop
                 #trading_util.write_as_csv(data, "append")
                 trading_util.write_as_csv(data, "append")
-    return 'DCA has succeeded'
+    print('[SUCCESS] DCA')
 
 
 

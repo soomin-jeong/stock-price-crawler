@@ -94,5 +94,4 @@ def oneoff(startmoney, investment_date, timeframe):
         else:
             trading_util.write_as_csv(data, "append")
 
-    
-    return data, 'Oneoff succeeded'
+    print("[SUCCESS] Oneoff")

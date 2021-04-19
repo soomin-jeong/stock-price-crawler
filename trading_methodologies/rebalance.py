@@ -348,8 +348,8 @@ def oneoff_rebalance(investment_period):
         # trading_util.write_as_csv(data, "append")
         # ##uncomment for debugging
         #print("finished writing trade to CSV")
-            
-    return 'rebalance succeeded'
+    print("[SUCCESS] Oneoff Rebalance")
+
 
 def DCA_rebalance(Rebal_ST_Q, Rebal_CB_Q, Rebal_SB_Q, Rebal_GO_Q, Rebal_CA_Q, stock_percentage, cbond_percentage, sbond_percentage, gold_percentage, cash_percentage, Rebal_Money, DCA_date):
     Rebal_ST_Q = Rebal_ST_Q 
