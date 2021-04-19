@@ -44,7 +44,22 @@ Inside the crawler_drivers forlder, an instance of chrome and firefox (gecko) dr
 │   ├── chromedriver         
 │   └── geckodriver       
 
-# Task 2 (Data Generation)
+# Task 2 (Investment Strategies Generation)
+In order to execute the trading the user needs to specify the amount of money to be invested, the date of the investment and the investment period in months. They also need to decided which trading strategy to use. 
+
+In order to run the oneoff trading methodology uncomment the following line in main.py:
+data, message = oneoff(100000, '01/01/2020', 1)
+The first parameter is the investment amount, the second is the date of the investment and the third is how long the investment will be held in months. The program goes through all the portfolio allocations portfolio_allocations.csv and Trades are executed. For each portfolio the number of each asset bought as well as data such as the price of the asset on the date is written to trading_methodologies.csv.
+
+Note: when the user specifies 1 as the investment period the program deletes trading_methodologies.csv and rewrites the header line. Otherwise the data will always be appended to the CSV
+
+In order to run the oneoff rebalance trading methodology uncomment the following line in main.py:
+oneoff_rebalance(1)
+Here the paramater is the holding period in months. Oneoff_rebalance analyzes previous one-off trades with a matching investment period and rebalances these. Therfore oneoff must be run first.
+
+In order to run the DCA trading methodology uncomment the following line in main.py:
+print(DCA(100000, '01/01/2020', 1, "FALSE"))
+Here the first parameter is how much money should be invested, the second is the date of the investment, the third parameter is the investment period in months, and finally the FALSE flag means the DCA trades will not be rebalanced.
 
 # Task 3 (Data Analysis)
 # Architecture
