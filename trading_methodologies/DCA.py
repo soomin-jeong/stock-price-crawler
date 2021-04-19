@@ -52,8 +52,8 @@ def DCA(startmoney, investment_date, investment_period, rebal):
         cash_money = money_per_month*cash_percentage
 
         #initialize empty dateframe to store previous trades if we need to access for rebalancing 
-        columns =['ST_Q', 'ST_P', 'CB_Q', 'CB_P', 'SB_Q', 'SB_P', 'GO_Q', 'GO_P', 'CA_Q', 'CA_P', 'Money', 'Portf_Val']
-        previous_rebalance =  pd.DataFrame(columns = columns)
+        columns =['ST_M', 'ST_Q', 'ST_P', 'CB_M', 'CB_Q', 'CB_P', 'SB_M', 'SB_Q', 'SB_P', 'GO_M', 'GO_Q', 'GO_P', 'CA_M', 'CA_Q', 'CA_P', 'Money', 'Portf_Val']
+        previous_trades =  pd.DataFrame(columns = columns)
 
         #execute trade with portfolio logic for every month of investment period
         for x in range(0,investment_period):
@@ -74,6 +74,64 @@ def DCA(startmoney, investment_date, investment_period, rebal):
             gold_units = math.floor(gold_money/gold_price)
             cash_units = math.floor(cash_money/cash_price)
 
+            #set the actual money spent
+            stock_money = round(stock_price*stock_units,2)
+            cbond_money = round(cbond_price*cbond_units,2)
+            sbond_money = round(sbond_price*sbond_units,2)
+            gold_money = round(gold_price*gold_units,2)
+            cash_money = round(1*cash_units,2)
+            
+            #add the current DCA trade to DF 
+            trade_port_value = stock_units*stock_price + cbond_units*cbond_price + sbond_price*sbond_units + gold_units*gold_price + cash_units*cash_price
+            trade_data = {
+                'ST_M': stock_money,
+                'ST_Q': stock_units,
+                'ST_P': stock_price,
+                'CB_M': cbond_money,
+                'CB_Q': cbond_units,
+                'CB_P': cbond_price,
+                'SB_M': sbond_money,
+                'SB_Q': sbond_units,
+                'SB_P': sbond_price,
+                'GO_M': gold_money,
+                'GO_Q': gold_units,
+                'GO_P': gold_price,
+                'CA_M': cash_money,
+                'CA_Q': cash_units,
+                'CA_P': cash_price,
+                'Money': 0,
+                'Portf_Val': trade_port_value
+                }
+
+            previous_trades = previous_trades.append(trade_data, ignore_index=True)
+            #typecast to int/float
+            previous_trades["ST_Q"] = pd.to_numeric(previous_trades["ST_Q"], errors='coerce')
+            previous_trades["CB_Q"] = pd.to_numeric(previous_trades["CB_Q"], errors='coerce')
+            previous_trades["SB_Q"] = pd.to_numeric(previous_trades["SB_Q"], errors='coerce')
+            previous_trades["GO_Q"] = pd.to_numeric(previous_trades["GO_Q"], errors='coerce')
+            previous_trades["CA_Q"] = pd.to_numeric(previous_trades["CA_Q"], errors='coerce')
+            previous_trades["Money"] = pd.to_numeric(previous_trades["Money"], errors='coerce')
+            previous_trades["Portf_Val"] = pd.to_numeric(previous_trades["Portf_Val"], errors='coerce')
+
+            #calculate current holdings for one portfolio
+            DCA_ST_M = previous_trades['ST_M'].sum()
+            DCA_ST_Q = previous_trades['ST_Q'].sum()
+            #DCA_ST_P = previous_trades['ST_P'].sum()
+            DCA_CB_M = previous_trades['CB_M'].sum()
+            DCA_CB_Q = previous_trades['CB_Q'].sum()
+            #DCA_CB_P = previous_trades['CB_P'].sum()
+            DCA_SB_M = previous_trades['SB_M'].sum()
+            DCA_SB_Q = previous_trades['SB_Q'].sum()
+            #DCA_SB_P = previous_trades['SB_P'].sum()
+            DCA_GO_M = previous_trades['GO_M'].sum()
+            DCA_GO_Q = previous_trades['GO_Q'].sum()
+            #DCA_GO_P = previous_trades['GO_P'].sum()
+            DCA_CA_M = previous_trades['CA_M'].sum()
+            DCA_CA_Q = previous_trades['CA_Q'].sum()
+            #DCA_CA_P = previous_trades['CA_P'].sum()
+            DCA_Money = previous_trades['Money'].sum()
+            DCA_Portf_Val = previous_trades['Portf_Val'].sum()
+
             #depending on what type of trade this is the trade methodology needs to be changed for the csv so we can identify it later
             if rebal == "TRUE":
                 trade_type = "DCA-rebalance"
@@ -81,11 +139,11 @@ def DCA(startmoney, investment_date, investment_period, rebal):
                 trade_type = "DCA"
             #add data to array for later csv writing
             data = []
-            data.append(tuple([DCA_date.strftime('%d/%m/%Y'), trade_type, str(int(portf_alloc)) + ".ST", int(portf_alloc), "stocks", stock_money, stock_price, int(stock_units), investment_period]))
-            data.append(tuple([DCA_date.strftime('%d/%m/%Y'), trade_type, str(int(portf_alloc)) + ".CB", int(portf_alloc), "cbonds", cbond_money, cbond_price, int(cbond_units), investment_period]))
-            data.append(tuple([DCA_date.strftime('%d/%m/%Y'), trade_type, str(int(portf_alloc)) + ".SB", int(portf_alloc), "sbonds", sbond_money, sbond_price, int(sbond_units), investment_period]))
-            data.append(tuple([DCA_date.strftime('%d/%m/%Y'), trade_type, str(int(portf_alloc)) + ".GO", int(portf_alloc), "gold", gold_money, gold_price, int(gold_units), investment_period]))
-            data.append(tuple([DCA_date.strftime('%d/%m/%Y'), trade_type, str(int(portf_alloc)) + ".CA", int(portf_alloc), "cash", cash_money, cash_price, int(cash_units), investment_period]))
+            data.append(tuple([DCA_date.strftime('%d/%m/%Y'), trade_type, str(int(portf_alloc)) + ".ST", int(portf_alloc), "stocks", round(DCA_ST_M,2), stock_price, DCA_ST_Q, stock_money, investment_period]))
+            data.append(tuple([DCA_date.strftime('%d/%m/%Y'), trade_type, str(int(portf_alloc)) + ".CB", int(portf_alloc), "cbonds", round(DCA_CB_M,2), cbond_price, DCA_CB_Q, cbond_money, investment_period]))
+            data.append(tuple([DCA_date.strftime('%d/%m/%Y'), trade_type, str(int(portf_alloc)) + ".SB", int(portf_alloc), "sbonds", round(DCA_SB_M,2), sbond_price, DCA_SB_Q, sbond_money, investment_period]))
+            data.append(tuple([DCA_date.strftime('%d/%m/%Y'), trade_type, str(int(portf_alloc)) + ".GO", int(portf_alloc), "gold", round(DCA_GO_M,2), gold_price, DCA_GO_Q, gold_money, investment_period]))
+            data.append(tuple([DCA_date.strftime('%d/%m/%Y'), trade_type, str(int(portf_alloc)) + ".CA", int(portf_alloc), "cash", round(DCA_CA_M,2), cash_price, DCA_CA_Q, cash_money, investment_period]))
             trading_util.write_as_csv(data, "append")
 
             #write all data to a single line
@@ -96,56 +154,26 @@ def DCA(startmoney, investment_date, investment_period, rebal):
             
             #if we want to rebalance then we need to make sure to rebalance the whole portfolio
             if rebal == "TRUE":
-                #add the current DCA trade to DF 
-                #print("entered if block for rebalance")
-                trade_port_value = stock_units*stock_price + cbond_units*cbond_price + sbond_price*sbond_units + gold_units*gold_price + cash_units*cash_price
-                trade_data = {
-                    'ST_Q': stock_units,
-                    'ST_P': stock_price,
-                    'CB_Q': cbond_units,
-                    'CB_P': cbond_price,
-                    'SB_Q': sbond_units,
-                    'SB_P': sbond_price,
-                    'GO_Q': gold_units,
-                    'GO_P': gold_price,
-                    'CA_Q': cash_units,
-                    'CA_P': cash_price,
-                    'Money': 0,
-                    'Portf_Val': trade_port_value
-                    }
-
-                previous_rebalance = previous_rebalance.append(trade_data, ignore_index=True)
-                #pd.show_versions()
-                #typecast to int/float
-                #previous_rebalance = previous_rebalance.apply(pd.to_numeric)
-                #previous_rebalance[['ST_Q', 'CB_Q']] = previous_rebalance[['ST_Q', 'CB_Q']].apply(pd.to_numeric)
-                #the above two options raise errors
-                previous_rebalance["ST_Q"] = pd.to_numeric(previous_rebalance["ST_Q"], errors='coerce')
-                previous_rebalance["CB_Q"] = pd.to_numeric(previous_rebalance["CB_Q"], errors='coerce')
-                previous_rebalance["SB_Q"] = pd.to_numeric(previous_rebalance["SB_Q"], errors='coerce')
-                previous_rebalance["GO_Q"] = pd.to_numeric(previous_rebalance["GO_Q"], errors='coerce')
-                previous_rebalance["CA_Q"] = pd.to_numeric(previous_rebalance["CA_Q"], errors='coerce')
-                previous_rebalance["Money"] = pd.to_numeric(previous_rebalance["Money"], errors='coerce')
-                previous_rebalance["Portf_Val"] = pd.to_numeric(previous_rebalance["Portf_Val"], errors='coerce')
-
+                
+                #to-do: get rid of this but only write additions/subtractions of rebal
                 #The previous rebalance will be the sum of all previous trades in portfolio alloc so drop all the other trade except the last
-                #print("The dataframe length is" + str(len(previous_rebalance)))
-                if len(previous_rebalance) == 4:
-                    previous_rebalance = previous_rebalance.drop(previous_rebalance.index[0])
+                #print("The dataframe length is" + str(len(previous_trades)))
+                if len(previous_trades) == 4:
+                    previous_trades = previous_trades.drop(previous_trades.index[0])
 
                 #Sum of the columns
-                Rebal_ST_Q = previous_rebalance['ST_Q'].sum()
-                #Rebal_ST_P = previous_rebalance['ST_P'].sum()
-                Rebal_CB_Q = previous_rebalance['CB_Q'].sum()
-                #Rebal_CB_P = previous_rebalance['CB_P'].sum()
-                Rebal_SB_Q = previous_rebalance['SB_Q'].sum()
-                #Rebal_SB_P = previous_rebalance['SB_P'].sum()
-                Rebal_GO_Q = previous_rebalance['GO_Q'].sum()
-                #Rebal_GO_P = previous_rebalance['GO_P'].sum()
-                Rebal_CA_Q = previous_rebalance['CA_Q'].sum()
-                #Rebal_CA_P = previous_rebalance['CA_P'].sum()
-                Rebal_Money = previous_rebalance['Money'].sum()
-                Rebal_Portf_Val = previous_rebalance['Portf_Val'].sum()
+                Rebal_ST_Q = previous_trades['ST_Q'].sum()
+                #Rebal_ST_P = previous_trades['ST_P'].sum()
+                Rebal_CB_Q = previous_trades['CB_Q'].sum()
+                #Rebal_CB_P = previous_trades['CB_P'].sum()
+                Rebal_SB_Q = previous_trades['SB_Q'].sum()
+                #Rebal_SB_P = previous_trades['SB_P'].sum()
+                Rebal_GO_Q = previous_trades['GO_Q'].sum()
+                #Rebal_GO_P = previous_trades['GO_P'].sum()
+                Rebal_CA_Q = previous_trades['CA_Q'].sum()
+                #Rebal_CA_P = previous_trades['CA_P'].sum()
+                Rebal_Money = previous_trades['Money'].sum()
+                Rebal_Portf_Val = previous_trades['Portf_Val'].sum()
                 #print("The sum of the portfolio value is " + str(Rebal_Portf_Val))
                 
                 #Execute rebalance
@@ -173,31 +201,42 @@ def DCA(startmoney, investment_date, investment_period, rebal):
                 Rebal_Money = result[11]
                 trade_port_value = result[12]
                 date_of_rebalance = result[13]
+                invest_buy_stocks = result[14]
+                invest_buy_cbonds = result[15]
+                invest_buy_sbonds = result[16]
+                invest_buy_gold = result[17]
+                invest_buy_cash = result[18]
                 
+                #to-do
                 #Write to dataframe
                 trade_data = {
+                    'ST_M': 0,
                     'ST_Q': stock_units,
                     'ST_P': stock_price,
+                    'CB_M': 0,
                     'CB_Q': cbond_units,
                     'CB_P': cbond_price,
+                    'SB_M': 0,
                     'SB_Q': sbond_units,
                     'SB_P': sbond_price,
+                    'GO_M': 0,
                     'GO_Q': gold_units,
                     'GO_P': gold_price,
+                    'CA_M': 0,
                     'CA_Q': cash_units,
                     'CA_P': cash_price,
                     'Money': Rebal_Money,
                     'Portf_Val': trade_port_value
                     }
 
-                previous_rebalance = previous_rebalance.append(trade_data, ignore_index=True)
+                previous_trades = previous_trades.append(trade_data, ignore_index=True)
                 #Add to data list to be written to CSV
                 data = []
-                data.append(tuple([date_of_rebalance.strftime('%d/%m/%Y'), "DCA-rebalance", str(int(portf_alloc)) + ".ST", int(portf_alloc), "stocks", stock_money, stock_price, int(stock_units), investment_period]))
-                data.append(tuple([date_of_rebalance.strftime('%d/%m/%Y'), "DCA-rebalance", str(int(portf_alloc)) + ".CB", int(portf_alloc), "cbonds", cbond_money, cbond_price, int(cbond_units), investment_period]))
-                data.append(tuple([date_of_rebalance.strftime('%d/%m/%Y'), "DCA-rebalance", str(int(portf_alloc)) + ".SB", int(portf_alloc), "sbonds", sbond_money, sbond_price, int(sbond_units), investment_period]))
-                data.append(tuple([date_of_rebalance.strftime('%d/%m/%Y'), "DCA-rebalance", str(int(portf_alloc)) + ".GO", int(portf_alloc), "gold", gold_money, gold_price, int(gold_units), investment_period]))
-                data.append(tuple([date_of_rebalance.strftime('%d/%m/%Y'), "DCA-rebalance", str(int(portf_alloc)) + ".CA", int(portf_alloc), "cash", cash_money, cash_price, int(cash_units), investment_period]))
+                data.append(tuple([date_of_rebalance.strftime('%d/%m/%Y'), "DCA-rebalance", str(int(portf_alloc)) + ".ST", int(portf_alloc), "stocks", stock_money, stock_price, int(stock_units), invest_buy_stocks, investment_period]))
+                data.append(tuple([date_of_rebalance.strftime('%d/%m/%Y'), "DCA-rebalance", str(int(portf_alloc)) + ".CB", int(portf_alloc), "cbonds", cbond_money, cbond_price, int(cbond_units), invest_buy_cbonds, investment_period]))
+                data.append(tuple([date_of_rebalance.strftime('%d/%m/%Y'), "DCA-rebalance", str(int(portf_alloc)) + ".SB", int(portf_alloc), "sbonds", sbond_money, sbond_price, int(sbond_units), invest_buy_sbonds, investment_period]))
+                data.append(tuple([date_of_rebalance.strftime('%d/%m/%Y'), "DCA-rebalance", str(int(portf_alloc)) + ".GO", int(portf_alloc), "gold", gold_money, gold_price, int(gold_units), invest_buy_gold, investment_period]))
+                data.append(tuple([date_of_rebalance.strftime('%d/%m/%Y'), "DCA-rebalance", str(int(portf_alloc)) + ".CA", int(portf_alloc), "cash", cash_money, cash_price, int(cash_units), invest_buy_cash, investment_period]))
                 ##uncomment for debugging
                 #print("current portfolio ID is" + str(portf_alloc))
                 ##for testing it may be helpful to write to the csv within the loop

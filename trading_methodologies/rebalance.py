@@ -12,8 +12,6 @@ def oneoff_rebalance(investment_period):
     stocksdf,cbondsdf, sbondsdf, golddf, cashdf =  trading_util.dataframes_from_crawler()
    
     #load all trade data which was made with oneoff method
-    #to-do: add and investment period is the same
-    #tradedatadf.loc[(tradedatadf['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer])) & (tradedatadf['Asset'] == "stocks")].iloc[0]['#']
     oneoff_trades_df = tradedatadf.loc[(tradedatadf['Trading Method.'] == "Oneoff") & (tradedatadf['Timeframe'] == investment_period)]
     
     ##uncomment for debugging
@@ -77,6 +75,7 @@ def oneoff_rebalance(investment_period):
         #print("the date of the first rebalance is " + str(rebalance_initial_date))
 
         #initialize empty dateframe which can be overwritten with rebalance data 
+        #columns =['ST_M', 'ST_Q', 'ST_P', 'CB_M', 'CB_Q', 'CB_P', 'SB_M', 'SB_Q', 'SB_P', 'GO_M', 'GO_Q', 'GO_P', 'CA_M', 'CA_Q', 'CA_P', 'Money', 'Portf_Val']
         empty_df = pd.DataFrame()
         previous_rebalance = empty_df
         # previous_rebalance = pd.DataFrame(index = [0, 1], columns = ['Asset Alloc.', 'Asset', '#'])
@@ -105,7 +104,11 @@ def oneoff_rebalance(investment_period):
                 initial_quant_sbonds = previous_rebalance.loc[(previous_rebalance['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer])) & (previous_rebalance['Asset'] == "sbonds")].iloc[0]['#']
                 initial_quant_gold = previous_rebalance.loc[(previous_rebalance['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer])) & (previous_rebalance['Asset'] == "gold")].iloc[0]['#']
                 initial_quant_cash = previous_rebalance.loc[(previous_rebalance['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer])) & (previous_rebalance['Asset'] == "cash")].iloc[0]['#']
-                
+                rebal_value_of_stocks = previous_rebalance.loc[(previous_rebalance['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer])) & (previous_rebalance['Asset'] == "stocks")].iloc[0]['Asset Money']
+                rebal_value_of_cbonds = previous_rebalance.loc[(previous_rebalance['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer])) & (previous_rebalance['Asset'] == "cbonds")].iloc[0]['Asset Money']
+                rebal_value_of_sbonds = previous_rebalance.loc[(previous_rebalance['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer])) & (previous_rebalance['Asset'] == "sbonds")].iloc[0]['Asset Money']
+                rebal_value_of_gold = previous_rebalance.loc[(previous_rebalance['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer])) & (previous_rebalance['Asset'] == "gold")].iloc[0]['Asset Money']
+                rebal_value_of_cash = previous_rebalance.loc[(previous_rebalance['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer])) & (previous_rebalance['Asset'] == "cash")].iloc[0]['Asset Money']
                 ##uncomment for debugging
                 #print("Your portfolio was previously rebalanced. It consists of " + str(initial_quant_stocks) + " stock units " + str(initial_quant_cbonds)+ " cbond units " + str(initial_quant_sbonds) +" sbond units " + str(initial_quant_gold) + " gold units " + str(initial_quant_cash) + " cash units")
             
@@ -122,11 +125,20 @@ def oneoff_rebalance(investment_period):
                 rebal_value_of_cash = tradedatadf.loc[(tradedatadf['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer])) & (tradedatadf['Asset'] == "cash")].iloc[0]['Amount($)']
                 price_of_rebalance_cash = tradedatadf.loc[(tradedatadf['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer])) & (tradedatadf['Asset'] == "cash")].iloc[0]['Asset price']
                 
-                data.append(tuple([initial_date_obj.strftime("%d/%m/%Y"), "oneoff-rebal.", str(portfolio_allocation_IDs[pointer]) +"."+ str(y) + ".st", portfolio_allocation_IDs[pointer], "stocks", rebal_value_of_stocks, price_of_rebalance_stocks, initial_quant_stocks, investment_period]))
-                data.append(tuple([initial_date_obj.strftime("%d/%m/%Y"), "oneoff-rebal.", str(portfolio_allocation_IDs[pointer]) +"."+ str(y) + ".cb", portfolio_allocation_IDs[pointer], "cbonds", rebal_value_of_cbonds, price_of_rebalance_cbonds, initial_quant_cbonds, investment_period]))
-                data.append(tuple([initial_date_obj.strftime("%d/%m/%Y"), "oneoff-rebal.", str(portfolio_allocation_IDs[pointer]) +"."+ str(y) + ".sb", portfolio_allocation_IDs[pointer], "sbonds", rebal_value_of_sbonds, price_of_rebalance_sbonds, initial_quant_sbonds, investment_period]))
-                data.append(tuple([initial_date_obj.strftime("%d/%m/%Y"), "oneoff-rebal.", str(portfolio_allocation_IDs[pointer]) +"."+ str(y) + ".go", portfolio_allocation_IDs[pointer], "gold", rebal_value_of_gold, price_of_rebalance_gold, initial_quant_gold, investment_period]))
-                data.append(tuple([initial_date_obj.strftime("%d/%m/%Y"), "oneoff-rebal.", str(portfolio_allocation_IDs[pointer]) +"."+ str(y) + ".ca", portfolio_allocation_IDs[pointer], "cash", rebal_value_of_cash, 1, initial_quant_cash, investment_period]))
+                data.append(tuple([initial_date_obj.strftime("%d/%m/%Y"), "oneoff-rebal.", str(portfolio_allocation_IDs[pointer]) +"."+ str(y) + ".ST", portfolio_allocation_IDs[pointer], "stocks", rebal_value_of_stocks, price_of_rebalance_stocks, initial_quant_stocks, rebal_value_of_stocks, investment_period]))
+                data.append(tuple([initial_date_obj.strftime("%d/%m/%Y"), "oneoff-rebal.", str(portfolio_allocation_IDs[pointer]) +"."+ str(y) + ".CB", portfolio_allocation_IDs[pointer], "cbonds", rebal_value_of_cbonds, price_of_rebalance_cbonds, initial_quant_cbonds, rebal_value_of_cbonds, investment_period]))
+                data.append(tuple([initial_date_obj.strftime("%d/%m/%Y"), "oneoff-rebal.", str(portfolio_allocation_IDs[pointer]) +"."+ str(y) + ".SB", portfolio_allocation_IDs[pointer], "sbonds", rebal_value_of_sbonds, price_of_rebalance_sbonds, initial_quant_sbonds, rebal_value_of_sbonds, investment_period]))
+                data.append(tuple([initial_date_obj.strftime("%d/%m/%Y"), "oneoff-rebal.", str(portfolio_allocation_IDs[pointer]) +"."+ str(y) + ".GO", portfolio_allocation_IDs[pointer], "gold", rebal_value_of_gold, price_of_rebalance_gold, initial_quant_gold, rebal_value_of_gold, investment_period]))
+                data.append(tuple([initial_date_obj.strftime("%d/%m/%Y"), "oneoff-rebal.", str(portfolio_allocation_IDs[pointer]) +"."+ str(y) + ".CA", portfolio_allocation_IDs[pointer], "cash", rebal_value_of_cash, 1, initial_quant_cash, rebal_value_of_cash, investment_period]))
+
+                pandas_data = {
+                'Asset Alloc.': [int(portfolio_allocation_IDs[pointer]), int(portfolio_allocation_IDs[pointer]), int(portfolio_allocation_IDs[pointer]), int(portfolio_allocation_IDs[pointer]), int(portfolio_allocation_IDs[pointer])],
+                'Asset': ['stocks', 'cbonds','sbonds', 'gold', 'cash'],
+                'Asset Money' : [rebal_value_of_stocks, rebal_value_of_cbonds, rebal_value_of_sbonds, rebal_value_of_gold, rebal_value_of_cash],
+                '#':  [initial_quant_stocks, initial_quant_cbonds, initial_quant_sbonds, initial_quant_gold, initial_quant_cash]
+                }
+                previous_rebalance = pd.DataFrame (pandas_data, columns = ['Asset Alloc.', 'Asset', 'Asset Money', '#'])
+                
             #get the current prices/values of assets
             date_of_rebalance, price_of_rebalance_cbonds = trading_util.find_data_point("cbonds", trading_util.add_months(rebalance_initial_date, y))
             
@@ -201,71 +213,82 @@ def oneoff_rebalance(investment_period):
             final_quant_cash = 0
             money_from_sales = 0
 
+            purchase_value_stocks = float(0)
+            purchase_value_cbonds = float(0)
+            purchase_value_sbonds = float(0)
+            purchase_value_gold = float(0)
+            purchase_value_cash = float(0)
+
             #conduct sales if needed
             if delta_quant_stocks < 0:
-                money_from_sales = money_from_sales + abs(delta_quant_stocks*price_of_rebalance_stocks)
+                purchase_value_stocks = round(delta_quant_stocks*price_of_rebalance_stocks,2)
+                money_from_sales = money_from_sales + abs(purchase_value_stocks)
                 final_quant_stock = initial_quant_stocks + delta_quant_stocks
                 ##uncomment for debugging
                 #print("stocks sold. The new amount of stocks held is " + str(final_quant_stock) + " your current spendable balance is " + str(money_from_sales))
             if delta_quant_cbonds < 0:
-                money_from_sales = money_from_sales + abs(delta_quant_cbonds*price_of_rebalance_cbonds)
+                purchase_value_cbonds = round(delta_quant_cbonds*price_of_rebalance_cbonds,2)
+                money_from_sales = money_from_sales + abs(purchase_value_cbonds)
                 final_quant_cbonds = initial_quant_cbonds + delta_quant_cbonds
                 ##uncomment for debugging
                 #print("cbonds sold. The new amount of cbonds held is " + str(final_quant_cbonds) + " your current spendable balance is " + str(money_from_sales))
             if delta_quant_sbonds < 0:
-                money_from_sales = money_from_sales + abs(delta_quant_sbonds*price_of_rebalance_sbonds)
+                purchase_value_sbonds = round(delta_quant_sbonds*price_of_rebalance_sbonds,2)
+                money_from_sales = money_from_sales + abs(purchase_value_sbonds)
                 final_quant_sbonds = initial_quant_sbonds + delta_quant_sbonds
                 ##uncomment for debugging
                 #print("sbonds sold. The new amount of sbonds held is " + str(final_quant_sbonds) + " your current spendable balance is " + str(money_from_sales))
             if delta_quant_gold < 0:
-                money_from_sales = money_from_sales + abs(delta_quant_gold*price_of_rebalance_gold)
+                purchase_value_gold = round(delta_quant_gold*price_of_rebalance_gold,2)
+                money_from_sales = money_from_sales + abs(purchase_value_gold)
                 final_quant_gold = initial_quant_gold + delta_quant_gold
                 ##uncomment for debugging
                 #print("gold sold. The new amount of gold held is " + str(final_quant_gold) + " your current spendable balance is " + str(money_from_sales))
             if delta_quant_cash < 0:
-                money_from_sales = money_from_sales + abs(delta_quant_cash*price_of_rebalance_cash)
+                purchase_value_gold = round(delta_quant_cash*price_of_rebalance_cash,2)
+                money_from_sales = money_from_sales + abs(purchase_value_gold)
                 final_quant_cash = initial_quant_cash + delta_quant_cash
                 ##uncomment for debugging
                 #print("cash sold. The new amount of cash held is " + str(final_quant_cash) + " your current spendable balance is " + str(money_from_sales))
             
             #conduct purchases with money_from_sales
             if delta_quant_stocks > 0:
-                purchase_value = delta_quant_stocks*price_of_rebalance_stocks
-                if purchase_value < money_from_sales:
-                    money_from_sales = money_from_sales - purchase_value
+                purchase_value_stocks = round(delta_quant_stocks*price_of_rebalance_stocks,2)
+                if purchase_value_stocks < money_from_sales:
+                    money_from_sales = money_from_sales - purchase_value_stocks
                     final_quant_stock = initial_quant_stocks + delta_quant_stocks
                     ##uncomment for debugging
                     #print("stocks bought. The new amount of stocks held is " + str(final_quant_stock) + " your current spendable balance is " + str(money_from_sales))
             if delta_quant_cbonds > 0:
-                purchase_value = delta_quant_cbonds*price_of_rebalance_cbonds
-                if purchase_value < money_from_sales:
-                    money_from_sales = money_from_sales - purchase_value
+                purchase_value_cbonds = round(delta_quant_cbonds*price_of_rebalance_cbonds,2)
+                if purchase_value_cbonds < money_from_sales:
+                    money_from_sales = money_from_sales - purchase_value_cbonds
                     final_quant_cbonds = initial_quant_cbonds + delta_quant_cbonds
                     ##uncomment for debugging
                     #print("cbonds bought. The new amount of cbonds held is " + str(final_quant_cbonds) + " your current spendable balance is " + str(money_from_sales))
             if delta_quant_sbonds > 0:
-                purchase_value = delta_quant_sbonds*price_of_rebalance_sbonds
-                if purchase_value < money_from_sales:
-                    money_from_sales = money_from_sales - purchase_value
+                purchase_value_sbonds = round(delta_quant_sbonds*price_of_rebalance_sbonds,2)
+                if purchase_value_sbonds < money_from_sales:
+                    money_from_sales = money_from_sales - purchase_value_sbonds
                     final_quant_sbonds = initial_quant_sbonds + delta_quant_sbonds
                     ##uncomment for debugging
                     #print("sbonds bought. The new amount of sbonds held is " + str(final_quant_sbonds) + " your current spendable balance is " + str(money_from_sales))
             if delta_quant_gold > 0:
-                purchase_value = delta_quant_gold*price_of_rebalance_gold
-                if purchase_value < money_from_sales:
-                    money_from_sales = money_from_sales - purchase_value
+                purchase_value_gold = round(delta_quant_gold*price_of_rebalance_gold,2)
+                if purchase_value_gold < money_from_sales:
+                    money_from_sales = money_from_sales - purchase_value_gold
                     final_quant_gold = initial_quant_gold + delta_quant_gold
                     ##uncomment for debugging
                     #print("gold bought. The new amount of gold held is " + str(final_quant_gold) + " your current spendable balance is " + str(money_from_sales))
             if delta_quant_cash > 0:
-                purchase_value = delta_quant_cash*price_of_rebalance_cash
-                if purchase_value < money_from_sales:
-                    money_from_sales = money_from_sales - purchase_value
+                purchase_value_cash = round(delta_quant_cash*price_of_rebalance_cash,2)
+                if purchase_value_cash < money_from_sales:
+                    money_from_sales = money_from_sales - purchase_value_cash
                     final_quant_cash = initial_quant_cash + delta_quant_cash
                     ##uncomment for debugging
                     #print("cash bought. The new amount of cash held is " + str(final_quant_cash) + " your current spendable balance is " + str(money_from_sales))
             
-            #if neither purchase or sale is needed keep the original quanitity
+            #add final quanitity for whole portfolio
             if delta_quant_stocks == 0:
                 final_quant_stock = initial_quant_stocks
             if delta_quant_cbonds == 0:
@@ -277,24 +300,43 @@ def oneoff_rebalance(investment_period):
             if delta_quant_cash == 0:
                 final_quant_cash = initial_quant_cash
             
+            #Only buys are used in calculating the return so we get rid of negative values
+            purchase_value_stocks=0 if purchase_value_stocks < 0 else purchase_value_stocks
+            purchase_value_cbonds=0 if purchase_value_cbonds < 0 else purchase_value_cbonds
+            purchase_value_sbonds=0 if purchase_value_sbonds < 0 else purchase_value_sbonds
+            purchase_value_gold=0 if purchase_value_gold < 0 else purchase_value_gold
+            purchase_value_cash=0 if purchase_value_cash < 0 else purchase_value_cash
+
+            #calculate the amount weve spent on each asset
+            final_val_stocks = rebal_value_of_stocks + purchase_value_stocks
+            final_val_cbonds = rebal_value_of_cbonds + purchase_value_cbonds
+            final_val_sbonds = rebal_value_of_sbonds + purchase_value_sbonds
+            final_val_gold = rebal_value_of_gold + purchase_value_gold
+            final_val_cash = rebal_value_of_cash + purchase_value_cash
+
             #Write rebalance to Pandas DF so we can reuse it in the next loop
             pandas_data = {
             'Asset Alloc.':  [int(portfolio_allocation_IDs[pointer]), int(portfolio_allocation_IDs[pointer]), int(portfolio_allocation_IDs[pointer]), int(portfolio_allocation_IDs[pointer]), int(portfolio_allocation_IDs[pointer])],
             'Asset': ['stocks', 'cbonds','sbonds', 'gold', 'cash'],
+            'Asset Money' : [final_val_stocks, final_val_cbonds, final_val_sbonds, final_val_gold, final_val_cash],
             '#':  [final_quant_stock, final_quant_cbonds, final_quant_sbonds, final_quant_gold, final_quant_cash] 
             }
-            previous_rebalance = pd.DataFrame (pandas_data, columns = ['Asset Alloc.', 'Asset', '#'])
+            #columns = ['ST_M', 'ST_Q', 'ST_P', 'CB_M', 'CB_Q', 'CB_P', 'SB_M', 'SB_Q', 'SB_P', 'GO_M', 'GO_Q', 'GO_P', 'CA_M', 'CA_Q', 'CA_P', 'Money', 'Portf_Val']
+            
+            previous_rebalance = pd.DataFrame (pandas_data, columns = ['Asset Alloc.', 'Asset', 'Asset Money', '#'])
         
+
+            
         
             #Write trade to data list for later writing to CSV
             ##uncomment for debugging
             #print(final_quant_stock, final_quant_cbonds, final_quant_sbonds, final_quant_gold, final_quant_cash)
             
-            data.append(tuple([date_of_rebalance.strftime("%d/%m/%Y"), "oneoff-rebal.", str(portfolio_allocation_IDs[pointer]) +"."+ str(y) + ".ST", int(portfolio_allocation_IDs[pointer]), "stocks", rebal_value_of_stocks, price_of_rebalance_stocks, final_quant_stock, investment_period]))
-            data.append(tuple([date_of_rebalance.strftime("%d/%m/%Y"), "oneoff-rebal.", str(portfolio_allocation_IDs[pointer]) +"."+ str(y) + ".CB", int(portfolio_allocation_IDs[pointer]), "cbonds", rebal_value_of_cbonds, price_of_rebalance_cbonds, final_quant_cbonds, investment_period]))
-            data.append(tuple([date_of_rebalance.strftime("%d/%m/%Y"), "oneoff-rebal.", str(portfolio_allocation_IDs[pointer]) +"."+ str(y) + ".SB", int(portfolio_allocation_IDs[pointer]), "sbonds", rebal_value_of_sbonds, price_of_rebalance_sbonds, final_quant_sbonds, investment_period]))
-            data.append(tuple([date_of_rebalance.strftime("%d/%m/%Y"), "oneoff-rebal.", str(portfolio_allocation_IDs[pointer]) +"."+ str(y) + ".GO", int(portfolio_allocation_IDs[pointer]), "gold", rebal_value_of_gold, price_of_rebalance_gold, final_quant_gold, investment_period]))
-            data.append(tuple([date_of_rebalance.strftime("%d/%m/%Y"), "oneoff-rebal.", str(portfolio_allocation_IDs[pointer]) +"."+ str(y) + ".CA", int(portfolio_allocation_IDs[pointer]), "cash", rebal_value_of_cash, 1, final_quant_cash, investment_period]))
+            data.append(tuple([date_of_rebalance.strftime("%d/%m/%Y"), "oneoff-rebal.", str(portfolio_allocation_IDs[pointer]) +"."+ str(y) + ".ST", int(portfolio_allocation_IDs[pointer]), "stocks", rebal_value_of_stocks, price_of_rebalance_stocks, final_quant_stock, purchase_value_stocks, investment_period]))
+            data.append(tuple([date_of_rebalance.strftime("%d/%m/%Y"), "oneoff-rebal.", str(portfolio_allocation_IDs[pointer]) +"."+ str(y) + ".CB", int(portfolio_allocation_IDs[pointer]), "cbonds", rebal_value_of_cbonds, price_of_rebalance_cbonds, final_quant_cbonds, purchase_value_cbonds, investment_period]))
+            data.append(tuple([date_of_rebalance.strftime("%d/%m/%Y"), "oneoff-rebal.", str(portfolio_allocation_IDs[pointer]) +"."+ str(y) + ".SB", int(portfolio_allocation_IDs[pointer]), "sbonds", rebal_value_of_sbonds, price_of_rebalance_sbonds, final_quant_sbonds, purchase_value_sbonds, investment_period]))
+            data.append(tuple([date_of_rebalance.strftime("%d/%m/%Y"), "oneoff-rebal.", str(portfolio_allocation_IDs[pointer]) +"."+ str(y) + ".GO", int(portfolio_allocation_IDs[pointer]), "gold", rebal_value_of_gold, price_of_rebalance_gold, final_quant_gold, purchase_value_gold, investment_period]))
+            data.append(tuple([date_of_rebalance.strftime("%d/%m/%Y"), "oneoff-rebal.", str(portfolio_allocation_IDs[pointer]) +"."+ str(y) + ".CA", int(portfolio_allocation_IDs[pointer]), "cash", rebal_value_of_cash, 1, final_quant_cash, purchase_value_cash, investment_period]))
             trading_util.write_as_csv(data, "append")
 
     #if we where to run this to get all 150k lines every time it would be more efficient to take write csv out of the for loop (unindent one lvl)
@@ -383,6 +425,13 @@ def DCA_rebalance(Rebal_ST_Q, Rebal_CB_Q, Rebal_SB_Q, Rebal_GO_Q, Rebal_CA_Q, st
     #use starting money from previous rebalances
     money_from_sales = 0 + Rebal_Money
 
+    #if we buy we need to return this later for calculating the return
+    invest_buy_stocks = float(0)
+    invest_buy_cbonds = float(0)
+    invest_buy_sbonds = float(0)
+    invest_buy_gold = float(0)
+    invest_buy_cash = float(0)
+
     #conduct sales if needed
     if delta_quant_stocks < 0:
         money_from_sales = money_from_sales + abs(delta_quant_stocks*price_of_rebalance_stocks)
@@ -416,6 +465,7 @@ def DCA_rebalance(Rebal_ST_Q, Rebal_CB_Q, Rebal_SB_Q, Rebal_GO_Q, Rebal_CA_Q, st
         if purchase_value < money_from_sales:
             money_from_sales = money_from_sales - purchase_value
             final_quant_stock = Rebal_ST_Q + delta_quant_stocks
+            invest_buy_stocks = round(purchase_value,2)
             ##uncomment for debugging
             #print("stocks bought. The new amount of stocks held is " + str(final_quant_stock) + " your current spendable balance is " + str(money_from_sales))
     if delta_quant_cbonds > 0:
@@ -423,6 +473,7 @@ def DCA_rebalance(Rebal_ST_Q, Rebal_CB_Q, Rebal_SB_Q, Rebal_GO_Q, Rebal_CA_Q, st
         if purchase_value < money_from_sales:
             money_from_sales = money_from_sales - purchase_value
             final_quant_cbonds = Rebal_CB_Q + delta_quant_cbonds
+            invest_buy_cbonds = round(purchase_value,2)
             ##uncomment for debugging
             #print("cbonds bought. The new amount of cbonds held is " + str(final_quant_cbonds) + " your current spendable balance is " + str(money_from_sales))
     if delta_quant_sbonds > 0:
@@ -430,6 +481,7 @@ def DCA_rebalance(Rebal_ST_Q, Rebal_CB_Q, Rebal_SB_Q, Rebal_GO_Q, Rebal_CA_Q, st
         if purchase_value < money_from_sales:
             money_from_sales = money_from_sales - purchase_value
             final_quant_sbonds = Rebal_SB_Q + delta_quant_sbonds
+            invest_buy_sbonds = round(purchase_value,2)
             ##uncomment for debugging
             #print("sbonds bought. The new amount of sbonds held is " + str(final_quant_sbonds) + " your current spendable balance is " + str(money_from_sales))
     if delta_quant_gold > 0:
@@ -437,6 +489,7 @@ def DCA_rebalance(Rebal_ST_Q, Rebal_CB_Q, Rebal_SB_Q, Rebal_GO_Q, Rebal_CA_Q, st
         if purchase_value < money_from_sales:
             money_from_sales = money_from_sales - purchase_value
             final_quant_gold = Rebal_GO_Q + delta_quant_gold
+            invest_buy_gold = round(purchase_value,2)
             ##uncomment for debugging
             #print("gold bought. The new amount of gold held is " + str(final_quant_gold) + " your current spendable balance is " + str(money_from_sales))
     if delta_quant_cash > 0:
@@ -444,6 +497,7 @@ def DCA_rebalance(Rebal_ST_Q, Rebal_CB_Q, Rebal_SB_Q, Rebal_GO_Q, Rebal_CA_Q, st
         if purchase_value < money_from_sales:
             money_from_sales = money_from_sales - purchase_value
             final_quant_cash = Rebal_CA_Q + delta_quant_cash
+            invest_buy_cash = round(purchase_value,2)
             ##uncomment for debugging
             #print("cash bought. The new amount of cash held is " + str(final_quant_cash) + " your current spendable balance is " + str(money_from_sales))
     
@@ -459,4 +513,4 @@ def DCA_rebalance(Rebal_ST_Q, Rebal_CB_Q, Rebal_SB_Q, Rebal_GO_Q, Rebal_CA_Q, st
     if delta_quant_cash == 0:
         final_quant_cash = Rebal_CA_Q
 
-    return "DCA rebalance succeeded", final_quant_stock, price_of_rebalance_stocks, final_quant_cbonds, price_of_rebalance_cbonds, final_quant_sbonds, price_of_rebalance_sbonds, final_quant_gold, price_of_rebalance_gold, final_quant_cash, price_of_rebalance_cash, money_from_sales, rebal_portf_value, date_of_rebalance
+    return "DCA rebalance succeeded", final_quant_stock, price_of_rebalance_stocks, final_quant_cbonds, price_of_rebalance_cbonds, final_quant_sbonds, price_of_rebalance_sbonds, final_quant_gold, price_of_rebalance_gold, final_quant_cash, price_of_rebalance_cash, money_from_sales, rebal_portf_value, date_of_rebalance, invest_buy_stocks, invest_buy_cbonds, invest_buy_sbonds, invest_buy_gold, invest_buy_cash
