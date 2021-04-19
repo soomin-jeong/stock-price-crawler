@@ -74,6 +74,16 @@ print(DCA(100000, '01/01/2020', 1, "TRUE"))
 
 As with DCA the parameters included here are how much money should be invested, the second is the date of the investment, the third parameter is the investment period in months. The TRUE flag means rebalance will be applied to the DCA trades. 
 
+Functionality about web scraping has been addressed in:
+
+├── trading_methodologies          -- a porfolio developer (DCA, oneoff, rebalance)
+│   ├── DCA.py                     -- Defines and executes the logic for DCA trading methodology
+│   ├── trading_methodologies.csv  -- Output file which trading methodologies write their actions to
+│   ├── __init__.py                -- Makes packages and functions in trading methodologies importable for others
+│   ├── oneoff.py                  -- Defines and executes logic for oneoff trading method
+│   ├── rebalance.py               -- Defines and executes logic for oneoff rebalance and DCA rebalance trading methods
+│   └── trading_util.py            -- Utility function which supports trading methodologies with shared functionalities
+
 # Task 3 (Data Analysis)
 # Architecture
 ```
