@@ -28,8 +28,7 @@ def main():
     if GENERATE_STRATEGIES:
         startmoney = 100000
         investment_date = '01/01/2020'
-        #timeframes = [1, 3, 6, 9, 12]
-        timeframes = [1,12]
+        timeframes = [1, 3, 6, 9, 12]
 
         for each_tf in timeframes:
             oneoff(startmoney, investment_date, each_tf)
@@ -46,7 +45,7 @@ def main():
         pa.run_performance_analysis()
     
     if ANALYZE_PERFORMANCE_PORTFOLIO:
-        trading_methodology_filename = 'trading_methodologies/trading_methodologies.csv'
+        trading_methodology_filename = 'trading_methodologies/trading_methodologies_report.csv'
         # Performance Analysis
         data = pd.read_csv(trading_methodology_filename, header=0, parse_dates=['Date'], dtype={'#': np.int32})
         pa = PerformanceAnalyst(data)
