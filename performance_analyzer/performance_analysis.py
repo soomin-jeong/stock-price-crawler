@@ -45,6 +45,8 @@ class PerformanceAnalyst:
             day_max = max(calendar.monthcalendar(2020, self.timeframes[0])[-1:][0][:5])
             date_max = datetime.datetime(2020, self.timeframes[0], day_max)
             data_point = trading_util.find_data_point(each, date_max)[1]
+            if (data_point is None):
+                data_point = 1.0
             current_asset_values.append(data_point)
         current_asset_values[4] = 1.0
         return current_asset_values
@@ -103,6 +105,7 @@ class PerformanceAnalyst:
 
         return (current_val - buy_amount) / buy_amount * 100
     
+    #def calculate_portfolio_return(self, portfolio_method_tf):
 
     def run_performance_analysis(self):
         performance_df = pd.DataFrame(columns=['method', 'timeframe', 'cost', 'volatility', 'return'])
@@ -115,8 +118,8 @@ class PerformanceAnalyst:
                 ret = self.calculate_return(data_method_tf)
                 performance_df = performance_df.append({'method': each_method,
                                                         'timeframe': each_tf,
-                                                        'cost': "{:.10f}".format(cost),
-                                                        'volatility': "{:.10f}".format(volatility),
+                                                        'cost': "{:.2f}".format(cost),
+                                                        'volatility': "{:.2f}".format(volatility),
                                                         'return': "{:.2f}".format(ret)}, ignore_index=True)
         filepath = 'performance_analyzer/portfolio_metrics.csv'
         write_as_csv(filepath, performance_df)
@@ -133,7 +136,7 @@ class PerformanceAnalyst:
                     ret = self.calculate_return(data_method_tf)
                     performance_df = performance_df.append({'asset alloc': each_portfolios, 'method': each_method,
                                                             'timeframe': each_tf,
-                                                            'return': "{:.10f}".format(ret)}, ignore_index=True)
+                                                            'return': "{:.2f}".format(ret)}, ignore_index=True)
         filepath = 'performance_analyzer/portfolio_metrics_portfolio.csv'
         write_as_csv(filepath, performance_df)
         return performance_df
