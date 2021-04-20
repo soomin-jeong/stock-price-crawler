@@ -5,15 +5,15 @@ import numpy as np
 from performance_analyzer.performance_analysis import PerformanceAnalyst
 from crawler_by_asset import crawlers
 from portfolio_allocation.portfolio_generator import portfolio_generator
-from trading_methodologies import oneoff, DCA, oneoff_rebalance
+from trading_methodologies import oneoff, DCA #,oneoff_rebalance
 
 
 # set the tasks to run here
 RUN_CRAWLER = False
 GENERATE_PORTFOLIOS = False
-GENERATE_STRATEGIES = False
+GENERATE_STRATEGIES = True
 ANALYZE_PERFORMANCE = False
-ANALYZE_PERFORMANCE_PORTFOLIO = True
+ANALYZE_PERFORMANCE_PORTFOLIO = False
 
 
 def main():
@@ -28,12 +28,12 @@ def main():
     if GENERATE_STRATEGIES:
         startmoney = 100000
         investment_date = '01/01/2020'
-        timeframes = [1, 3, 6, 9, 12]
+        timeframes = [1, 3]
 
         for each_tf in timeframes:
             oneoff(startmoney, investment_date, each_tf)
-            oneoff_rebalance(each_tf)
-            DCA(startmoney, investment_date, each_tf)
+            # oneoff_rebalance(each_tf)
+            # DCA(startmoney, investment_date, each_tf)
             DCA(startmoney, investment_date, each_tf, True)
 
     if ANALYZE_PERFORMANCE:

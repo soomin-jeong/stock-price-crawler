@@ -159,8 +159,8 @@ def DCA(startmoney, investment_date, investment_period, rebal=False):
                 #to-do: get rid of this but only write additions/subtractions of rebal
                 #The previous rebalance will be the sum of all previous trades in portfolio alloc so drop all the other trade except the last
                 #print("The dataframe length is" + str(len(previous_trades)))
-                if len(previous_trades) == 4:
-                    previous_trades = previous_trades.drop(previous_trades.index[0])
+                # if len(previous_trades) == 4:
+                #     previous_trades = previous_trades.drop(previous_trades.index[0])
 
                 #Sum of the columns
                 Rebal_ST_Q = previous_trades['ST_Q'].sum()
@@ -207,24 +207,35 @@ def DCA(startmoney, investment_date, investment_period, rebal=False):
                 invest_buy_sbonds = result[16]
                 invest_buy_gold = result[17]
                 invest_buy_cash = result[18]
+                rebal_delta_stocks = result[19]
+                rebal_delta_cbonds = result[20]
+                rebal_delta_sbonds = result[21]
+                rebal_delta_gold = result[22]
+                rebal_delta_cash = result[23]
                 
+                stock_units = stock_units + rebal_delta_stocks
+                cbond_units = cbond_units + rebal_delta_cbonds
+                sbond_units = sbond_units + rebal_delta_sbonds
+                gold_units = gold_units + rebal_delta_gold
+                cash_units = cash_units + rebal_delta_cash
+
                 #to-do
                 #Write to dataframe
                 trade_data = {
                     'ST_M': 0,
-                    'ST_Q': stock_units,
+                    'ST_Q': rebal_delta_stocks,
                     'ST_P': stock_price,
                     'CB_M': 0,
-                    'CB_Q': cbond_units,
+                    'CB_Q': rebal_delta_cbonds,
                     'CB_P': cbond_price,
                     'SB_M': 0,
-                    'SB_Q': sbond_units,
+                    'SB_Q': rebal_delta_sbonds,
                     'SB_P': sbond_price,
                     'GO_M': 0,
-                    'GO_Q': gold_units,
+                    'GO_Q': rebal_delta_gold,
                     'GO_P': gold_price,
                     'CA_M': 0,
-                    'CA_Q': cash_units,
+                    'CA_Q': rebal_delta_cash,
                     'CA_P': cash_price,
                     'Money': Rebal_Money,
                     'Portf_Val': trade_port_value
