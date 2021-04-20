@@ -88,7 +88,7 @@ def find_data_point(asset_class, sourcedate):
         ##uncomment for debugging
         #print("there is no data for " + sourcedate.strftime('%d/%m/%Y' + " this date may fall on the weekend. We will try to get data for Monday"))
         new_date = None
-        for i in range(1, 4):
+        for i in range(1, 6):
             try:
                 #becuase incrementing dates could pring us to the next month we call add days function
                 ##uncomment for debugging
