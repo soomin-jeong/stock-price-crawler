@@ -45,8 +45,6 @@ class PerformanceAnalyst:
             day_max = max(calendar.monthcalendar(2020, self.timeframes[0])[-1:][0][:5])
             date_max = datetime.datetime(2020, self.timeframes[0], day_max)
             data_point = trading_util.find_data_point(each, date_max)[1]
-            if (data_point is None):
-                data_point = 1.0
             current_asset_values.append(data_point)
         current_asset_values[4] = 1.0
         return current_asset_values
@@ -105,7 +103,6 @@ class PerformanceAnalyst:
 
         return (current_val - buy_amount) / buy_amount * 100
     
-    #def calculate_portfolio_return(self, portfolio_method_tf):
 
     def run_performance_analysis(self):
         performance_df = pd.DataFrame(columns=['method', 'timeframe', 'cost', 'volatility', 'return'])
