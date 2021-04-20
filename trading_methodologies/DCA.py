@@ -221,7 +221,7 @@ def DCA(startmoney, investment_date, investment_period, rebal=False):
 
                 #to-do
                 #Write to dataframe
-                #columns =['ST_M', 'ST_Q', 'ST_P', 'CB_M', 'CB_Q', 'CB_P', 'SB_M', 'SB_Q', 'SB_P', 'GO_M', 'GO_Q', 'GO_P', 'CA_M', 'CA_Q', 'CA_P', 'Money', 'Portf_Val']
+                
                 trade_data = {
                     'ST_M': rebal_delta_stocks*stock_price,
                     'ST_Q': rebal_delta_stocks,
