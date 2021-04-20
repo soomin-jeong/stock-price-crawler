@@ -17,6 +17,7 @@ def dataframes_from_crawler():
 
 def get_portfolio_dataframe():
     portfolio_df = pd.read_csv('portfolio_allocation/portfolio_allocations.csv')
+
     return portfolio_df
 
 def write_as_csv(data, write_mode): 
@@ -97,7 +98,7 @@ def find_data_point(asset_class, sourcedate):
                 price_on_date =  info_for_date.iloc[0]['price']
                 date_on_date = new_date
                 ##uncomment for debugging
-                #print ("The date you're looking for may be on the weekend. On the date " + new_date.strftime('%d/%m/%Y') + " the asset " + str(asset_class) + " cost " + str(price_on_date))
+                # print ("The date you're looking for may be on the weekend. On the date " + new_date.strftime('%d/%m/%Y') + " the asset " + str(asset_class) + " cost " + str(price_on_date))
                 break
             except:
                 continue

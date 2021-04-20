@@ -37,17 +37,17 @@ def oneoff_rebalance(investment_period):
 
     for i in portfolio_allocation_IDs:
         
-        
+        pointer = i-1
 
         #get target allocation
 
         ##uncomment for debugging
-        #print("the vaue of i is " + str(i))
-        #print("the value of the pointer is " + str(pointer))
-        #print("the stored value of the portfolio at pointer is " + str(portfolio_allocation_IDs[pointer]))
-        #print(portfolio_allocation_IDs[pointer])
+        print("the value of i is " + str(i))
+        print("the value of the pointer is " + str(pointer))
+        print("the stored value of the portfolio at pointer is " + str(portfolio_allocation_IDs[pointer]))
+        print(portfolio_allocation_IDs[pointer])
 
-        pointer = i-1
+        
         target_alloc_df = portfoliodf.loc[portfoliodf['Asset Alloc.'] == int(portfolio_allocation_IDs[pointer])]
         target_alloc_stocks = target_alloc_df.iloc[0]['ST']
         target_alloc_cbonds = target_alloc_df.iloc[0]['CB']
