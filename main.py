@@ -5,7 +5,7 @@ import numpy as np
 from performance_analyzer.performance_analysis import PerformanceAnalyst
 from crawler_by_asset import crawlers
 from portfolio_allocation.portfolio_generator import portfolio_generator
-from trading_methodologies import oneoff, DCA, oneoff_rebalance
+from trading_methodologies import oneoff, DCA #,oneoff_rebalance
 
 
 # set the tasks to run here
@@ -13,7 +13,7 @@ RUN_CRAWLER = False
 GENERATE_PORTFOLIOS = False
 GENERATE_STRATEGIES = True
 ANALYZE_PERFORMANCE = False
-ANALYZE_PERFORMANCE_PORTFOLIO = False
+ANALYZE_PERFORMANCE_PORTFOLIO = True
 
 
 def main():
