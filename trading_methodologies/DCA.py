@@ -221,20 +221,21 @@ def DCA(startmoney, investment_date, investment_period, rebal=False):
 
                 #to-do
                 #Write to dataframe
+                #columns =['ST_M', 'ST_Q', 'ST_P', 'CB_M', 'CB_Q', 'CB_P', 'SB_M', 'SB_Q', 'SB_P', 'GO_M', 'GO_Q', 'GO_P', 'CA_M', 'CA_Q', 'CA_P', 'Money', 'Portf_Val']
                 trade_data = {
-                    'ST_M': 0,
+                    'ST_M': rebal_delta_stocks*stock_price,
                     'ST_Q': rebal_delta_stocks,
                     'ST_P': stock_price,
-                    'CB_M': 0,
+                    'CB_M': rebal_delta_cbonds*cbond_price,
                     'CB_Q': rebal_delta_cbonds,
                     'CB_P': cbond_price,
-                    'SB_M': 0,
+                    'SB_M': rebal_delta_sbonds*sbond_price,
                     'SB_Q': rebal_delta_sbonds,
                     'SB_P': sbond_price,
-                    'GO_M': 0,
+                    'GO_M': rebal_delta_gold*gold_price,
                     'GO_Q': rebal_delta_gold,
                     'GO_P': gold_price,
-                    'CA_M': 0,
+                    'CA_M': rebal_delta_cash*cash_price,
                     'CA_Q': rebal_delta_cash,
                     'CA_P': cash_price,
                     'Money': Rebal_Money,
@@ -244,11 +245,11 @@ def DCA(startmoney, investment_date, investment_period, rebal=False):
                 previous_trades = previous_trades.append(trade_data, ignore_index=True)
                 #Add to data list to be written to CSV
                 data = []
-                data.append(tuple([date_of_rebalance.strftime('%d/%m/%Y'), "DCA-rebalance", str(int(portf_alloc)) + ".ST", int(portf_alloc), "stocks", stock_money, stock_price, int(stock_units), invest_buy_stocks, investment_period]))
-                data.append(tuple([date_of_rebalance.strftime('%d/%m/%Y'), "DCA-rebalance", str(int(portf_alloc)) + ".CB", int(portf_alloc), "cbonds", cbond_money, cbond_price, int(cbond_units), invest_buy_cbonds, investment_period]))
-                data.append(tuple([date_of_rebalance.strftime('%d/%m/%Y'), "DCA-rebalance", str(int(portf_alloc)) + ".SB", int(portf_alloc), "sbonds", sbond_money, sbond_price, int(sbond_units), invest_buy_sbonds, investment_period]))
-                data.append(tuple([date_of_rebalance.strftime('%d/%m/%Y'), "DCA-rebalance", str(int(portf_alloc)) + ".GO", int(portf_alloc), "gold", gold_money, gold_price, int(gold_units), invest_buy_gold, investment_period]))
-                data.append(tuple([date_of_rebalance.strftime('%d/%m/%Y'), "DCA-rebalance", str(int(portf_alloc)) + ".CA", int(portf_alloc), "cash", cash_money, cash_price, int(cash_units), invest_buy_cash, investment_period]))
+                data.append(tuple([date_of_rebalance.strftime('%d/%m/%Y'), "DCA-rebalance", str(int(portf_alloc)) + ".ST", int(portf_alloc), "stocks", stock_money+(rebal_delta_stocks*stock_price), stock_price, int(stock_units), invest_buy_stocks, investment_period]))
+                data.append(tuple([date_of_rebalance.strftime('%d/%m/%Y'), "DCA-rebalance", str(int(portf_alloc)) + ".CB", int(portf_alloc), "cbonds", cbond_money+(rebal_delta_cbonds*cbond_price), cbond_price, int(cbond_units), invest_buy_cbonds, investment_period]))
+                data.append(tuple([date_of_rebalance.strftime('%d/%m/%Y'), "DCA-rebalance", str(int(portf_alloc)) + ".SB", int(portf_alloc), "sbonds", sbond_money+(rebal_delta_sbonds*sbond_price), sbond_price, int(sbond_units), invest_buy_sbonds, investment_period]))
+                data.append(tuple([date_of_rebalance.strftime('%d/%m/%Y'), "DCA-rebalance", str(int(portf_alloc)) + ".GO", int(portf_alloc), "gold", gold_money+(rebal_delta_gold*gold_price), gold_price, int(gold_units), invest_buy_gold, investment_period]))
+                data.append(tuple([date_of_rebalance.strftime('%d/%m/%Y'), "DCA-rebalance", str(int(portf_alloc)) + ".CA", int(portf_alloc), "cash", cash_money+(rebal_delta_cash*cash_price), cash_price, int(cash_units), invest_buy_cash, investment_period]))
                 ##uncomment for debugging
                 #print("current portfolio ID is" + str(portf_alloc))
                 ##for testing it may be helpful to write to the csv within the loop
