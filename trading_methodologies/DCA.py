@@ -59,7 +59,7 @@ def DCA(startmoney, investment_date, investment_period, rebal=False):
         #execute trade with portfolio logic for every month of investment period
         for x in range(0,investment_period):
             
-            #print("DCA iterator value is: " + str(x))
+            print("DCA iterator value is: " + str(x))
             stock_date, stock_price = trading_util.find_data_point("stocks", trading_util.add_months(date_obj, x))
             DCA_date = stock_date
             cbond_date, cbond_price = trading_util.find_data_point("cbonds", DCA_date)
