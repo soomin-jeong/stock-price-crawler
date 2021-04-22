@@ -60,6 +60,7 @@ class PerformanceAnalyst:
         #purchase num is a dollar amount and not a unit! It wouldnt make sense to have the unit either because you would need to get the cost at the time of purchase not the current cost
         buy_amount = portfolio_method_tf['Purchase_num'].sum()
         print("buy amount is " + str(buy_amount))
+        print(portfolio_method_tf)
         #share_count = portfolio_method_tf[portfolio_method_tf['purchased_amount'] > 0].groupby('Asset')['Purchase_num'].sum()
         #share_count = portfolio_method_tf.groupby('Asset')['Purchase_num'].sum()
         
