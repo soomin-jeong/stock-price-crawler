@@ -27,15 +27,7 @@ class PerformanceAnalyst:
         self.cost_per_asset = [0.0, 0.2, 0.1, 0.2, 0.4]
         self.portfolios['purchased_amount'] = self.portfolios['Asset price'] * self.portfolios['Purchase_num']
         # though 'max' was picked, all the prices grouped by 'Asset' are the same
-        
-    # def get_current_asset_values(self, portfolio_data):
-    #     current_asset_values = []
-    #     for each in self.assets:
-    #         # value of asset in the last date in the data
-    #         print(portfolio_data['Date'].max())
-    #         last_value = portfolio_data[portfolio_data['Asset'] == each][portfolio_data['Date'] == portfolio_data['Date'].max()]['Asset price'].iloc[0]
-    #         current_asset_values.append(last_value)
-    #     return current_asset_values
+
 
     def get_current_asset_values(self):
         current_asset_values = []
@@ -90,13 +82,11 @@ class PerformanceAnalyst:
                     share_count.append(float(0))
                     continue
                 share_count.append(portfolio_method_tf[portfolio_method_tf['Asset'] == asset]['#'].iloc[pointer])
-        print("share count is " + str(share_count))
+        #print("share count is " + str(share_count))
 
-        
         #calculate the current portfolio value by taking end asset amounts in units times their value on day of analysis
         current_asset_value = self.get_current_asset_values()
-        
-        print("current asset values are " + str(current_asset_value))
+        #print("current asset values are " + str(current_asset_value))
         
         for num1, num2 in zip(share_count, current_asset_value):
 	        final_prices.append(num1 * num2)
@@ -105,7 +95,6 @@ class PerformanceAnalyst:
 
         return (current_val - buy_amount) / buy_amount * 100
     
-    #def calculate_portfolio_return(self, portfolio_method_tf):
 
     def run_performance_analysis(self):
         performance_df = pd.DataFrame(columns=['method', 'timeframe', 'cost', 'volatility', 'return'])
@@ -134,9 +123,10 @@ class PerformanceAnalyst:
                 for each_tf in self.timeframes:
                     data_method_tf = data_for_method[self.portfolios['Timeframe'] == each_tf]
                     ret = self.calculate_return(data_method_tf)
-                    performance_df = performance_df.append({'asset alloc': each_portfolios, 'method': each_method,
+                    performance_df = performance_df.append({'asset alloc': each_portfolios, 
+                                                            'method': each_method,
                                                             'timeframe': each_tf,
-                                                            'return': "{:.2f}".format(ret)}, ignore_index=True)
+                                                            'return': "{:.10f}".format(ret)}, ignore_index=True)
         filepath = 'performance_analyzer/portfolio_metrics_portfolio.csv'
         write_as_csv(filepath, performance_df)
         return performance_df
