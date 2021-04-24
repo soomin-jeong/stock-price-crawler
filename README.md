@@ -99,28 +99,32 @@ In order to execute the trading the user needs to specify the amount of money to
 
 In order to run the oneoff trading methodology uncomment the following line in main.py:
 
+```
 data, message = oneoff(100000, '01/01/2020', 1)
+```
 
 The first parameter is the investment amount, the second is the date of the investment and the third is how long the investment will be held in months. The program goes through all the portfolio allocations portfolio_allocations.csv and Trades are executed. For each portfolio the number of each asset bought as well as data such as the price of the asset on the date is written to trading_methodologies.csv.
 
 Note: when the user specifies 1 as the investment period the program deletes trading_methodologies.csv and rewrites the header line. Otherwise the data will always be appended to the CSV
 
 In order to run the oneoff rebalance trading methodology uncomment the following line in main.py:
-
+```
 oneoff_rebalance(1)
+```
 
 Here the paramater is the holding period in months. Oneoff_rebalance analyzes previous one-off trades with a matching investment period and rebalances these. Therefore oneoff must be run first.
 
 In order to run the DCA trading methodology uncomment the following line in main.py:
-
+```
 print(DCA(100000, '01/01/2020', 1, "FALSE"))
-
+```
 Here the first parameter is how much money should be invested, the second is the date of the investment, the third parameter is the investment period in months, and finally the FALSE flag means the DCA trades will not be rebalanced.
 
 
 In order to run the oneoff trading methodology uncomment the following line in main.py:
-
+```
 print(DCA(100000, '01/01/2020', 1, "TRUE"))
+```
 
 As with DCA the parameters included here are how much money should be invested, the second is the date of the investment, the third parameter is the investment period in months. The TRUE flag means rebalance will be applied to the DCA trades. 
 
