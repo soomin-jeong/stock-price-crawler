@@ -80,6 +80,7 @@ Inside the crawler_drivers forlder, an instance of chrome and firefox (gecko) dr
 
 Functionality about web scraping has been addressed in:
 
+```
 ├── crawler_by_asset                       
 │   ├── __init__.py
 │   ├── cash.py                   
@@ -91,6 +92,7 @@ Functionality about web scraping has been addressed in:
 ├── crawler_drivers                
 │   ├── chromedriver         
 │   └── geckodriver       
+```
 
 ## Task 2 (Data Generation)
 In order to execute the trading the user needs to specify the amount of money to be invested, the date of the investment and the investment period in months. They also need to decided which trading strategy to use. 
