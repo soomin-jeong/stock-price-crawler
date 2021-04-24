@@ -28,7 +28,10 @@ Please refer to the file 'exercise_statement.pdf' in the repository.
 │   └── geckodriver                -- an installed firefox driver for web sraping
 ├── exercise_statement.pdf         -- the description of the exercise from moodle
 ├── main.py                        -- a core trigger to start crawling, make porfolios, and analyze their performance
-├── performance_analysis.py        -- a performance analyzer to evalute cost, volatility, and return
+├── performance analyzer           -- a performance analyzer to evalute cost, volatility, and return
+│   ├── __init__.py
+│   ├── performance_analysis.py
+│   └── performance_metric.csv     -- the outcome of the performance analysis
 ├── portfolio_allocation      
 │   ├── portfolio_allocations.csv  -- the generated portfolio as csv export
 │   └── portfolio_generator.py     -- a trigger to generate porfolios
@@ -141,6 +144,16 @@ Functionality about trading data generation has been addressed in:
 ```
 
 ## Task 3 (Data Analysis)
+To run this task, a portfolio file should be generated from Task2. The file should be lcoated as `trading_methodologies/trading_methodologies.csv`. As each stage is activated or deactivated from the constants in `main.py` file, `ANALYZE_PERFORMANCE` should be `True` to start analysis.
+
+As the column names are in type of strings when imported, their names are set as constants at the beginning of the file to mitigate any mistake.
+
+The analysis includes 3 index: Cost, Volatility, and Return. Each term follows the common concept in regard to the evaluation of investment. 
+- Cost: the sum of the price to purchase the assets
+- Volatility: the deviation of the value of the assets
+- Return: the difference in the price when purchasing the asset and the current value of them
+
+The output is located in the same folder, and its name is `portfolio_metrics.csv` as suggested from the guildeline. 
 
 # Acknowledgment
 The dataset was scraped from www.investing.com
