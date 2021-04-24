@@ -116,14 +116,14 @@ Here the paramater is the holding period in months. Oneoff_rebalance analyzes pr
 
 In order to run the DCA trading methodology uncomment the following line in main.py:
 ```
-print(DCA(100000, '01/01/2020', 1, "FALSE"))
+print(DCA(100000, '01/01/2020', 1 False))
 ```
 Here the first parameter is how much money should be invested, the second is the date of the investment, the third parameter is the investment period in months, and finally the FALSE flag means the DCA trades will not be rebalanced.
 
 
 In order to run the oneoff trading methodology uncomment the following line in main.py:
 ```
-print(DCA(100000, '01/01/2020', 1, "TRUE"))
+print(DCA(100000, '01/01/2020', 1))
 ```
 
 As with DCA the parameters included here are how much money should be invested, the second is the date of the investment, the third parameter is the investment period in months. The TRUE flag means rebalance will be applied to the DCA trades. 
