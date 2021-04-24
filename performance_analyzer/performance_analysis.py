@@ -41,8 +41,7 @@ class PerformanceAnalyst:
 
     def get_current_asset_values(self):
         current_asset_values = []
-        Assets = ['stocks', 'cbonds', 'sbonds', 'gold', 'cash']
-        for each in Assets:
+        for each in self.assets:
             # value of asset in the last date in the data
             day_max = max(calendar.monthcalendar(2020, self.timeframes[0])[-1:][0][:5])
             date_max = datetime.datetime(2020, self.timeframes[0], day_max)
@@ -73,9 +72,7 @@ class PerformanceAnalyst:
         print(portfolio_method_tf)
         #share_count = portfolio_method_tf[portfolio_method_tf[PURCHASED_AMOUNT_ARG] > 0].groupby(ASSET_ARG)[PURCHASE_NUM].sum()
         #share_count = portfolio_method_tf.groupby(ASSET_ARG)[PURCHASE_NUM].sum()
-        
-        
-        #here we get the end amount in units of each asset
+
         Assets = ['stocks', 'cbonds', 'sbonds', 'gold', 'cash']
         share_count = [] 
         final_prices = []

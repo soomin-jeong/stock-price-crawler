@@ -1,5 +1,5 @@
 method,timeframe,cost,volatility,return
-DCA,12,0.23,1.59,-99.99
-DCA-rebalance,12,0.23,2.06,-99.99
-Oneoff,12,0.24,1.28,-100.00
-oneoff-rebal.,12,0.24,5.63,-99.99
+DCA,12,0.20,2.00,-97.61
+DCA-rebalance,12,0.20,3.77,-47.81
+Oneoff,12,0.20,1.93,-94.80
+oneoff-rebal.,12,0.20,7.18,-94.98
