@@ -19,7 +19,8 @@ PURCHASED_AMOUNT_ARG = 'purchased_amount'
 ASSET_PRICE_ARG = 'Asset price'
 PURCHASE_NUM = 'Purchase_num'
 
-OUTPUT_PATH = 'performance_analyzer/portfolio_metrics_portfolio.csv'
+STRATEGY_OUTPUT_PATH = 'performance_analyzer/portfolio_metrics.csv'
+PORTFOLIO_OUTPUT_PATH = 'performance_analyzer/portfolio_metrics_portfolio.csv'
 
 
 class PerformanceAnalyst:
@@ -116,8 +117,7 @@ class PerformanceAnalyst:
                                                         'cost': "{:.2f}".format(cost),
                                                         'volatility': "{:.2f}".format(volatility),
                                                         'return': "{:.2f}".format(ret)}, ignore_index=True)
-        filepath = 'performance_analyzer/portfolio_metrics.csv'
-        write_as_csv(filepath, performance_df)
+        write_as_csv(STRATEGY_OUTPUT_PATH, performance_df)
         return performance_df
 
     def run_performance_analysis_portfolio(self):
@@ -133,6 +133,6 @@ class PerformanceAnalyst:
                                                             'method': each_method,
                                                             'timeframe': each_tf,
                                                             'return': "{:.10f}".format(ret)}, ignore_index=True)
-        write_as_csv(OUTPUT_PATH, performance_df)
+        write_as_csv(PORTFOLIO_OUTPUT_PATH, performance_df)
         return performance_df
 

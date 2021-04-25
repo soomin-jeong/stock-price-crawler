@@ -43,6 +43,7 @@ def main():
 
     data = pd.read_csv(STRATEGY_OUTPUT_FILENAME, header=0, parse_dates=['Date'], dtype={'#': np.int32})
     pa = PerformanceAnalyst(data)
+
     if ANALYZE_PERFORMANCE:
         pa.run_performance_analysis()
     elif ANALYZE_PERFORMANCE_PORTFOLIO:
