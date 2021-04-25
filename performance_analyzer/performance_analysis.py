@@ -19,7 +19,7 @@ PURCHASED_AMOUNT_ARG = 'purchased_amount'
 ASSET_PRICE_ARG = 'Asset price'
 PURCHASE_NUM = 'Purchase_num'
 
-OUTPUT_PATH = 'performance_analyzer/portfolio_metrics_portfolio.csv'
+OUTPUT_PATH = 'performance_analyzer/portfolio_metrics.csv'
 
 
 class PerformanceAnalyst:
