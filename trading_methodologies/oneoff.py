@@ -89,7 +89,7 @@ def oneoff(startmoney, investment_date, timeframe):
         data.append(tuple([date_obj.strftime('%d/%m/%Y'), "Oneoff", str(index+1) + ".CA", int(portf_alloc), "cash", cash_money, cashprice, cash_units, cash_money, timeframe]))
 
         #write trading methodologies to CSV
-        if timeframe == 12 and index == 0:
+        if timeframe == 1 and index == 0:
             trading_util.write_as_csv(data, "overwrite")
         else:
             trading_util.write_as_csv(data, "append")
