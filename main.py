@@ -13,7 +13,7 @@ RUN_CRAWLER = False
 GENERATE_PORTFOLIOS = False
 GENERATE_STRATEGIES = False
 ANALYZE_PERFORMANCE = False
-ANALYZE_PERFORMANCE_PORTFOLIO = True
+ANALYZE_PERFORMANCE_PORTFOLIO = False
 
 STRATEGY_OUTPUT_FILENAME = 'trading_methodologies/trading_methodologies.csv'
 
@@ -30,10 +30,9 @@ def main():
     if GENERATE_STRATEGIES:
         startmoney = 100000
         investment_date = '01/01/2020'
-        # For testing we recommend only to test with the timeframes 1 or 1, 3 because it will take a lot of time to generate all the investments.
+        # For testing we recommend only to test with the timeframes 1 or 1, 3 because it will take a lot of time to generate all the investments. Before running 3, 6, 9, 12 either 1 has to be run or the header has to be copied into the trading_methodologies.csv file
         #timeframes = [1, 3, 6, 9, 12]
-        # timeframes = [1, 3]
-        timeframes = [12]
+        timeframes = [1, 3]
 
         for each_tf in timeframes:
             oneoff(startmoney, investment_date, each_tf)

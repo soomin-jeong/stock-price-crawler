@@ -69,8 +69,8 @@ class PerformanceAnalyst:
         #buy_amount = portfolio_method_tf[PURCHASED_AMOUNT_ARG].sum()
         #purchase num is a dollar amount and not a unit! It wouldnt make sense to have the unit either because you would need to get the cost at the time of purchase not the current cost
         buy_amount = portfolio_method_tf[PURCHASE_NUM].sum()
-        print("buy amount is " + str(buy_amount))
-        print(portfolio_method_tf)
+        #print("buy amount is " + str(buy_amount))
+        #print(portfolio_method_tf)
         #share_count = portfolio_method_tf[portfolio_method_tf[PURCHASED_AMOUNT_ARG] > 0].groupby(ASSET_ARG)[PURCHASE_NUM].sum()
         #share_count = portfolio_method_tf.groupby(ASSET_ARG)[PURCHASE_NUM].sum()
 
@@ -121,7 +121,7 @@ class PerformanceAnalyst:
         return performance_df
 
     def run_performance_analysis_portfolio(self):
-        performance_df = pd.DataFrame(columns=['asset alloc', 'method', 'timeframe', 'return'])
+        performance_df = pd.DataFrame(columns=['asset alloc', 'method', 'timeframe', 'volatility', 'return'])
         for each_portfolios in self.asset_alloc:
             data_for_method2 = self.portfolios[self.portfolios[ASSET_ALLOC_ARG] == each_portfolios]
             for each_method in self.trade_methods:
@@ -129,9 +129,11 @@ class PerformanceAnalyst:
                 for each_tf in self.timeframes:
                     data_method_tf = data_for_method[self.portfolios[TIMEFRAME_ARG] == each_tf]
                     ret = self.calculate_return(data_method_tf)
+                    volatility = self.calculate_volatility(data_method_tf)
                     performance_df = performance_df.append({'asset alloc': each_portfolios, 
                                                             'method': each_method,
                                                             'timeframe': each_tf,
+                                                            'volatility': "{:.2f}".format(volatility),
                                                             'return': "{:.10f}".format(ret)}, ignore_index=True)
         write_as_csv(PORTFOLIO_OUTPUT_PATH, performance_df)
         return performance_df
