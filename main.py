@@ -15,6 +15,8 @@ GENERATE_STRATEGIES = False
 ANALYZE_PERFORMANCE = False
 ANALYZE_PERFORMANCE_PORTFOLIO = True
 
+STRATEGY_OUTPUT_FILENAME = 'trading_methodologies/trading_methodologies.csv'
+
 
 def main():
     if RUN_CRAWLER:
@@ -39,19 +41,11 @@ def main():
             DCA(startmoney, investment_date, each_tf)
             DCA(startmoney, investment_date, each_tf, True)
 
+    data = pd.read_csv(STRATEGY_OUTPUT_FILENAME, header=0, parse_dates=['Date'], dtype={'#': np.int32})
+    pa = PerformanceAnalyst(data)
     if ANALYZE_PERFORMANCE:
-        trading_methodology_filename = 'trading_methodologies/trading_methodologies.csv'
-
-        # Performance Analysis
-        data = pd.read_csv(trading_methodology_filename, header=0, parse_dates=['Date'], dtype={'#': np.int32})
-        pa = PerformanceAnalyst(data)
         pa.run_performance_analysis()
-    
-    if ANALYZE_PERFORMANCE_PORTFOLIO:
-        trading_methodology_filename = 'trading_methodologies/trading_methodologies.csv'
-        # Performance Analysis
-        data = pd.read_csv(trading_methodology_filename, header=0, parse_dates=['Date'], dtype={'#': np.int32})
-        pa = PerformanceAnalyst(data)
+    elif ANALYZE_PERFORMANCE_PORTFOLIO:
         pa.run_performance_analysis_portfolio()
 
 
