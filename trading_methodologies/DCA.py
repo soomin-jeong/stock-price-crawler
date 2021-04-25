@@ -21,8 +21,8 @@ def DCA(startmoney, investment_date, investment_period, rebal=False):
     #If we enter an investment period of 1 we would expect DCA to run only for that one month so we shouldnt add 1
     investment_pd_end_obj= trading_util.add_months(date_obj, (investment_period-1))
     date_obj, price = trading_util.find_data_point("cbonds", investment_pd_end_obj)
-    if (date_obj == None) or (price == None):
-        return print("the specified date or investment period are outside of the dataset")
+
+    assert date_obj is not None and price is not None, "the specified date or investment period are outside of the dataset"
     
     #reset date object to original investment date
     date_obj = datetime.datetime.strptime(investment_date, '%d/%m/%Y')
