@@ -1,7 +1,6 @@
 
 import pandas as pd
 import numpy as np
-from pandas.tseries.offsets import BMonthEnd
 import datetime
 import calendar
 
@@ -21,6 +20,7 @@ PURCHASE_NUM = 'Purchase_num'
 
 STRATEGY_OUTPUT_PATH = 'performance_analyzer/portfolio_metrics.csv'
 PORTFOLIO_OUTPUT_PATH = 'performance_analyzer/portfolio_metrics_portfolio.csv'
+
 
 
 class PerformanceAnalyst:
